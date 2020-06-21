@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Users</title>
+</head>
+<body>
+	<div th:each="user: ${users}">
+    <p th:text="${user.id}" /> 
+
+<a href="/logout">Logout</a>
+</div>
+</body>
+</html>
