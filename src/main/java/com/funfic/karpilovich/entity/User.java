@@ -19,8 +19,13 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
 public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
@@ -34,6 +39,8 @@ public class User implements UserDetails {
     private String password;
     @Transient
     @Nullable
+    @Getter
+    @Setter
     private String confirmPassword;
     @Column(name = "first_name")
     @NotBlank
@@ -49,70 +56,9 @@ public class User implements UserDetails {
         setEnabled(false);
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
     }
 
     @Override

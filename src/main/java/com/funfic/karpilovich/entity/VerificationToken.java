@@ -13,8 +13,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(name = "verification_token")
+@Getter
+@Setter
 public class VerificationToken {
 
     private static final int TERMINATION_TIME_IN_MINUTES = 60;
@@ -37,38 +42,6 @@ public class VerificationToken {
         this();
         this.user = user;
         this.token = token;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public Timestamp getTerminationDate() {
-        return terminationDate;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public void setTerminationDate(Timestamp terminationDate) {
-        this.terminationDate = terminationDate;
     }
 
     private Timestamp calculateTerminationDate() {

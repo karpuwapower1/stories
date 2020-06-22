@@ -14,8 +14,13 @@ import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(name = "roles")
+@Getter
+@Setter
 public class Role implements GrantedAuthority {
 
     private static final long serialVersionUID = 1L;
@@ -36,30 +41,6 @@ public class Role implements GrantedAuthority {
     public Role(Integer id, String name) {
         this.id = id;
         this.name = name;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
     }
 
     @Override
