@@ -19,10 +19,7 @@ public class UsersController {
     @GetMapping
     public String getPage(Model model) {
         Iterable<User> users = userRepository.findAll();
-        for (User user : users) {
-            System.out.println(user.getId());
-        }
         model.addAttribute("users", users);
-        return "users";
+        return Page.USERES.getName();
     }
 }

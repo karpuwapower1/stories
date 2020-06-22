@@ -30,17 +30,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers("/registration").not().fullyAuthenticated()
             .antMatchers("/users").hasRole("USER")
-            .antMatchers("/").permitAll()
+            .antMatchers("/", "/registration/activation/*").permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin()
-            .loginPage("/login").permitAll().usernameParameter("email") .defaultSuccessUrl("/users")
+            .loginPage("/login").permitAll().usernameParameter("email").defaultSuccessUrl("/users")
             .and()
             .logout().permitAll().logoutSuccessUrl("/login");
     }
     
-    
-
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/css/**", "/js/**", "/fonts/**");
