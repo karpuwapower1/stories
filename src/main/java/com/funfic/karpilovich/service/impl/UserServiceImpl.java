@@ -1,5 +1,6 @@
 package com.funfic.karpilovich.service.impl;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -8,15 +9,15 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.funfic.karpilovich.entity.Role;
 import com.funfic.karpilovich.entity.User;
+import com.funfic.karpilovich.entity.VerificationToken;
 import com.funfic.karpilovich.exception.ServiceException;
-import com.funfic.karpilovich.repository.RoleRepository;
 import com.funfic.karpilovich.repository.UserRepository;
+import com.funfic.karpilovich.repository.VerificationTokenRepository;
 import com.funfic.karpilovich.service.UserService;
 
 @Service
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RoleRepository roleRepository;
+    private VerificationTokenRepository emailVerificationTokenRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findByUsername(username);
         return user.isPresent() ? user.get() : new User();
     }
-    
+
     @Override
     public User addUser(User user) throws ServiceException {
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
@@ -47,6 +48,22 @@ public class UserServiceImpl implements UserService {
         }
         user.setRoles(Collections.singleton(new Role(1, "ROLE_USER")));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setEnabled(false);
         return userRepository.save(user);
+    }
+
+    @Override
+    public void confirmRegistration(String token) throws ServiceException {
+        VerificationToken emailToken = emailVerificationTokenRepository.findByToken(token);
+        if (emailToken == null
+                || emailToken.getTerminationDate().getTime() < Calendar.getInstance().getTimeInMillis()) {
+            throw new ServiceException();
+        }
+        activateUser(emailToken.getUser());
+    }
+
+    public void activateUser(User user) {
+        user.setEnabled(true);
+        userRepository.save(user);
     }
 }

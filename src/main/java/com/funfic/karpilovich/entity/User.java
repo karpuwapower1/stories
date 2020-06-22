@@ -15,6 +15,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -31,8 +32,8 @@ public class User implements UserDetails {
     private String username;
     @NotBlank
     private String password;
-    @NotBlank
     @Transient
+    @Nullable
     private String confirmPassword;
     @Column(name = "first_name")
     @NotBlank
