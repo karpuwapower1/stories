@@ -13,13 +13,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "verification_token")
 @Getter
 @Setter
+@EqualsAndHashCode
+@ToString
 public class VerificationToken {
 
     private static final int TERMINATION_TIME_IN_MINUTES = 60;

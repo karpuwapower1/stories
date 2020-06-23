@@ -48,6 +48,11 @@ body .form-control, body .custom-select, body .btn-light {
 	color: #696969;
 }
 
+custom-content {
+	width: 250px;
+	font-size: 10px;
+}
+
 table {
 	font-family: 'Sen', sans-serif;
 	font-size: 12px;

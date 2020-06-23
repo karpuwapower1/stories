@@ -7,13 +7,17 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name ="tag")
 @Getter
 @Setter
+@EqualsAndHashCode
+@ToString
 public class Tag {
     
     @Id

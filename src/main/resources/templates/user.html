@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Users</title>
+<title >User</title>
+
+
 </head>
 <body>
-	<div th:each="user: ${users}">
-    <p th:text="${user.id}" /> 
-
+<p th:text="${user.firstName}"></p>
+<a href="/book">Book</a>
 <a href="/logout">Logout</a>
-</div>
+
 
 	<script type="text/javascript" th:src="@{/js/jquery-3.3.1.min.js}"></script>
 	<script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>

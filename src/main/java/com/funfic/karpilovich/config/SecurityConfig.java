@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.funfic.karpilovich.controller.Page;
 import com.funfic.karpilovich.service.UserService;
 
 @Configuration
@@ -28,15 +29,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeRequests()
-            .antMatchers("/registration").not().fullyAuthenticated()
-            .antMatchers("/users").hasRole("USER")
+            .antMatchers(Page.REGISTRATION.getPath()).not().fullyAuthenticated()
+            .antMatchers(Page.USERES.getPath(), "/book").hasRole("USER")
             .antMatchers("/", "/registration/activation/*").permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin()
-            .loginPage("/login").permitAll().usernameParameter("email").defaultSuccessUrl("/users")
+            .loginPage("/login").permitAll().usernameParameter("email").defaultSuccessUrl(Page.USERES.getPath())
             .and()
-            .logout().permitAll().logoutSuccessUrl("/login");
+            .logout().permitAll().logoutSuccessUrl(Page.LOGIN.getPath());
     }
     
     @Override

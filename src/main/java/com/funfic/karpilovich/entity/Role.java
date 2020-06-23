@@ -14,13 +14,17 @@ import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "roles")
 @Getter
 @Setter
+@EqualsAndHashCode
+@ToString
 public class Role implements GrantedAuthority {
 
     private static final long serialVersionUID = 1L;

@@ -2,7 +2,6 @@ package com.funfic.karpilovich.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,8 +10,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
-@Table(name = "chapter")
+@Table(name = "chapters")
+@Getter
+@Setter
 public class Chapter {
 
     @Id
@@ -23,8 +27,8 @@ public class Chapter {
     @Column(columnDefinition = "text")
     @NotBlank
     private String text;
-    @ManyToOne(targetEntity = Book.class, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "book_id")
+    @ManyToOne
+    @JoinColumn(name = "book_id")
     private Book book;
 
 }
