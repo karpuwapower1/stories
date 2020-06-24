@@ -1,5 +1,5 @@
-INSERT IGNORE INTO roles (id, name) VALUES (1, 'ROLE_USER');
-INSERT IGNORE INTO roles (id, name) VALUES (2, 'ROLE_ADMIN');
+INSERT IGNORE INTO roles (id, name) VALUES (1, 'ROLE_ADMIN');
+INSERT IGNORE INTO roles (id, name) VALUES (2, 'ROLE_USER');
 
 INSERT IGNORE INTO users (id, username, password, first_name, last_name, enabled) VALUES (1, 'aliakseikarpilovich@gmail.com', '$2a$10$8RsBxWVIk8Wq879Nz9EQyO8BkRw4f/QZ0.3yP/JNd293Bg9wnrXrK', 'Aliaksei', 'Karpilovich', true);
 INSERT IGNORE INTO users (id, username, password, first_name, last_name, enabled) VALUES (2, '1@gmail.com', '$2a$10$8RsBxWVIk8Wq879Nz9EQyO8BkRw4f/QZ0.3yP/JNd293Bg9wnrXrK', 'Aliaksei', 'Karpilovich', true);
@@ -8,7 +8,9 @@ INSERT IGNORE INTO users (id, username, password, first_name, last_name, enabled
 INSERT IGNORE INTO users_roles (user_id, roles_id) VALUES (1, 2); 
 INSERT IGNORE INTO users_roles (user_id, roles_id) VALUES (2, 1);
 
-INSERT IGNORE INTO books (id, name) VALUES (1, 'Think as a mathematic');
+INSERT IGNORE INTO books (id, name, description, user_id) VALUES (1, 'Think as a mathematic', 'Book about mathematic', 2);
+INSERT IGNORE INTO books (id, name, description, user_id) VALUES (2, 'English grammar in use', 'Good book for encrease yout english level', 2);
+INSERT IGNORE INTO books (id, name, description, user_id) VALUES (3, 'Effective java', 'Must have', 2);
 
 INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (1, 'First chapter', 'Повседневная практика показывает, что рамки и место обучения 
 кадров способствует подготовки и реализации модели развития. Идейные соображения высшего порядка, а также дальнейшее развитие различных форм 
@@ -103,3 +105,46 @@ INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (4, 'Fourth chapter
 задач. Таким образом реализация намеченных плановых заданий позволяет выполнять важные задания по разработке систем массового участия. Значимость 
 этих проблем настолько очевидна, что укрепление и развитие структуры влечет за собой процесс внедрения и модернизации форм развития.', 1);
 
+
+INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (5, 'First chapter', 'Lorem ipsum dolor sit amet, 
+consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
+nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, 
+fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. 
+Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
+enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 2);
+
+INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (6, 'Second chapter', 'Lorem ipsum dolor sit amet, 
+consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
+nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, 
+fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. 
+Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
+enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 2);
+
+INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (7, 'Third chapter', 'Lorem ipsum dolor sit amet, 
+consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
+nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, 
+fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. 
+Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
+enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 2);
+
+
+INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (8, 'First chapter', 'Lorem ipsum dolor sit amet, 
+consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
+nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, 
+fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. 
+Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
+enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 3);
+
+INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (9, 'Second chapter', 'Lorem ipsum dolor sit amet, 
+consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
+nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, 
+fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. 
+Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
+enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 3);
+
+INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (10, 'Third chapter', 'Lorem ipsum dolor sit amet, 
+consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
+nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, 
+fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. 
+Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
+enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 3);
