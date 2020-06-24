@@ -57,7 +57,7 @@ public class RegistrationController {
         String address;
         try {
             userService.confirmRegistration(token);
-            address = UrlBasedViewResolver.REDIRECT_URL_PREFIX + Page.USERES.getPath();
+            address = UrlBasedViewResolver.REDIRECT_URL_PREFIX + Page.USER.getPath();
         } catch (ServiceException e) {
             model.addAttribute("error", "Invalid link");
             address = Page.REGISTRATION.getName();

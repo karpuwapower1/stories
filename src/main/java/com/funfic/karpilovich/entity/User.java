@@ -20,17 +20,13 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
 public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
@@ -54,7 +50,7 @@ public class User implements UserDetails {
     private boolean enabled;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
-    @OneToMany
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Book> books;
     
     public User() {

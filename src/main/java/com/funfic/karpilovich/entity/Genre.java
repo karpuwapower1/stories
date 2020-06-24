@@ -13,17 +13,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Entity
 @Table(name = "genre")
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
 public class Genre {
 
     @Id

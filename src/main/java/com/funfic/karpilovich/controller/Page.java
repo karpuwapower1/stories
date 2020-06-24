@@ -2,7 +2,7 @@ package com.funfic.karpilovich.controller;
 
 public enum Page {
 
-    REGISTRATION("registration", "/registration"), LOGIN("login", "/login"), USERES("user", "/user");
+    REGISTRATION("registration", "/registration"), LOGIN("login", "/login"), USER("user", "/user");
 
     private final String name;
     private final String path;

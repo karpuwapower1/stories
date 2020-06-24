@@ -30,12 +30,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
             .authorizeRequests()
             .antMatchers(Page.REGISTRATION.getPath()).not().fullyAuthenticated()
-            .antMatchers(Page.USERES.getPath(), "/book").hasRole("USER")
+//            .antMatchers(Page.USER.getPath(), "/book").hasRole("USER").hasRole("ADMIN")
             .antMatchers("/", "/registration/activation/*").permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin()
-            .loginPage("/login").permitAll().usernameParameter("email").defaultSuccessUrl(Page.USERES.getPath())
+            .loginPage("/login").permitAll().usernameParameter("email").defaultSuccessUrl(Page.USER.getPath())
             .and()
             .logout().permitAll().logoutSuccessUrl(Page.LOGIN.getPath());
     }
