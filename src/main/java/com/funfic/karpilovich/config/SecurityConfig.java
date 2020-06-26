@@ -31,11 +31,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers(Page.REGISTRATION.getPath()).not().fullyAuthenticated()
 //            .antMatchers(Page.USER.getPath(), "/book").hasRole("USER").hasRole("ADMIN")
-            .antMatchers("/", "/registration/activation/*").permitAll()
+            .antMatchers("/registration/activation/*", "/static/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin()
-            .loginPage("/login").permitAll().usernameParameter("email").defaultSuccessUrl(Page.USER.getPath())
+            .loginPage("/login").permitAll().usernameParameter("email").defaultSuccessUrl("/", true)
             .and()
             .logout().permitAll().logoutSuccessUrl(Page.LOGIN.getPath());
     }

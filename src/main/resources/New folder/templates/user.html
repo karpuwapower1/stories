@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang='en'>
 
 <head>
@@ -41,57 +41,15 @@
 
     <div class="container">
        <div id="card">
-       <template v-for="book in user.books">
-                    <div class="card">
-                            <img class="card-img-top" src=" {{ book.url }}" alt="Card image cap">
-                            <div class="card-body">
-                            <h5 class="card-title">{{ book.name }}</h5>
-                            <p class="card-text">{{ book.description }}
-                            </p>
-                            <a class="card-text btn btn-primary" th:href="@{/book/{{ book.id }}">Read</a>
-                        </div>
-
-                    </div>
-                
-           
-            </template>
-         </div>
-         </div>
-        <script>
-  var userApi = Vue.resource('/user{/id}');
+        </div>
         
-        Vue.component('som', {
-        		  props: ['user'],
-        		  data: function() {
-        		    return {
-        		        message: null
-        		    }
-        		  },
-        		 
-        		  
-        		 
-        		});
-        
-        var app = new Vue({
-            el: '#card',
-            template: '<som :user="user" />',
-            data: {
-                users: []
-                
-            },
-            created: function() {
-    		    userApi.get().then(result =>
-    		        result.json().then(result => (this.user = result)
-    		        )
-    		    )
-    		  },
-            
-        });
+        <script src="static/js/card.js">
+   
         </script>
 
        <script src="/static/js/jquery-3.3.1.min.js"></script>
         <script src="/static/js/bootstrap.min.js"></script>
         <script src="/static/js/popper.min.js"></script>
-       
+        </div>
 </body>
-</html>
+</html> -->

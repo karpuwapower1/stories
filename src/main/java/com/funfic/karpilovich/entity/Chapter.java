@@ -10,13 +10,19 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "chapters")
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = "book")
+@ToString(exclude = "book")
 public class Chapter {
 
     @Id
@@ -29,6 +35,7 @@ public class Chapter {
     private String text;
     @ManyToOne
     @JoinColumn(name = "book_id")
+    @JsonIgnore
     private Book book;
 
 }

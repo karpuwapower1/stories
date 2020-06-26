@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import com.funfic.karpilovich.entity.User;
@@ -21,6 +22,7 @@ import com.funfic.karpilovich.service.UserService;
 import com.funfic.karpilovich.service.VerificationTokenService;
 
 @Controller
+@RequestMapping("registration")
 public class RegistrationController {
 
     @Autowired
@@ -32,19 +34,20 @@ public class RegistrationController {
     @Autowired
     private VerificationTokenService verificationTokenService;
 
-    @GetMapping("/registration")
+    @GetMapping
     public String get(Model model) {
-        model.addAttribute("user", new User());
-        return Page.REGISTRATION.getName();
+       model.addAttribute("user", new User());
+       return Page.REGISTRATION.getPath();
     }
 
-    @PostMapping("/registration")
+    @PostMapping
     public String register(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model,
             HttpServletRequest request) {
         if (!checkBindingResult(bindingResult)) {
             try {
                 registerUser(user, request);
-                model.addAttribute("error", "Mail with verification link was sent to your email");  //TODO REDIRECT TO PAGE
+                model.addAttribute("error", "Mail with verification link was sent to your email"); // TODO REDIRECT TO
+                                                                                                   // PAGE
             } catch (ServiceException e) {
                 model.addAttribute("error", e.getMessage());
             }
@@ -52,12 +55,11 @@ public class RegistrationController {
         return Page.REGISTRATION.getName();
     }
 
-    @GetMapping("/registration/activation/{token}")
+    @GetMapping("/activation/{token}")
     public String confirmRegistration(Model model, @PathVariable String token) {
         String address;
         try {
-            userService.confirmRegistration(token);
-            address = UrlBasedViewResolver.REDIRECT_URL_PREFIX + Page.USER.getPath();
+            address = confirmEmail(token);
         } catch (ServiceException e) {
             model.addAttribute("error", "Invalid link");
             address = Page.REGISTRATION.getName();
@@ -66,11 +68,11 @@ public class RegistrationController {
         }
         return address;
     }
-    
+
     private boolean checkBindingResult(BindingResult bindingResult) {
         return bindingResult.hasErrors();
     }
-    
+
     private void registerUser(User user, HttpServletRequest request) throws ServiceException {
         addUser(user);
         sendTokenToUser(user.getUsername(), request.getRequestURL(), verificationTokenService.createToken(user));
@@ -83,5 +85,10 @@ public class RegistrationController {
 
     private void addUser(User user) throws ServiceException {
         userService.addUser(user);
+    }
+    
+    private String confirmEmail(String token) throws ServiceException {
+        userService.confirmRegistration(token);
+        return UrlBasedViewResolver.REDIRECT_URL_PREFIX + Page.USER.getPath();
     }
 }

@@ -13,13 +13,19 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "books")
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = "user")
+@ToString(exclude = "user")
 public class Book {
 
     @Id
@@ -36,6 +42,7 @@ public class Book {
     private Set<Chapter> chapters;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 //    @OneToMany
 //    private Set<Tag> tags;
