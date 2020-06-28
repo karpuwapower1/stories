@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 import Main from 'pages/Main.vue'
+import router from 'router/router'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -12,6 +13,7 @@ Vue.config.productionTip = false
 
 new Vue({
 	el: '#app',
+	router,
 	render: a => a(Main)
 })
 

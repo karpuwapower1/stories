@@ -1,20 +1,8 @@
 <template>
-
-
-
-
-
-
-
-
-
-
-
 <div> 
 <navbar-component :user="user" />
 <book-component :user="user"/>
-</div>
-					
+</div>					
 </template>
 
 <script>
