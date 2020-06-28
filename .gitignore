@@ -78,7 +78,9 @@ nb-configuration.xml
 .DS_Store
 
 ##############################
-## My files
+## Vuejs
 ##############################
-src/main/resources/mail.properties
-logs/
+node_modules/
+dist/
+npm-debug.log
+yarn-error.log
