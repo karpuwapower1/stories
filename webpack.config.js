@@ -1,43 +1,26 @@
-const path = require('path');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+var path = require('path');
 
 module.exports = {
-	mode : 'development',
-	devtool : 'source-map',
-	entry : path.join(__dirname, 'src', 'main', 'resources', 'static', 'js',
-			'main.js'),
-	devServer : {
-		contentBase : './dist',
-		compress : true,
-		port : 8087,
-		allowedHosts : [ 'localhost:8080' ]
-	},
-	module : {
-		rules : [ {
-			test : /\.css$/,
-			loaders : [ "style-loader", "css-loader" ]
-		}, {
-			test : /\.s[ac]ss$/i,
-			use : [ 'style-loader', 'css-loader', 'sass-loader', ],
-		}, {
-			test : /\.js$/,
-			exclude : /(node_modules|bower_components)/,
-			use : {
-				loader : 'babel-loader',
-				options : {
-					presets : [ '@babel/preset-env' ]
-				}
-			}
-		}, {
-			test : /\.vue$/,
-			loader : 'vue-loader'
-		} ]
-	},
-	plugins : [ new VueLoaderPlugin() ],
-	resolve : {
-		modules : [
-				path
-						.join(__dirname, 'src', 'main', 'resources', 'static',
-								'js'), path.join(__dirname, 'node_modules'), ],
-	}
-}
+    entry: './src/main/resources/static/js/App.js',
+    devtool: 'sourcemaps',
+    cache: true,
+    mode: 'development',
+    output: {
+        path: __dirname,
+        filename: './src/main/resources/static/built/bundle.js'
+    },
+    module: {
+        rules: [
+            {
+                test: path.join(__dirname, '.'),
+                exclude: /(node_modules)/,
+                use: [{
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ["@babel/preset-env", "@babel/preset-react"]
+                    }
+                }]
+            }
+        ]
+    }
+};
