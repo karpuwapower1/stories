@@ -1,4 +1,4 @@
-package com.funfic.karpilovich.entity;
+package com.funfic.karpilovich.domain;
 
 import java.util.Collection;
 import java.util.Set;

@@ -2,6 +2,7 @@ package com.funfic.karpilovich.service.impl;
 
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,9 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.funfic.karpilovich.entity.Role;
-import com.funfic.karpilovich.entity.User;
-import com.funfic.karpilovich.entity.VerificationToken;
+import com.funfic.karpilovich.domain.Role;
+import com.funfic.karpilovich.domain.User;
+import com.funfic.karpilovich.domain.VerificationToken;
 import com.funfic.karpilovich.exception.ServiceException;
 import com.funfic.karpilovich.repository.UserRepository;
 import com.funfic.karpilovich.repository.VerificationTokenRepository;
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
@@ -52,6 +53,12 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException();
         }
         activateUser(emailToken.getUser());
+    }
+
+    @Override
+    public User getById(Long id) {
+        Optional<User> optional = userRepository.findById(id);
+        return optional.isPresent() ? optional.get() : new User();
     }
 
     private void activateUser(User user) {

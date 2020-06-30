@@ -1,7 +1,7 @@
 package com.funfic.karpilovich.service;
 
-import com.funfic.karpilovich.entity.User;
-import com.funfic.karpilovich.entity.VerificationToken;
+import com.funfic.karpilovich.domain.User;
+import com.funfic.karpilovich.domain.VerificationToken;
 
 public interface VerificationTokenService {
     

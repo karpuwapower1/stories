@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
-import com.funfic.karpilovich.entity.User;
-import com.funfic.karpilovich.entity.VerificationToken;
+import com.funfic.karpilovich.domain.User;
+import com.funfic.karpilovich.domain.VerificationToken;
 import com.funfic.karpilovich.exception.ServiceException;
 import com.funfic.karpilovich.service.MailSenderService;
 import com.funfic.karpilovich.service.UserService;

@@ -13,21 +13,20 @@ class Main extends React.Component {
 
   componentDidMount() {
     let user = axios.get("/user").then((response) => {
+      console.log(response.data);
       const user = response.data;
       this.setState({ user });
     });
   }
 
   render() {
-	  console.log(this.state.user.books);
 	  const books = this.state.user.books;
-   console.log(books);
     return (
       <div>
         <NavbarComponent user={this.state.user} />
-		books.map(function(book) {
+		{/* books.map(function(book) {
 			<BookComponent book={book} />
-		})
+		}) */}
         
       </div>
     );

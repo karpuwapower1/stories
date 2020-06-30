@@ -5,8 +5,8 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.funfic.karpilovich.entity.User;
-import com.funfic.karpilovich.entity.VerificationToken;
+import com.funfic.karpilovich.domain.User;
+import com.funfic.karpilovich.domain.VerificationToken;
 import com.funfic.karpilovich.repository.VerificationTokenRepository;
 import com.funfic.karpilovich.service.VerificationTokenService;
 

@@ -8,25 +8,29 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.funfic.karpilovich.entity.User;
-import com.funfic.karpilovich.repository.UserRepository;
+import com.funfic.karpilovich.domain.User;
+import com.funfic.karpilovich.dto.UserDto;
+import com.funfic.karpilovich.dto.mapper.UserMapper;
+import com.funfic.karpilovich.service.UserService;
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+    
+    @Autowired
+    private UserMapper userMapper;
 
     @GetMapping
-    public User getUser(@AuthenticationPrincipal User user) {
-        System.out.println(user);
-        return user;
+    public UserDto getUser(@AuthenticationPrincipal User user) {
+        return userMapper.mapToDto(user);
     }
 
     @GetMapping("{id}")
-    public User getUserById(@PathVariable("id") User user) {
-        return user;
+    public UserDto getUserById(@PathVariable("id") User user) {
+        return userMapper.mapToDto(user);
     }
 
     @PutMapping("{id}")

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.funfic.karpilovich.entity.Book;
-import com.funfic.karpilovich.entity.User;
+import com.funfic.karpilovich.domain.Book;
+import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.repository.BookRepository;
 
 @RestController
