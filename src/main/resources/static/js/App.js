@@ -1,60 +1,37 @@
-import axios from 'axios';
-const React = require('react'); 
-const ReactDOM = require('react-dom'); 
+import axios from "axios";
+import React from "react";
+import ReactDOM from "react-dom";
+import BookComponent from "./components/BookComponent.js";
+import NavbarComponent from "./components/NavbarComponent.js";
+import "bootstrap/dist/css/bootstrap.min.css";
 
-class App extends React.Component {
+class Main extends React.Component {
+  constructor(props) {
+    super(props);
+	this.state = { user: {}};
+  }
 
-	constructor(props) {
-		console.log("constructor");
-		super(props);
-		this.state = {users: []};
-	}
+  componentDidMount() {
+    let user = axios.get("/user").then((response) => {
+      const user = response.data;
+      this.setState({ user });
+    });
+  }
 
-	componentDidMount() {
-		axios.get('/user{/id}').done(response => {
-			this.setState({users: response.entity._embedded.users});
-		});
-	}
-
-	render() {
-		return (
-			<UserList users={this.state.users}/>
-		)
-	}
+  render() {
+	  console.log(this.state.user.books);
+	  const books = this.state.user.books;
+   console.log(books);
+    return (
+      <div>
+        <NavbarComponent user={this.state.user} />
+		books.map(function(book) {
+			<BookComponent book={book} />
+		})
+        
+      </div>
+    );
+  }
 }
 
-
-class UserList extends React.Component{
-	render() {
-		const users = this.props.users.map(user =>
-			<User key={user._links.self.href} user={user}/>
-		);
-		return (
-			<table>
-				<tbody>
-					<tr>
-						<th>First Name</th>
-						<th>Last Name</th>
-					</tr>
-					{user}
-				</tbody>
-			</table>
-		)
-	}
-}
-
-class User extends React.Component{
-	render() {
-		return (
-			<tr>
-				<td>{this.props.user.firstName}</td>
-				<td>{this.props.user.lastName}</td>
-			</tr>
-		)
-	}
-}
-
-ReactDOM.render(
-		<App />,
-		document.getElementById('app')
-	)
+ReactDOM.render(<Main />, document.getElementById("app"));

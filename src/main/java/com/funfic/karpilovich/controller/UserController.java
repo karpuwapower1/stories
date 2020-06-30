@@ -20,6 +20,7 @@ public class UserController {
 
     @GetMapping
     public User getUser(@AuthenticationPrincipal User user) {
+        System.out.println(user);
         return user;
     }
 

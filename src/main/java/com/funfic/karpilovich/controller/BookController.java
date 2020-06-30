@@ -1,7 +1,5 @@
 package com.funfic.karpilovich.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,15 +13,15 @@ import com.funfic.karpilovich.entity.User;
 import com.funfic.karpilovich.repository.BookRepository;
 
 @RestController
-@RequestMapping("book")
+@RequestMapping("books")
 public class BookController {
 
     @Autowired
     private BookRepository bookRepository;
 
     @GetMapping
-    public List<Book> getUserBooks(@AuthenticationPrincipal User user) {
-        return bookRepository.findAllByUser(user.getId());
+    public Iterable<Book> getUserBooks(@AuthenticationPrincipal User user) {
+        return bookRepository.findAll();
     }
 
     @GetMapping("{id}")
