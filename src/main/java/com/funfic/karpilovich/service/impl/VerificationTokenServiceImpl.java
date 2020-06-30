@@ -18,8 +18,7 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
 
     @Override
     public VerificationToken createToken(User user) {
-        VerificationToken verificationToken = new VerificationToken(user, createToken());
-        return repository.save(verificationToken);
+        return repository.save(new VerificationToken(user, createToken()));
     }
 
     @Override

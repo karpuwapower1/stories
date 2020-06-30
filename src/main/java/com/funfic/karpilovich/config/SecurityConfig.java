@@ -18,7 +18,7 @@ import com.funfic.karpilovich.service.UserService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -30,12 +30,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
             .authorizeRequests()
             .antMatchers(Page.REGISTRATION.getPath()).not().fullyAuthenticated()
-//            .antMatchers(Page.USER.getPath(), "/book").hasRole("USER").hasRole("ADMIN")
-            .antMatchers("/registration/activation/*").permitAll()
+            .antMatchers("/registration/activation/*", "/static/**", "/", "/user").permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin()
-            .loginPage("/login").permitAll().usernameParameter("email").defaultSuccessUrl(Page.USER.getPath())
+            .loginPage("/login").permitAll().usernameParameter("email").defaultSuccessUrl("/", true)
             .and()
             .logout().permitAll().logoutSuccessUrl(Page.LOGIN.getPath());
     }

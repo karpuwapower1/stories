@@ -13,13 +13,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "books")
 @Getter
 @Setter
+@EqualsAndHashCode(exclude = "user")
+@ToString(exclude = "user")
 public class Book {
 
     @Id

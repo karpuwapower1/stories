@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang='en'>
+
+<head>
+<meta charset="utf-8">
+<link href="../static/css/bootstrap.min.css"
+	th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+<link href="../static/css/custom.css" th:href="@{/css/custom.css}"
+	rel="stylesheet" />
+<link href="../static/css/bootstrap.min.css"
+	th:href="@{/css/book_page.css}" rel="stylesheet" />
+<title th:text="${book.name}"></title>
+</head>
+
+<body>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-4 col-lg-2 navbar-container bg-light">
+				<nav class="navbar navbar-expand-md navbar-light">
+					<a class="navbar-brand" href="#">Contents</a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse"
+						data-target="#navbar" aria-controls="navbarSupportedContent"
+						aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="contents"></div>
+				</nav>
+			</div>
+
+			<div class="col-md-8 col-lg-10 content-container">
+				<article th:each="chapter: ${book.chapters}">
+					<h2 th:text="${chapter.name}"></h2>
+					<p class="text-justify" th:text="${chapter.text}"></p>
+				</article>
+			</div>
+
+		</div>
+	</div>
+	<script type="text/javascript" src="../static/js/jquery-3.5.1.js"
+		th:src="@{/js/jquery-3.5.1.js}"></script>
+	<script type="text/javascript"
+		src="../static/js/book-contents-maker.js"
+		th:src="@{/js/book-contents-maker.js}"></script>
+	<script type="text/javascript" src="../static/js/jquery-3.3.1.min.js"
+		th:src="@{/js/jquery-3.3.1.min.js}"></script>
+	<script type="text/javascript" src="../static/js/bootstrap.min.js"
+		th:src="@{/js/bootstrap.min.js}"></script>
+	<script type="text/javascript" src="../static/js/popper.min.js"
+		th:src="@{/js/popper.min.js}"></script>
+</body>
