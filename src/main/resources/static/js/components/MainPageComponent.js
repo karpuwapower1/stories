@@ -1,13 +1,11 @@
-
-import React from "react";
 import axios from "axios";
+import React from "react";
 import ReactDOM from "react-dom";
-import NavbarComponent from "./components/NavbarComponent.js";
-import BookComponent from "./components/BookComponent.js";
+import BookComponent from "./BookComponent.js";
+import NavbarComponent from "./NavbarComponent.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-class Main extends React.Component {
-
+class MainPageComponent extends React.Component {
   constructor(props) {
     console.log("constructor");
     super(props);
@@ -35,4 +33,4 @@ class Main extends React.Component {
   }
 }
 
-ReactDOM.render(<Main />, document.getElementById("app"));
+export default MainPageComponent;

@@ -1,6 +1,6 @@
 import { Navbar, Nav, Form, FormControl, Button } from "react-bootstrap";
 import React from "react";
-import UserAuthorizationComponent from './UserAuthorizationComponent.js';
+import UserAuthorizationComponent from "./UserAuthorizationComponent.js";
 
 class NavbarComponent extends React.Component {
   render() {

@@ -1,11 +1,9 @@
-import axios from "axios";
 import React from "react";
-import ReactDOM from "react-dom";
 import { Card, Row, Col, Button } from "react-bootstrap";
 
 class BookComponent extends React.Component {
   render() {
-   let book = this.props.book;
+    let book = this.props.book;
     return (
       <Card>
         <Card.Body>
@@ -15,9 +13,7 @@ class BookComponent extends React.Component {
             </Col>
             <Col xs={9}>
               <Card.Title>{book.name}</Card.Title>
-              <Card.Text>
-                {book.description}
-              </Card.Text>
+              <Card.Text>{book.description}</Card.Text>
             </Col>
           </Row>
           <div>

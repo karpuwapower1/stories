@@ -27,10 +27,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.csrf().disable().anonymous().and()
             .authorizeRequests()
+            .antMatchers("/", "/registration/activation/*", "/static/**").permitAll()
             .antMatchers(Page.REGISTRATION.getPath()).not().fullyAuthenticated()
-            .antMatchers("/registration/activation/*", "/static/**", "/", "/user").permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin()

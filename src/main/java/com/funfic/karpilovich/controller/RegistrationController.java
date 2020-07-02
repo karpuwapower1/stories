@@ -1,7 +1,6 @@
 package com.funfic.karpilovich.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,7 +40,7 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String register(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model,
+    public String register(@ModelAttribute("user") User user, BindingResult bindingResult, Model model,
             HttpServletRequest request) {
         if (!checkBindingResult(bindingResult)) {
             try {

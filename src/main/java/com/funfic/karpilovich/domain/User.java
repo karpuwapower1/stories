@@ -14,7 +14,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,25 +33,23 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
+    @NotEmpty
     @Email
     private String username;
-    @NotBlank
+    @NotEmpty
     private String password;
     @Transient
     @Nullable
     private String confirmPassword;
     @Column(name = "first_name")
-    @NotBlank
+    @NotEmpty
     private String firstName;
     @Column(name = "last_name")
-    @NotBlank
+    @NotEmpty
     private String lastName;
     private boolean enabled;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private Set<Book> books;
     
     public User() {
         setEnabled(false);

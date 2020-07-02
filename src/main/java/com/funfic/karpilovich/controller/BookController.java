@@ -31,6 +31,7 @@ public class BookController {
     
     @PostMapping
     public Book addBook() {
+        
         return new Book();
     }
 }

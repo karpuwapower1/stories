@@ -5,11 +5,13 @@ import javax.annotation.PostConstruct;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.funfic.karpilovich.domain.Book;
 import com.funfic.karpilovich.dto.BookDto;
 import com.funfic.karpilovich.service.UserService;
 
+@Component
 public class BookMapper {
 
     private final ModelMapper modelMapper;
