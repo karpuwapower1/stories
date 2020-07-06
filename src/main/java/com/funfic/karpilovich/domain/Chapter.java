@@ -33,6 +33,8 @@ public class Chapter {
     @Column(columnDefinition = "text")
     @NotEmpty
     private String text;
+    @Column(columnDefinition = "SMALLINT")
+    private short number;
     @ManyToOne
     @JoinColumn(name = "book_id")
     @JsonIgnore

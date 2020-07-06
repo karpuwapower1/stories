@@ -11,28 +11,40 @@ class Main extends React.Component {
   constructor(props) {
     console.log("constructor");
     super(props);
-    this.state = { user: {} };
+    this.state = { user: {},
+                    popularBooks: [],
+                    updatedBooks: [] };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     console.log("moutn");
-    let user = axios.get("/user").then((response) => {
-      const user = response.data;
-      this.setState({ user });
-    });
+    const response = await fetch('/');
+    const body = response.json();
+    const user = body.user;
+    const updatedBooks = response.updatedBooks;
+    const popularBooks = response.popularBooks;
+    this.state({user: boby.user, popularBooks: popularBooks, updatedBooks: updatedBooks});
+    // let user = axios.get("/user").then((response) => {
+    //   const user = response.data;
+    //   this.setState({ user });
+    // });
   }
 
   render() {
-    const books = this.state.user.books ? this.state.user.books : [];
+    // const books = this.state.user.books ? this.state.user.books : [];
+    console.log(this.state.user);
+    console.log(this.state.popularBooks);
+    console.log(this.state.updatedBooks);
     return (
       <div>
-        <NavbarComponent user={this.state.user} />
+        hello
+        {/* <NavbarComponent user={this.state.user} />
         {books.map((book) => {
           return <BookComponent book={book} key={book.id} />;
-        })}
+        })} */}
       </div>
     );
   }
 }
 
-ReactDOM.render(<Main />, document.getElementById("app"));
+export default Main;

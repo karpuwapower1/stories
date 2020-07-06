@@ -12,11 +12,11 @@ INSERT IGNORE INTO books (id, name, description, user_id) VALUES (1, 'Think as a
 INSERT IGNORE INTO books (id, name, description, user_id) VALUES (2, 'English grammar in use', 'Good book for encrease yout english level', 2);
 INSERT IGNORE INTO books (id, name, description, user_id) VALUES (3, 'Effective java', 'Must have', 2);
 
-INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (1, 'First chapter', 'Повседневная практика показывает, что рамки и место обучения 
+INSERT IGNORE INTO chapters (id, name, text, number, book_id) VALUES (1, 'First chapter', 'Повседневная практика показывает, что рамки и место обучения 
 кадров способствует подготовки и реализации модели развития. Идейные соображения высшего порядка, а также дальнейшее развитие различных форм 
 деятельности в значительной степени обуславливает создание дальнейших направлений развития. Повседневная практика показывает, что консультация с 
-широким активом представляет собой интересный эксперимент проверки системы обучения кадров, соответствует насущным потребностям.', 1);
-INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (2, 'Second chapter', 'Разнообразный и богатый опыт постоянный количественный 
+широким активом представляет собой интересный эксперимент проверки системы обучения кадров, соответствует насущным потребностям.', 1, 1);
+INSERT IGNORE INTO chapters (id, name, text, number, book_id) VALUES (2, 'Second chapter', 'Разнообразный и богатый опыт постоянный количественный 
 рост и сфера нашей активности требуют от нас анализа соответствующий условий активизации. Разнообразный и богатый опыт постоянное 
 информационно-пропагандистское обеспечение нашей деятельности способствует подготовки и реализации направлений прогрессивного развития. 
 Товарищи! постоянное информационно-пропагандистское обеспечение нашей деятельности представляет собой интересный эксперимент проверки систем 
@@ -28,8 +28,8 @@ INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (2, 'Second chapter
 Товарищи! постоянное информационно-пропагандистское обеспечение нашей деятельности представляет собой интересный эксперимент проверки систем 
 массового участия. Товарищи! сложившаяся структура организации позволяет оценить значение позиций, занимаемых участниками в отношении поставленных 
 задач. Таким образом реализация намеченных плановых заданий позволяет выполнять важные задания по разработке систем массового участия. Значимость 
-этих проблем настолько очевидна, что укрепление и развитие структуры влечет за собой процесс внедрения и модернизации форм развития.', 1);
-INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (3, 'Third chapter', 'Разнообразный и богатый опыт постоянный количественный 
+этих проблем настолько очевидна, что укрепление и развитие структуры влечет за собой процесс внедрения и модернизации форм развития.', 2, 1);
+INSERT IGNORE INTO chapters (id, name, text, number, book_id) VALUES (3, 'Third chapter', 'Разнообразный и богатый опыт постоянный количественный 
 рост и сфера нашей активности требуют от нас анализа соответствующий условий активизации. Разнообразный и богатый опыт постоянное 
 информационно-пропагандистское обеспечение нашей деятельности способствует подготовки и реализации направлений прогрессивного развития. 
 Товарищи! постоянное информационно-пропагандистское обеспечение нашей деятельности представляет собой интересный эксперимент проверки систем 
@@ -53,9 +53,9 @@ INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (3, 'Third chapter'
 Товарищи! постоянное информационно-пропагандистское обеспечение нашей деятельности представляет собой интересный эксперимент проверки систем 
 массового участия. Товарищи! сложившаяся структура организации позволяет оценить значение позиций, занимаемых участниками в отношении поставленных 
 задач. Таким образом реализация намеченных плановых заданий позволяет выполнять важные задания по разработке систем массового участия. Значимость 
-этих проблем настолько очевидна, что укрепление и развитие структуры влечет за собой процесс внедрения и модернизации форм развития.', 1);
+этих проблем настолько очевидна, что укрепление и развитие структуры влечет за собой процесс внедрения и модернизации форм развития.', 3, 1);
 
-INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (4, 'Fourth chapter', 'Разнообразный и богатый опыт постоянный количественный 
+INSERT IGNORE INTO chapters (id, name, text, number, book_id) VALUES (4, 'Fourth chapter', 'Разнообразный и богатый опыт постоянный количественный 
 рост и сфера нашей активности требуют от нас анализа соответствующий условий активизации. Разнообразный и богатый опыт постоянное 
 информационно-пропагандистское обеспечение нашей деятельности способствует подготовки и реализации направлений прогрессивного развития. 
 Товарищи! постоянное информационно-пропагандистское обеспечение нашей деятельности представляет собой интересный эксперимент проверки систем 
@@ -103,48 +103,48 @@ INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (4, 'Fourth chapter
 Товарищи! постоянное информационно-пропагандистское обеспечение нашей деятельности представляет собой интересный эксперимент проверки систем 
 массового участия. Товарищи! сложившаяся структура организации позволяет оценить значение позиций, занимаемых участниками в отношении поставленных 
 задач. Таким образом реализация намеченных плановых заданий позволяет выполнять важные задания по разработке систем массового участия. Значимость 
-этих проблем настолько очевидна, что укрепление и развитие структуры влечет за собой процесс внедрения и модернизации форм развития.', 1);
+этих проблем настолько очевидна, что укрепление и развитие структуры влечет за собой процесс внедрения и модернизации форм развития.', 4, 1);
 
 
-INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (5, 'First chapter', 'Lorem ipsum dolor sit amet, 
+INSERT IGNORE INTO chapters (id, name, text, number, book_id) VALUES (5, 'First chapter', 'Lorem ipsum dolor sit amet, 
 consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
 nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, 
 fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. 
 Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
-enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 2);
+enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 1, 2);
 
-INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (6, 'Second chapter', 'Lorem ipsum dolor sit amet, 
+INSERT IGNORE INTO chapters (id, name, text, number, book_id) VALUES (6, 'Second chapter', 'Lorem ipsum dolor sit amet, 
 consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
 nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, 
 fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. 
 Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
-enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 2);
+enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 2, 2);
 
-INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (7, 'Third chapter', 'Lorem ipsum dolor sit amet, 
+INSERT IGNORE INTO chapters (id, name, text, number, book_id) VALUES (7, 'Third chapter', 'Lorem ipsum dolor sit amet, 
 consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
 nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, 
 fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. 
 Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
-enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 2);
+enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 3, 2);
 
 
-INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (8, 'First chapter', 'Lorem ipsum dolor sit amet, 
+INSERT IGNORE INTO chapters (id, name, text, number, book_id) VALUES (8, 'First chapter', 'Lorem ipsum dolor sit amet, 
 consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
 nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, 
 fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. 
 Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
-enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 3);
+enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 1, 3);
 
-INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (9, 'Second chapter', 'Lorem ipsum dolor sit amet, 
+INSERT IGNORE INTO chapters (id, name, text, number, book_id) VALUES (9, 'Second chapter', 'Lorem ipsum dolor sit amet, 
 consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
 nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, 
 fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. 
 Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
-enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 3);
+enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 3, 3);
 
-INSERT IGNORE INTO chapters (id, name, text, book_id) VALUES (10, 'Third chapter', 'Lorem ipsum dolor sit amet, 
+INSERT IGNORE INTO chapters (id, name, text, number, book_id) VALUES (10, 'Third chapter', 'Lorem ipsum dolor sit amet, 
 consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
 nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, 
 fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. 
 Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
-enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 3);
+enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 2, 3);

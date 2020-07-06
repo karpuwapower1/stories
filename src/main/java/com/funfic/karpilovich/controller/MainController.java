@@ -24,7 +24,7 @@ import com.funfic.karpilovich.service.BookService;
 import com.funfic.karpilovich.service.UserService;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/main")
 public class MainController {
     
     @Autowired
