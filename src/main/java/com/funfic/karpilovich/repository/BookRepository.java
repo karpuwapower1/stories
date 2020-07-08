@@ -17,5 +17,5 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     
     Page<BookWithoutContextProjection> findBy(Pageable pageable);
     
-    Optional<Book> findByIdOrderByChaptersNumberAsc(Long id);
+    Optional<Book> findByIdOrderByChaptersNumber(Long id);
 }

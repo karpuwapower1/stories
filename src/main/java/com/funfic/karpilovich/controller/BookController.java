@@ -26,7 +26,7 @@ public class BookController {
 
     @GetMapping("{id}")
     public Book getBookById(@PathVariable("id") Long id) {
-        return bookRepository.findByIdOrderByChaptersNumberAsc(id).orElse(new Book());
+        return bookRepository.findByIdOrderByChaptersNumber(id).orElse(new Book());
     }
     
     @PostMapping

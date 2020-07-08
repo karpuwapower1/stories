@@ -49,7 +49,7 @@ export default class BookPage extends React.Component {
         <Container fluid>
       <Row>
         <Col xs={1}>
-          <LeftMenuComponent />
+          <LeftMenuComponent chapters = {chapters}/>
         </Col>
         <Col>
           {chapters.map((chapter) => {

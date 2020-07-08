@@ -2,7 +2,7 @@ import React from "react";
 import BookCarousel from "../components/main_page/BookCarousel.js";
 import LoadingComponent from "../components/general/LoadingComponent.js";
 import NavbarComponent from "../components/navbar/NavbarComponent.js";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Container } from "react-bootstrap";
 import axios from "axios";
 
 export default class Main extends React.Component {
@@ -50,16 +50,13 @@ export default class Main extends React.Component {
     return (
       <div>
         <NavbarComponent user={this.state.user} />
-        <Row>
-          <Col>
+        <Container>
             <h3 style={{ textAlign: "center" }}>Popular Books </h3>
             <BookCarousel books={popularBooks} />
-          </Col>
-          <Col>
+        
             <h3 style={{ textAlign: "center" }}>Last update </h3>
             <BookCarousel books={popularBooks} />
-          </Col>
-        </Row>
+            </Container>
       </div>
     );
   }

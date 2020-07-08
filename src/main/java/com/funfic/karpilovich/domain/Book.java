@@ -1,6 +1,6 @@
 package com.funfic.karpilovich.domain;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -39,7 +39,7 @@ public class Book {
 //    @JoinTable(name = "books_genres", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
 //    private List<Genre> genres;
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER)
-    private Set<Chapter> chapters;
+    private List<Chapter> chapters;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore

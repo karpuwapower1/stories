@@ -8,6 +8,7 @@ export default class ChapterComponent extends React.Component {
       <div>
         <h1 style={{ textAlign: "center" }}> {name} {this.props.chapter.number}</h1>
         <p style={{ textAlign: "justify" }}> {text} </p>
+        <a name={this.props.chapter.id}></a>
       </div>
     );
   }

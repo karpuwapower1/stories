@@ -7,21 +7,24 @@ export default class BookCarouselItem extends React.Component {
     const book = this.props.book;
     const link = this.props.book.links
       ? this.props.book.links.find((link) => (link.rel = "self"))
-      : {};
+      : {}
     return (
      
       <div style={{ textAlign: "center" }}>
-         <BookCarouselLink link={link.href} text = {book.name}/>
+        <a href={link.href} style={{color: "#000"}}>
         <Figure>
+        <Figure.Caption>
+         <BookCarouselLink link={link.href} text = {book.name}/>
+         </Figure.Caption>
           <Figure.Image
-            width={300}
-            height={300}
+            width={170}
+            height={50}
             alt="book.picture"
-            src="https://picsum.photos/500/500"
+            src="https://picsum.photos/500/600"
             rounded
           />
         </Figure>
-        <BookCarouselLink link={link.href} text = {book.description} />
+        </a>
       </div>
     );
   }

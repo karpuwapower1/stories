@@ -2,8 +2,7 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import BookCaruselItem from "./BookCarouselItem.js";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+
 
 export default class BookCarousel extends React.Component {
 
@@ -16,14 +15,46 @@ export default class BookCarousel extends React.Component {
       autoplaySpeed: 3000,
       pauseOnHover: true,
       adaptiveHeight: true,
-      fade: true,
-      slidesToShow: 1,
-      slidesToScroll: 1,
+      responsive: [
+        {
+          breakpoint: 1400,
+          settings: {
+            slidesToShow: 5,
+            slidesToScroll: 1,
+          }
+        },
+        {
+          breakpoint: 1000,
+          settings: {
+            slidesToShow: 4,
+            slidesToScroll: 1,
+          }
+        },
+        {
+          breakpoint: 800,
+          settings: {
+            slidesToShow: 3,
+            slidesToScroll: 1,
+          }
+        },
+        {
+          breakpoint: 600,
+          settings: {
+            slidesToShow: 2,
+            slidesToScroll: 1,
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        }
+      ]
     };
     const books = this.props.books ? this.props.books : [];
     return (
-      <div>
-        <Container>
           <Slider {...settings}>
             {books.map((book, index) => {
               return (
@@ -33,8 +64,6 @@ export default class BookCarousel extends React.Component {
               );
             })}
           </Slider>
-        </Container>
-      </div>
     );
   }
 }
