@@ -2,6 +2,7 @@ package com.funfic.karpilovich.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,7 +37,7 @@ public class Chapter {
     @Column(columnDefinition = "SMALLINT")
     private short number;
     @ManyToOne
-    @JoinColumn(name = "book_id")
+    @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "FK_books_chapters"))
     @JsonIgnore
     private Book book;
 

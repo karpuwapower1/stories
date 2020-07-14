@@ -2,13 +2,15 @@ package com.funfic.karpilovich.service;
 
 import org.springframework.data.domain.Page;
 
-import com.funfic.karpilovich.domain.Book;
+import com.funfic.karpilovich.exception.ServiceException;
 import com.funfic.karpilovich.projection.BookWithoutContextProjection;
 
 public interface BookService {
-    
+
     Page<BookWithoutContextProjection> findMostPopular();
+
+    Page<BookWithoutContextProjection> findLastUpdated();
     
-    Page<Book> findLastUpdated();
+    void delete(Long id) throws ServiceException;
 
 }

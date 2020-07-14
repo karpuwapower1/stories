@@ -4,6 +4,7 @@ import LoadingComponent from "../components/general/LoadingComponent.js";
 import ChapterComponent from "../components/book_page/ChapterComponent.js";
 import { Container, Col, Row } from "react-bootstrap";
 import axios from "axios";
+import '../css/toggle.css';
 
 export default class BookPage extends React.Component {
   constructor(props) {
@@ -20,9 +21,10 @@ export default class BookPage extends React.Component {
   initialState = { book: [] };
 
   componentDidMount = () => {
+    console.log(this.props.location.state.links.self.href);
     axios({
       method: "GET",
-      url: `/books/${this.props.match.params.id}`,
+      url: this.props.location.state.links.self.href,
       config: { headers: { "Content-Type": "application/json" } },
     })
       .then((response) => response.data)
@@ -46,12 +48,12 @@ export default class BookPage extends React.Component {
     }
     const chapters = this.state.chapters ? this.state.chapters : [];
     return (
-        <Container fluid>
+        <Container >
       <Row>
-        <Col xs={1}>
+        <Col xs={3} sm={3} md={3} lg = {1}>
           <LeftMenuComponent chapters = {chapters}/>
         </Col>
-        <Col>
+        <Col md={9} xs={9} sm={9} lg={11}>
           {chapters.map((chapter) => {
             return (
               <ChapterComponent chapter = {chapter} key = {chapter.id} />

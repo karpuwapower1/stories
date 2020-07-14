@@ -1,7 +1,5 @@
 import React from "react";
-import SideNav, {
-  Toggle,
-  Nav,
+import  {
   NavItem,
   NavIcon,
   NavText,
@@ -18,7 +16,7 @@ export default class LeftSideMenuItemComponent extends React.Component {
             <i className="fa fa-fw fa-home" />
           </NavIcon>
           <NavText>
-            <a href={"#" + chapter.id} style= {{color: "#000"}}>
+            <a href={"#" + chapter.number} style= {{color: "#000"}}>
               <p>{chapter.number} {chapter.name}</p>
             </a>
           </NavText>

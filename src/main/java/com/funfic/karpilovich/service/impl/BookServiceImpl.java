@@ -6,7 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import com.funfic.karpilovich.domain.Book;
+import com.funfic.karpilovich.exception.ServiceException;
 import com.funfic.karpilovich.projection.BookWithoutContextProjection;
 import com.funfic.karpilovich.repository.BookRepository;
 import com.funfic.karpilovich.service.BookService;
@@ -19,15 +19,24 @@ public class BookServiceImpl implements BookService {
 
     private static final int DEFAULT_PAGE_SIZE = 10;
     private static final int MIN_PAGE_SIZE = 0;
+    private static final String ID_COLUMN_NAME = "id";
+    private static final String UPDATE_DATE_COLUMN_NAME= "updated";
 
     @Override
     public Page<BookWithoutContextProjection> findMostPopular() {
-        return bookRepository.findBy(PageRequest.of(MIN_PAGE_SIZE, DEFAULT_PAGE_SIZE, Sort.by("id").descending()));
+        return bookRepository.findBy(PageRequest.of(MIN_PAGE_SIZE, DEFAULT_PAGE_SIZE, Sort.by(ID_COLUMN_NAME).descending()));
     }
 
     @Override
-    public Page<Book> findLastUpdated() {
-        // TODO Auto-generated method stub
-        return null;
+    public Page<BookWithoutContextProjection> findLastUpdated() {
+        return bookRepository.findBy(PageRequest.of(MIN_PAGE_SIZE, DEFAULT_PAGE_SIZE, Sort.by(UPDATE_DATE_COLUMN_NAME).descending()));
+    }
+    
+    @Override
+    public void delete(Long id) throws ServiceException {
+        if (id == null) {
+            throw new ServiceException();
+        }
+        bookRepository.deleteById(id);
     }
 }

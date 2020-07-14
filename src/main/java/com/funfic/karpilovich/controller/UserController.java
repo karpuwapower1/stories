@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,9 +29,8 @@ public class UserController {
     private UserMapper userMapper;
 
     @GetMapping
-    public EntityModel<UserDto> getUser(@AuthenticationPrincipal User user) {
-        return EntityModel.of(userMapper.mapToDto(user),
-                linkTo(methodOn(UserController.class).getUserById(user.getId())).withSelfRel());
+    public ResponseEntity<?> getUser(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(createEntityModel(user));
     }
 
     @GetMapping("{id}")
@@ -40,13 +38,21 @@ public class UserController {
         User user = userService.getById(id);
        return createResponseEntity(user);
     }
-
-    @PutMapping("{id}")
-    public String updateInfo(@PathVariable("id") User userFromDb) {
-        // todo
-        return Page.USER.getName();
+    
+    private EntityModel<UserDto> createEntityModel(User user) {
+        return user == null ?  createEntityModelForUnauthenticatedUser() : createEntityModelForAuthenticatedUser(user);
     }
     
+    private EntityModel<UserDto> createEntityModelForUnauthenticatedUser() {
+       EntityModel<UserDto> model = EntityModel.of(new UserDto()).add(linkTo(methodOn(RegistrationController.class).login(null)).withRel("login"));
+       return model.add(linkTo(methodOn(RegistrationController.class).register(null, null)).withRel("registration"));
+    }
+    
+    private EntityModel<UserDto> createEntityModelForAuthenticatedUser(User user) {
+        return EntityModel.of(userMapper.mapToDto(user), linkTo(methodOn(RegistrationController.class).logout(null)).withRel("logout"), 
+                linkTo(methodOn(UserController.class).getUserById(user.getId())).withSelfRel());
+    }
+
     private ResponseEntity<?> createResponseEntity(User user) {
         if (user == null || user.getId() == null) {
             return ResponseEntity.badRequest().body(Problem.create().withTitle("Invalid link"));

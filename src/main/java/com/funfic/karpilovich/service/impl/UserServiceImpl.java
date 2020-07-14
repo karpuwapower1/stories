@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import com.funfic.karpilovich.domain.Role;
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.domain.VerificationToken;
+import com.funfic.karpilovich.dto.RegistrationRequest;
+import com.funfic.karpilovich.dto.mapper.UserMapper;
 import com.funfic.karpilovich.exception.ServiceException;
 import com.funfic.karpilovich.repository.UserRepository;
 import com.funfic.karpilovich.repository.VerificationTokenRepository;
@@ -32,18 +34,13 @@ public class UserServiceImpl implements UserService {
     private VerificationTokenRepository emailVerificationTokenRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private UserMapper userMapper;
+    
 
     @Override
     public UserDetails loadUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
-    }
-
-    @Override
-    public User addUser(User user) throws ServiceException {
-        checkUserPresents(user);
-        checkUserPassword(user.getPassword(), user.getConfirmPassword());
-        setDefaultParametersToUser(user);
-        return userRepository.save(user);
     }
 
     @Override
@@ -60,19 +57,32 @@ public class UserServiceImpl implements UserService {
         Optional<User> optional = userRepository.findById(id);
         return optional.isPresent() ? optional.get() : new User();
     }
-
-    private void activateUser(User user) {
-        user.setEnabled(true);
-        userRepository.save(user);
+    
+    @Override
+    public User save(RegistrationRequest registrationRequest) throws ServiceException {
+        validateRegistrationRequest(registrationRequest);
+        User user = prepareToSaving(registrationRequest);
+        return userRepository.save(user);
+    }
+    
+    private void validateRegistrationRequest(RegistrationRequest registrationRequest) throws ServiceException {
+        checkPasswords(registrationRequest.getPassword(), registrationRequest.getConfirmPassword());
+        checkUserPresents(registrationRequest.getUsername());
     }
 
-    private void checkUserPresents(User user) throws ServiceException {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+    private void checkUserPresents(String username) throws ServiceException {
+        if (userRepository.findByUsername(username).isPresent()) {
             throw new ServiceException("User already present");
         }
     }
+    
+    private User prepareToSaving(RegistrationRequest registrationRequest) {
+        User user = userMapper.mapFromRegistrationRequestToUser(registrationRequest);
+        setDefaultParametersToUser(user);
+        return user; 
+    }
 
-    private void checkUserPassword(String password, String confirmation) throws ServiceException {
+    private void checkPasswords(String password, String confirmation) throws ServiceException {
         if (!password.equals(confirmation)) {
             throw new ServiceException("Passwords do not match");
         }
@@ -86,5 +96,10 @@ public class UserServiceImpl implements UserService {
 
     private boolean isTokenActive(VerificationToken token) {
         return token.getTerminationDate().getTime() > Calendar.getInstance().getTimeInMillis();
+    }
+    
+    private void activateUser(User user) {
+        user.setEnabled(true);
+        userRepository.save(user);
     }
 }
