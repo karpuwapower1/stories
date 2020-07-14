@@ -1,19 +1,11 @@
 package com.funfic.karpilovich.dto.mapper;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-
-import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import com.funfic.karpilovich.domain.Book;
 import com.funfic.karpilovich.domain.User;
-import com.funfic.karpilovich.dto.BookDto;
+import com.funfic.karpilovich.dto.RegistrationRequest;
 import com.funfic.karpilovich.dto.UserDto;
 import com.funfic.karpilovich.repository.BookRepository;
 
@@ -43,6 +35,10 @@ public class UserMapper {
 
     public UserDto mapToDto(User user) {
         return user == null ? new UserDto() : modelMapper.map(user, UserDto.class);
+    }
+    
+    public User mapFromRegistrationRequestToUser(RegistrationRequest registrationRequest) {
+        return registrationRequest == null ? new User() : modelMapper.map(registrationRequest, User.class);
     }
 
 //    private Converter<User, UserDto> toUserDto() {

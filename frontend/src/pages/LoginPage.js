@@ -1,6 +1,6 @@
 import React from "react";
-import { Form, Button, Container, Col, Row, Alert } from "react-bootstrap";
-import { Redirect, useHistory } from "react-router-dom";
+import { Form, Button, Container, Col, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import InvalidMessage from "../components/general/InvalidMessage.js";
 import axios from "axios";
 
@@ -12,12 +12,13 @@ export default class LoginPage extends React.Component {
     this.setParameter = this.setParameter.bind(this);
   }
 
-  initialState = { password: "", email: "", success: false, message: "" };
+  initialState = { password: "", email: "", message: "" };
 
-  submit = (event) => {
+  submit(event) {
+    event.preventDefault();
     axios({
       method: "post",
-      url: "/login",
+      url: this.props.location.state.links.login.href,
       params: {
         username: this.state.email,
         password: this.state.password,
@@ -25,13 +26,13 @@ export default class LoginPage extends React.Component {
       config: { headers: { "Content-Type": "application/json" } },
     })
       .then((response) => {
-        this.setState({ success: true });
+        localStorage.setItem("authorization", response.data.jwttoken);
+        window.location.href = "/main";
       })
       .catch((error) => {
         this.setState({ message: "Invalid email or password" });
       });
-    event.preventDefault();
-  };
+  }
 
   setParameter = (event) => {
     this.setState({
@@ -40,9 +41,7 @@ export default class LoginPage extends React.Component {
   };
 
   render() {
-    return this.state.success ? (
-      <Redirect to="/main" />
-    ) : (
+    return (
       <Container>
         <Row className="justify-content-md-center">
           <Col md md="5" style={{ textAlign: "center" }}>
@@ -87,14 +86,21 @@ export default class LoginPage extends React.Component {
                   controlId="formBasicLink"
                   style={{ textAlign: "right" }}
                 >
-                  <Button to="/register" variant="link" type="reset">
+                  <Link
+                    to={{
+                      pathname: "/auth/registration",
+                      state: {
+                        links: this.props.location.state.links,
+                      },
+                    }}
+                  >
                     Register
-                  </Button>
+                  </Link>
                 </Form.Group>
               </Form.Row>
 
-              <Button variant="primary" type="submit">
-                Submit
+              <Button variant="primary" type="submit" onClick={this.submit}>
+                Login
               </Button>
             </Form>
           </Col>

@@ -1,6 +1,6 @@
 import React from "react";
-import { Form, Button, Container, Col, Row, Alert } from "react-bootstrap";
-import { Redirect, useHistory } from "react-router-dom";
+import { Form, Button, Container, Col, Row } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import InvalidMessage from "../components/general/InvalidMessage.js";
 import axios from "axios";
 
@@ -14,7 +14,7 @@ export default class RegistrationPage extends React.Component {
 
   initialState = {
     firstName: "",
-    LastName: "",
+    lastName: "",
     password: "",
     confirmPassword: "",
     email: "",
@@ -22,27 +22,35 @@ export default class RegistrationPage extends React.Component {
     message: "",
   };
 
-  submit = (event) => {
+  submit(event) {
+    event.preventDefault();
     axios({
       method: "post",
-      url: "/register",
+      url: this.props.location.state.links.registration.href,
       params: {
         username: this.state.email,
         password: this.state.password,
         confirmPassword: this.state.confirmPassword,
         firstName: this.state.firstName,
-        lastName: this.state.lastName
+        lastName: this.state.lastName,
       },
       config: { headers: { "Content-Type": "application/json" } },
     })
       .then((response) => {
-        this.setState({ success: true });
+        this.setState({
+          message: `A confirmation link was send to ${this.state.email}. Follow the sent link to complite registration`,
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        });
       })
       .catch((error) => {
         this.setState({ message: "Invalid email or password" });
       });
     event.preventDefault();
-  };
+  }
 
   setParameter = (event) => {
     this.setState({
@@ -51,20 +59,26 @@ export default class RegistrationPage extends React.Component {
   };
 
   render() {
-    return this.state.success ? (
-      <Redirect to="/main" />
-    ) : (
+    const {
+      email,
+      password,
+      confirmPassword,
+      firstName,
+      lastName,
+      message,
+    } = this.state;
+    return (
       <Container>
         <Row className="justify-content-md-center">
           <Col md md="5" style={{ textAlign: "center" }}>
-            <h1>Login</h1>
+            <h1>Registration</h1>
             <Form onSubmit={this.submit} id="loginForm">
               <Form.Group controlId="formBasicEmail">
                 <Form.Control
                   type="email"
-                  placeholder="Enter email"
+                  placeholder="Email"
                   name="email"
-                  value={this.state.email}
+                  value={email}
                   onChange={this.setParameter}
                   required
                 />
@@ -76,37 +90,63 @@ export default class RegistrationPage extends React.Component {
                   type="password"
                   placeholder="Password"
                   name="password"
-                  value={this.state.password}
+                  value={password}
                   onChange={this.setParameter}
                   required
                 />
               </Form.Group>
 
-              <InvalidMessage message={this.state.message} />
+              <Form.Group controlId="formBasicPassword">
+                <Form.Control
+                  type="password"
+                  placeholder="Confirm password"
+                  name="confirmPassword"
+                  value={confirmPassword}
+                  onChange={this.setParameter}
+                  required
+                />
+              </Form.Group>
 
-              <Form.Row>
-                <Form.Group
-                  as={Col}
-                  controlId="formBasicCheckbox"
-                  style={{ textAlign: "left" }}
-                >
-                  <Form.Check type="checkbox" label="Remember me" />
-                </Form.Group>
+              <Form.Group controlId="formBasicPassword">
+                <Form.Control
+                  type="text"
+                  placeholder="First name"
+                  name="firstName"
+                  value={firstName}
+                  onChange={this.setParameter}
+                  required
+                />
+              </Form.Group>
 
-                <Form.Group
-                  as={Col}
-                  controlId="formBasicLink"
-                  style={{ textAlign: "right" }}
-                >
-                  <Button to="/register" variant="link" type="reset">
-                    Register
-                  </Button>
-                </Form.Group>
-              </Form.Row>
+              <Form.Group controlId="formBasicPassword">
+                <Form.Control
+                  type="text"
+                  placeholder="Last name"
+                  name="lastName"
+                  value={lastName}
+                  onChange={this.setParameter}
+                  required
+                />
+              </Form.Group>
 
-              <Button variant="primary" type="submit">
+              <InvalidMessage message={message} />
+
+              <Button variant="primary" type="submit" onClick={this.submit}>
                 Submit
               </Button>
+              <div>
+                <p>Already have an account?</p>
+                <Link
+                  to={{
+                    pathname: "/auth/login",
+                    state: {
+                      links: this.props.location.state.links,
+                    },
+                  }}
+                >
+                  Login
+                </Link>
+              </div>
             </Form>
           </Col>
         </Row>

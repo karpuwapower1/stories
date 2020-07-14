@@ -1,41 +1,49 @@
 package com.funfic.karpilovich.config;
 
-import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.funfic.karpilovich.config.jwt.JwtAuthentificationEntryPoint;
+import com.funfic.karpilovich.config.jwt.JwtAuthentificationFilter;
 import com.funfic.karpilovich.config.util.LoginFailureHandler;
-import com.funfic.karpilovich.controller.Page;
 import com.funfic.karpilovich.service.UserService;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private JwtAuthentificationEntryPoint entryPoint;
+    
+    @Override
+    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+        authenticationManagerBuilder
+                .userDetailsService(userService)
+                .passwordEncoder(getBCryptPasswordEncoder());
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors()
-        .and().csrf().disable().anonymous()
-        .and().authorizeRequests()
-                .antMatchers("/main", "/registration/activation/*", "/static/**").permitAll()
-                .antMatchers(Page.REGISTRATION.getPath()).not().fullyAuthenticated()
-                .anyRequest().authenticated()
-                .and().formLogin().loginProcessingUrl("/login").permitAll().failureHandler(getLoginFailureHandler())
-                .and().logout().permitAll();
+        http.cors().and().csrf().disable()
+        .exceptionHandling().authenticationEntryPoint(entryPoint)
+        .and()
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.addFilterBefore(getJwtAuthentificationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
@@ -53,15 +61,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public LoginFailureHandler getLoginFailureHandler() {
         return new LoginFailureHandler();
     }
-
+    
     @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+    public AuthenticationManager getAuthenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+    
+    @Bean
+    public JwtAuthentificationFilter getJwtAuthentificationFilter() {
+        return new JwtAuthentificationFilter();
     }
 
     @Autowired
