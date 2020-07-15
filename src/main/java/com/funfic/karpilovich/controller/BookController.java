@@ -6,13 +6,18 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,10 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.funfic.karpilovich.domain.Book;
 import com.funfic.karpilovich.domain.User;
+import com.funfic.karpilovich.dto.BookDto;
+import com.funfic.karpilovich.dto.BookRequest;
 import com.funfic.karpilovich.exception.ServiceException;
 import com.funfic.karpilovich.projection.BookWithoutContextProjection;
 import com.funfic.karpilovich.repository.BookRepository;
 import com.funfic.karpilovich.service.BookService;
+import com.funfic.karpilovich.service.UserService;
 
 @RestController
 @RequestMapping("books")
@@ -32,9 +40,10 @@ public class BookController {
 
     @Autowired
     private BookRepository bookRepository;
-    
     @Autowired
     private BookService bookService;
+    @Autowired
+    private UserService userService;
 
     @GetMapping
     public Iterable<Book> getUserBooks(@AuthenticationPrincipal User user) {
@@ -45,22 +54,22 @@ public class BookController {
     public Book getBookById(@PathVariable("id") Long id) {
         return bookRepository.findByIdOrderByChaptersNumber(id).orElse(new Book());
     }
-    
+
     @GetMapping("/popular")
     public ResponseEntity<?> findMostPupular() {
         Page<BookWithoutContextProjection> books = bookService.findMostPopular();
         CollectionModel<EntityModel<BookWithoutContextProjection>> entities = createBookEntityModel(books);
         return ResponseEntity.ok(entities);
     }
-    
-    @GetMapping("/updated") 
+
+    @GetMapping("/updated")
     public ResponseEntity<?> findLastUpdated() {
         Page<BookWithoutContextProjection> books = bookService.findLastUpdated();
         CollectionModel<EntityModel<BookWithoutContextProjection>> entities = createBookEntityModel(books);
         return ResponseEntity.ok(entities);
     }
-    
-    @PostMapping("/delete/{id}")
+
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteBook(@PathVariable("id") Long id) {
         try {
             bookService.delete(id);
@@ -69,22 +78,38 @@ public class BookController {
             return ResponseEntity.badRequest().build();
         }
     }
-    
-    private CollectionModel<EntityModel<BookWithoutContextProjection>> createBookEntityModel(Page<BookWithoutContextProjection> books) {
-        List<EntityModel<BookWithoutContextProjection>> listOfBooks 
-        = books.stream().map(this::createBookWithotContextEntityModel).collect(Collectors.toList());
+
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> addBook(@Valid BookRequest bookRequest) {
+        try {
+            BookDto bookDto = saveBook(bookRequest);
+            return ResponseEntity.ok(bookDto);
+        } catch (ServiceException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    private BookDto saveBook(BookRequest bookRequest) throws ServiceException {
+        User user = findCurrentUser();
+        return bookService.addBook(bookRequest, user);
+    }
+
+    private CollectionModel<EntityModel<BookWithoutContextProjection>> createBookEntityModel(
+            Page<BookWithoutContextProjection> books) {
+        List<EntityModel<BookWithoutContextProjection>> listOfBooks = books.stream()
+                .map(this::createBookWithotContextEntityModel).collect(Collectors.toList());
         return CollectionModel.of(listOfBooks);
     }
-    
-    private EntityModel<BookWithoutContextProjection> createBookWithotContextEntityModel(BookWithoutContextProjection book) {
-        return EntityModel.of(book, linkTo(methodOn(BookController.class).getBookById(book.getId())).withSelfRel(), 
-                linkTo(methodOn(BookController.class).deleteBook(book.getId())).withRel("delete"), 
+
+    private EntityModel<BookWithoutContextProjection> createBookWithotContextEntityModel(
+            BookWithoutContextProjection book) {
+        return EntityModel.of(book, linkTo(methodOn(BookController.class).getBookById(book.getId())).withSelfRel(),
+                linkTo(methodOn(BookController.class).deleteBook(book.getId())).withRel("delete"),
                 linkTo(methodOn(UserController.class).getUserById(book.getUserId())).withRel("author"));
     }
-    
-    @PostMapping
-    public Book addBook() {
-        
-        return new Book();
+
+    private User findCurrentUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return (User) userService.loadUserByUsername(username);
     }
 }

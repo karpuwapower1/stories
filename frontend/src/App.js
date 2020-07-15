@@ -6,6 +6,7 @@ import RegistrationPage from "./pages/RegistrationPage.js";
 import BooksTablePage from "./pages/BooksTablePage.js";
 import NavbarComponent from "./components/navbar/NavbarComponent.js"
 import BookPage from "./pages/BookPage.js";
+import AddBookPage from "./pages/AddBookPage.js";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import interseptors from "./Interceptors.js"
@@ -22,6 +23,7 @@ export default class App extends React.Component {
           <Route path="/auth/registration" component={RegistrationPage} />
           <Route path="/books/popular" component={BooksTablePage} />
           <Route path="/books/:id" component={BookPage} />
+          <Route path="/add/book" component={AddBookPage} />
           {/* <Route path="user/:id/books" */}
           {/* <Route path="/books/{id}" component={BookPage}/>
           <Route path="/books" component={BooksPage}/> */}

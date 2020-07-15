@@ -13,14 +13,10 @@ import com.funfic.karpilovich.repository.BookRepository;
 public class UserMapper {
 
     private final ModelMapper modelMapper;
-    private final BookMapper bookMapper;
-    @Autowired
-    private BookRepository bookRepository;
 
     @Autowired
-    public UserMapper(ModelMapper modelMapper, BookMapper bookMapper) {
+    public UserMapper(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
-        this.bookMapper = bookMapper;
     }
 
 //    /*

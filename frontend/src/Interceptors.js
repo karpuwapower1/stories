@@ -6,6 +6,7 @@ axios.interceptors.request.use(
   function (config) {
     if (jwtToken) {
       config.headers.Authorization = `Bearer ${jwtToken}`;
+      config.headers["Content-Type"]="application/json";
     }
     return config;
   },

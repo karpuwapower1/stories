@@ -35,7 +35,7 @@ export default class BookTablePage extends React.Component {
     console.log(href);
     console.log(id)
     try {
-     axios.post(href)
+     axios.delete(href)
      .then(this.setState ({
        books : this.state.books.filter((book) => book.id != id),
        show : true
