@@ -2,15 +2,18 @@ package com.funfic.karpilovich.domain;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -22,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -31,6 +35,7 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode(exclude = "user")
 @ToString(exclude = "user")
+@NoArgsConstructor
 public class Book {
 
     @Id
@@ -46,16 +51,15 @@ public class Book {
     @DateTimeFormat
     @Column(name = "updated")
     private Calendar updateDate;
-//    @ManyToMany(fetch = FetchType.EAGER)
-//    @JoinTable(name = "books_genres", joinColumns = @JoinColumn(name = "book_id"), inverseJoinColumns = @JoinColumn(name = "genre_id"))
-//    private List<Genre> genres;
+    @ManyToMany(mappedBy = "books", cascade = CascadeType.ALL)
+    private Set<Genre> genres;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Chapter> chapters;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_users_books"))
     @JsonIgnore
     private User user;
-//    @OneToMany
-//    private Set<Tag> tags;
+    @ManyToMany(mappedBy="books", cascade = CascadeType.ALL)
+    private Set<Tag> tags;
 
 }

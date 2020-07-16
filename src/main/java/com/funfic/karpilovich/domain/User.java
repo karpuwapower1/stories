@@ -1,14 +1,19 @@
 package com.funfic.karpilovich.domain;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -49,7 +54,14 @@ public class User implements UserDetails {
     private String lastName;
     private boolean enabled;
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles", 
+                joinColumns = @JoinColumn(name="roles_id"), 
+                inverseJoinColumns = @JoinColumn(name="users_id"), 
+                foreignKey = @ForeignKey(name="FK_roles_users"), 
+                inverseForeignKey = @ForeignKey(name = "FK_users_roles"))
     private Set<Role> roles;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Book> books;
     
     public User() {
         setEnabled(false);

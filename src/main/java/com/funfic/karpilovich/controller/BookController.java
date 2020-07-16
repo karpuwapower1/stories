@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.funfic.karpilovich.domain.Book;
 import com.funfic.karpilovich.domain.User;
-import com.funfic.karpilovich.dto.BookDto;
 import com.funfic.karpilovich.dto.BookRequest;
 import com.funfic.karpilovich.exception.ServiceException;
 import com.funfic.karpilovich.projection.BookWithoutContextProjection;
@@ -58,6 +58,7 @@ public class BookController {
     @GetMapping("/popular")
     public ResponseEntity<?> findMostPupular() {
         Page<BookWithoutContextProjection> books = bookService.findMostPopular();
+        System.out.println(books.toString());
         CollectionModel<EntityModel<BookWithoutContextProjection>> entities = createBookEntityModel(books);
         return ResponseEntity.ok(entities);
     }
@@ -65,6 +66,27 @@ public class BookController {
     @GetMapping("/updated")
     public ResponseEntity<?> findLastUpdated() {
         Page<BookWithoutContextProjection> books = bookService.findLastUpdated();
+        CollectionModel<EntityModel<BookWithoutContextProjection>> entities = createBookEntityModel(books);
+        return ResponseEntity.ok(entities);
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<?> findBookByAuthor(@PathVariable("id") Long id) {
+        Page<BookWithoutContextProjection> books = bookService.findByUserId(id);
+        CollectionModel<EntityModel<BookWithoutContextProjection>> entities = createBookEntityModel(books);
+        return ResponseEntity.ok(entities);
+    }
+
+    @GetMapping("/genres")
+    public ResponseEntity<?> findBooksByGenre(@RequestParam(name = "name") String name) {
+        Page<BookWithoutContextProjection> books = bookService.findByGenre(name);
+        CollectionModel<EntityModel<BookWithoutContextProjection>> entities = createBookEntityModel(books);
+        return ResponseEntity.ok(entities);
+    }
+
+    @GetMapping("/tags")
+    public ResponseEntity<?> findBooksByTag(@RequestParam(name = "name") String name) {
+        Page<BookWithoutContextProjection> books = bookService.findByTag(name);
         CollectionModel<EntityModel<BookWithoutContextProjection>> entities = createBookEntityModel(books);
         return ResponseEntity.ok(entities);
     }
@@ -82,16 +104,16 @@ public class BookController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addBook(@Valid BookRequest bookRequest) {
         try {
-            BookDto bookDto = saveBook(bookRequest);
-            return ResponseEntity.ok(bookDto);
+            saveBook(bookRequest);
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (ServiceException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 
-    private BookDto saveBook(BookRequest bookRequest) throws ServiceException {
+    private void saveBook(BookRequest bookRequest) throws ServiceException {
         User user = findCurrentUser();
-        return bookService.addBook(bookRequest, user);
+        bookService.addBook(bookRequest, user);
     }
 
     private CollectionModel<EntityModel<BookWithoutContextProjection>> createBookEntityModel(
@@ -105,7 +127,9 @@ public class BookController {
             BookWithoutContextProjection book) {
         return EntityModel.of(book, linkTo(methodOn(BookController.class).getBookById(book.getId())).withSelfRel(),
                 linkTo(methodOn(BookController.class).deleteBook(book.getId())).withRel("delete"),
-                linkTo(methodOn(UserController.class).getUserById(book.getUserId())).withRel("author"));
+                linkTo((methodOn(BookController.class)).findBookByAuthor(book.getUser().getId())).withRel("author"),
+                linkTo(methodOn(BookController.class).findBooksByGenre(null)).withRel("genre"),
+                linkTo((methodOn(BookController.class)).findBooksByTag(null)).withRel("tag"));
     }
 
     private User findCurrentUser() {

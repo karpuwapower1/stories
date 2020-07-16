@@ -22,5 +22,4 @@ public class UserDto {
     private String lastName;
     @NonNull
     private Set<Role> roles;
-    private Set<BookDto> books;
 }

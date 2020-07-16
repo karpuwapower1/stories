@@ -16,6 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -25,6 +26,7 @@ import lombok.ToString;
 @Setter
 @EqualsAndHashCode(exclude = "users")
 @ToString(exclude = "users")
+@NoArgsConstructor
 public class Role implements GrantedAuthority {
 
     private static final long serialVersionUID = 1L;
@@ -38,9 +40,6 @@ public class Role implements GrantedAuthority {
     private Set<User> users;
     @Column(unique = true)
     private String name;
-
-    public Role() {
-    }
 
     public Role(Integer id, String name) {
         this.id = id;

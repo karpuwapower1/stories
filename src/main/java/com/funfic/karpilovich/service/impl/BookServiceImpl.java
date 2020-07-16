@@ -14,7 +14,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.funfic.karpilovich.domain.Book;
 import com.funfic.karpilovich.domain.Chapter;
 import com.funfic.karpilovich.domain.User;
-import com.funfic.karpilovich.dto.BookDto;
 import com.funfic.karpilovich.dto.BookRequest;
 import com.funfic.karpilovich.dto.mapper.BookMapper;
 import com.funfic.karpilovich.dto.mapper.ChapterMapper;
@@ -52,6 +51,21 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findBy(
                 PageRequest.of(MIN_PAGE_SIZE, DEFAULT_PAGE_SIZE, Sort.by(UPDATE_DATE_COLUMN_NAME).descending()));
     }
+    
+    @Override
+    public Page<BookWithoutContextProjection> findByUserId(Long id) {
+        return bookRepository.findByUserId(PageRequest.of(MIN_PAGE_SIZE, DEFAULT_PAGE_SIZE), id);
+    }
+
+    @Override
+    public Page<BookWithoutContextProjection> findByGenre(String name) {
+        return bookRepository.findByGenresName(PageRequest.of(MIN_PAGE_SIZE, DEFAULT_PAGE_SIZE), name);
+    }
+
+    @Override
+    public Page<BookWithoutContextProjection> findByTag(String name) {
+        return bookRepository.findByTagsName(PageRequest.of(MIN_PAGE_SIZE, DEFAULT_PAGE_SIZE), name);
+    }
 
     @Override
     public void delete(Long id) throws ServiceException {
@@ -62,12 +76,11 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public BookDto addBook(BookRequest bookRequest, User user) throws ServiceException {
+    public void addBook(BookRequest bookRequest, User user) throws ServiceException {
         try {
             Book book = saveBook(bookRequest, user);
             List<Chapter> chapters = saveChapters(bookRequest, book);
             book.setChapters(chapters);
-            return bookMapper.mapToDto(book);
         } catch (JsonProcessingException e) {
             throw new ServiceException(e);
         }
@@ -107,6 +120,6 @@ public class BookServiceImpl implements BookService {
 
     private void setChapterParameters(Chapter chapter, int number, Book book) {
         chapter.setBook(book);
-        chapter.setNumber((short) (number + 1));
+        chapter.setNumber((short) number);
     }
 }

@@ -22,7 +22,7 @@ export default class BookTablePage extends React.Component {
       .then((data) => {
         console.log(data);
         this.setState({
-          books: data._embedded.tupleBackedMaps,
+          books: data._embedded.books,
           links: [],
           isLoaded: true,
         });
@@ -59,6 +59,7 @@ export default class BookTablePage extends React.Component {
             <tr>
               <th>Book</th>
               <th>Author</th>
+              <th>Genre</th>
               <th>Description</th>
               <th>Action</th>
             </tr>
@@ -69,8 +70,18 @@ export default class BookTablePage extends React.Component {
                 <tr key={book.id}>
                   <td><Link style = {this.styles} to={{pathname: `/books/${book.id}`, state:{links: book._links}}}>
                   {book.name} </Link></td>
-                  <td> <Link style = {this.styles} to={{pathname: `/users/${book.userId}`, state:{links: book._links}}}>{book.userFirstName} {book.userLastName}</Link>
+                  <td> <Link style = {this.styles} to={{pathname: `/users/${book.user.id}`, state:{links: book._links}}}>{book.user.firstName} {book.user.lastName}</Link>
                     </td>
+                  <td>
+                    {book.genres.map(genre => {
+                    return (
+                  <Link style = {this.styles} to={{pathname: `/books/genres/${genre.name}`, state:{links: book._links}}}>
+                  {genre.name}{" "} 
+                  </Link>
+                    );
+                  })}
+                    </td>
+                 
                   <td style= {{textAlign : "justify"}}>{book.description}</td>
                   <td><Button size="sm" onClick={this.deleteBook.bind(this, book._links.delete.href, book.id)}> Delete</Button></td>
                 </tr>

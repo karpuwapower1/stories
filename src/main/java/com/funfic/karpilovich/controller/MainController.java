@@ -1,4 +1,4 @@
-package com.funfic.karpilovich.controller;
+    package com.funfic.karpilovich.controller;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.dto.UserDto;
 import com.funfic.karpilovich.dto.mapper.UserMapper;
-import com.funfic.karpilovich.service.BookService;
 import com.funfic.karpilovich.service.UserService;
 
 @RestController

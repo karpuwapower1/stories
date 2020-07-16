@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.dto.RegistrationRequest;
 import com.funfic.karpilovich.dto.UserDto;
-import com.funfic.karpilovich.repository.BookRepository;
 
 @Component
 public class UserMapper {

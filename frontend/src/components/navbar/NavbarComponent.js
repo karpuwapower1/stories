@@ -20,6 +20,7 @@ export default class NavbarComponent extends React.Component {
    })
    .then( response => (response.data))
    .then (data => {
+   console.log(data);
     this.setState({
      user: data,
      links: data._links,
