@@ -18,9 +18,10 @@ import com.funfic.karpilovich.dto.BookRequest;
 import com.funfic.karpilovich.dto.mapper.BookMapper;
 import com.funfic.karpilovich.dto.mapper.ChapterMapper;
 import com.funfic.karpilovich.exception.ServiceException;
-import com.funfic.karpilovich.projection.BookWithoutContextProjection;
 import com.funfic.karpilovich.repository.BookRepository;
 import com.funfic.karpilovich.repository.ChapterRepository;
+import com.funfic.karpilovich.repository.projection.BookProjection;
+import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
 import com.funfic.karpilovich.service.BookService;
 
 @Service
@@ -40,6 +41,11 @@ public class BookServiceImpl implements BookService {
     private static final String ID_COLUMN_NAME = "id";
     private static final String UPDATE_DATE_COLUMN_NAME = "updated";
 
+    @Override
+    public BookProjection findById(Long id) throws ServiceException {
+        return bookRepository.findByIdOrderByChaptersNumber(id).orElseThrow(() -> new ServiceException());
+    }
+    
     @Override
     public Page<BookWithoutContextProjection> findMostPopular() {
         return bookRepository

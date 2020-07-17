@@ -1,4 +1,4 @@
-package com.funfic.karpilovich.config.jwt;
+package com.funfic.karpilovich.filter;
 
 import java.io.IOException;
 
@@ -15,6 +15,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.service.UserService;
+import com.funfic.karpilovich.service.util.JwtTokenUtil;
 
 public class JwtAuthentificationFilter extends OncePerRequestFilter {
 

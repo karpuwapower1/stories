@@ -1,7 +1,5 @@
 package com.funfic.karpilovich.config;
 
-import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,14 +13,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import com.funfic.karpilovich.config.jwt.JwtAuthentificationEntryPoint;
-import com.funfic.karpilovich.config.jwt.JwtAuthentificationFilter;
-import com.funfic.karpilovich.config.util.LoginFailureHandler;
+import com.funfic.karpilovich.filter.JwtAuthentificationFilter;
 import com.funfic.karpilovich.service.UserService;
+import com.funfic.karpilovich.service.util.JwtAuthentificationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
@@ -53,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/css/**", "/js/**", "/fonts/**");
+        web.ignoring().antMatchers("/css/**", "/js/**", "/fonts/**", "/main");
 
     }
 
@@ -61,32 +55,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder getBCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Bean
-    public LoginFailureHandler getLoginFailureHandler() {
-        return new LoginFailureHandler();
-    }
-    
-    @Bean
-    public AuthenticationManager getAuthenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
     
     @Bean
     public JwtAuthentificationFilter getJwtAuthentificationFilter() {
         return new JwtAuthentificationFilter();
     }
     
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("*"));
-//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
-
+    @Bean
+    public AuthenticationManager getAuthenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
     @Autowired
     protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {

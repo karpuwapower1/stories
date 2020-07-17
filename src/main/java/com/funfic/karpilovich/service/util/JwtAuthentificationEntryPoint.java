@@ -1,4 +1,4 @@
-package com.funfic.karpilovich.config.jwt;
+package com.funfic.karpilovich.service.util;
 
 import java.io.IOException;
 

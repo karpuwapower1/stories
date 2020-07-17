@@ -8,7 +8,7 @@ import com.funfic.karpilovich.exception.ServiceException;
 
 public interface UserService extends UserDetailsService {
 
-    void confirmRegistration(String token) throws ServiceException;
+    User confirmRegistration(String token) throws ServiceException;
 
     User getById(Long id);
 

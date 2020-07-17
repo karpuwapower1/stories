@@ -1,4 +1,4 @@
-package com.funfic.karpilovich.projection;
+package com.funfic.karpilovich.repository.projection;
 
 import org.springframework.data.rest.core.config.Projection;
 
@@ -10,5 +10,4 @@ public interface UserProjection {
     Long getId();
     String getFirstName();
     String getLastName();
-
 }

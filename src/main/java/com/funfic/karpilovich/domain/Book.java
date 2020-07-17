@@ -61,5 +61,7 @@ public class Book {
     private User user;
     @ManyToMany(mappedBy="books", cascade = CascadeType.ALL)
     private Set<Tag> tags;
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
 }

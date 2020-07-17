@@ -18,17 +18,11 @@ export default class BookPage extends React.Component {
     };
   }
 
-  initialState = { book: [] };
-
   componentDidMount = () => {
-    console.log(this.props.location.state.links.self.href);
-    axios({
-      method: "GET",
-      url: this.props.location.state.links.self.href,
-      config: { headers: { "Content-Type": "application/json" } },
-    })
+    axios.get(this.props.location.state.links)
       .then((response) => response.data)
       .then((data) => {
+        console.log(data);
         this.setState({
           id: data.id,
           bookName: data.name,
@@ -53,7 +47,7 @@ export default class BookPage extends React.Component {
         <Col xs={3} sm={3} md={3} lg = {1}>
           <LeftMenuComponent chapters = {chapters}/>
         </Col>
-        <Col md={9} xs={9} sm={9} lg={11}>
+        <Col md={7} xs={9} sm={9} lg={11}>
           {chapters.map((chapter) => {
             return (
               <ChapterComponent chapter = {chapter} key = {chapter.id} />

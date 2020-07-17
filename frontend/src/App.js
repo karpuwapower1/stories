@@ -22,6 +22,9 @@ export default class App extends React.Component {
           <Route path="/auth/login" component={LoginPage} />
           <Route path="/auth/registration" component={RegistrationPage} />
           <Route path="/books/popular" component={BooksTablePage} />
+          <Route path="/books/genres/:name" component={BooksTablePage} />
+          <Route path="/books/users/:id" component={BooksTablePage} />
+          <Route path="/books/tags/:name" component={BooksTablePage} />
           <Route path="/books/:id" component={BookPage} />
           <Route path="/add/book" component={AddBookPage} />
           {/* <Route path="user/:id/books" */}

@@ -5,7 +5,8 @@ import org.springframework.data.domain.Page;
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.dto.BookRequest;
 import com.funfic.karpilovich.exception.ServiceException;
-import com.funfic.karpilovich.projection.BookWithoutContextProjection;
+import com.funfic.karpilovich.repository.projection.BookProjection;
+import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
 
 public interface BookService {
 
@@ -22,4 +23,6 @@ public interface BookService {
     Page<BookWithoutContextProjection> findByGenre(String name);
 
     Page<BookWithoutContextProjection> findByTag(String name);
+    
+    BookProjection findById(Long id) throws ServiceException;
 }

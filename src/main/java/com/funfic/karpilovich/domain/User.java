@@ -17,11 +17,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -43,9 +41,6 @@ public class User implements UserDetails {
     private String username;
     @NotEmpty
     private String password;
-    @Transient
-    @Nullable
-    private String confirmPassword;
     @Column(name = "first_name")
     @NotEmpty
     private String firstName;
@@ -55,13 +50,15 @@ public class User implements UserDetails {
     private boolean enabled;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", 
-                joinColumns = @JoinColumn(name="roles_id"), 
-                inverseJoinColumns = @JoinColumn(name="users_id"), 
+                joinColumns = @JoinColumn(name="users_id"), 
+                inverseJoinColumns = @JoinColumn(name="roles_id"), 
                 foreignKey = @ForeignKey(name="FK_roles_users"), 
                 inverseForeignKey = @ForeignKey(name = "FK_users_roles"))
     private Set<Role> roles;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Book> books;
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+    private List<Comment> coments; 
     
     public User() {
         setEnabled(false);

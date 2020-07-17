@@ -4,9 +4,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,8 +23,6 @@ import com.funfic.karpilovich.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @PersistenceContext
-    private EntityManager entityManager;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -37,19 +32,20 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
     
-
     @Override
     public UserDetails loadUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
     }
 
     @Override
-    public void confirmRegistration(String token) throws ServiceException {
+    public User confirmRegistration(String token) throws ServiceException {
         VerificationToken emailToken = emailVerificationTokenRepository.findByToken(token);
         if (emailToken == null || !isTokenActive(emailToken)) {
             throw new ServiceException();
         }
-        activateUser(emailToken.getUser());
+        User user = emailToken.getUser();
+        activateUser(user);
+        return user;
     }
 
     @Override

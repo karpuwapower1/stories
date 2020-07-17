@@ -13,17 +13,6 @@ INSERT IGNORE INTO genres (id, name) VALUES (2, "Наука");
 INSERT IGNORE INTO genres (id, name) VALUES (3, "Фентези"); 
 INSERT IGNORE INTO genres (id, name) VALUES (4, "Бред");
 
-
-INSERT IGNORE INTO books_genres (book_id, genre_id) VALUES (1, 1); 
-INSERT IGNORE INTO books_genres (book_id, genre_id) VALUES (1, 2); 
-INSERT IGNORE INTO books_genres (book_id, genre_id) VALUES (1, 3); 
-INSERT IGNORE INTO books_genres (book_id, genre_id) VALUES (1, 4); 
-
-INSERT IGNORE INTO books_genres (book_id, genre_id) VALUES (2, 1); 
-INSERT IGNORE INTO books_genres (book_id, genre_id) VALUES (3, 2); 
-INSERT IGNORE INTO books_genres (book_id, genre_id) VALUES (2, 3); 
-INSERT IGNORE INTO books_genres (book_id, genre_id) VALUES (3, 4); 
-
 INSERT IGNORE INTO books (id, name, description, user_id) VALUES (1, 'Think as a mathematic', 'Book about mathematic', 2);
 INSERT IGNORE INTO books (id, name, description, user_id) VALUES (2, 'English grammar in use', 'Good book for encrease yout english level', 2);
 INSERT IGNORE INTO books (id, name, description, user_id) VALUES (3, 'Effective java', 'Must have', 2);
@@ -68,3 +57,13 @@ INSERT IGNORE INTO chapters (id, name, text, number, book_id) VALUES (10, 'Third
 consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, 
 nt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
 enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 2, 3);
+--
+--INSERT IGNORE INTO books_genres (books_id, genres_id) VALUES (1, 1); 
+--INSERT IGNORE INTO books_genres (books_id, genres_id) VALUES (1, 2); 
+--INSERT IGNORE INTO books_genres (books_id, genres_id) VALUES (1, 3); 
+--INSERT IGNORE INTO books_genres (books_id, genres_id) VALUES (1, 4); 
+--
+--INSERT IGNORE INTO books_genres (books_id, genres_id) VALUES (2, 1); 
+--INSERT IGNORE INTO books_genres (books_id, genres_id) VALUES (3, 2); 
+--INSERT IGNORE INTO books_genres (books_id, genres_id) VALUES (2, 3); 
+--INSERT IGNORE INTO books_genres (books_id, genres_id) VALUES (3, 4); 

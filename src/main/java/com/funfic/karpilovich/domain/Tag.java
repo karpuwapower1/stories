@@ -3,6 +3,7 @@ package com.funfic.karpilovich.domain;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.springframework.lang.NonNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,13 +35,15 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NonNull
+    @Column(unique = true)
     private String name;
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "books_tags", 
-                joinColumns = @JoinColumn(name = "tag_id"), 
-                inverseJoinColumns = @JoinColumn(name = "book_id"), 
+                joinColumns = @JoinColumn(name = "tags_id"), 
+                inverseJoinColumns = @JoinColumn(name = "books_id"), 
                 foreignKey = @ForeignKey(name = "FK_tags_books"),
                 inverseForeignKey = @ForeignKey(name = "FK_books_tags"))
+    @JsonIgnore
     private List<Book> books;
 
 }
