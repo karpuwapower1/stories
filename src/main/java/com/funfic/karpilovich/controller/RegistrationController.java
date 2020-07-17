@@ -53,11 +53,11 @@ public class RegistrationController {
         } catch (ServiceException e) {
             return ResponseEntity.badRequest().body(registrationRequest);
         }
-
     }
 
     @GetMapping("/activation/{token}")
     public void confirmRegistration(@PathVariable String token) {
+        System.out.println("confirm");
         try {
             confirmEmail(token);
         } catch (ServiceException e) {

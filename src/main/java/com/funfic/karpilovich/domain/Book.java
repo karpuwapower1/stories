@@ -51,7 +51,7 @@ public class Book {
     @DateTimeFormat
     @Column(name = "updated")
     private Calendar updateDate;
-    @ManyToMany(mappedBy = "books", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "books")
     private Set<Genre> genres;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Chapter> chapters;
@@ -59,7 +59,7 @@ public class Book {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_users_books"))
     @JsonIgnore
     private User user;
-    @ManyToMany(mappedBy="books", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy="books")
     private Set<Tag> tags;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Comment> comments;

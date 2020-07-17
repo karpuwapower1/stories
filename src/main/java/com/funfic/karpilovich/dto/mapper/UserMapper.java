@@ -18,12 +18,6 @@ public class UserMapper {
         this.modelMapper = modelMapper;
     }
 
-//    /*
-//     * @PostConstruct public void setup() { modelMapper.createTypeMap(User.class,
-//     * UserDto.class).addMappings(m -> m.skip(UserDto::setBooks))
-//     * .setPostConverter(toUserDto()); }
-//     */
-
     public User mapToUser(UserDto userDto) {
         return userDto == null ? new User() : modelMapper.map(userDto, User.class);
     }
@@ -35,19 +29,4 @@ public class UserMapper {
     public User mapFromRegistrationRequestToUser(RegistrationRequest registrationRequest) {
         return registrationRequest == null ? new User() : modelMapper.map(registrationRequest, User.class);
     }
-
-//    private Converter<User, UserDto> toUserDto() {
-//        return context -> {
-//            User source = context.getSource();
-//            UserDto destination = context.getDestination();
-//
-//            Set<BookDto> books = new HashSet<>();
-//            for (Book book : bookRepository.findAll(Pageable.unpaged())) {
-//                books.add(bookMapper.mapToDto(book));
-//            }
-//            destination.setBooks(books);
-//
-//            return destination;
-//        };
-//    }
 }

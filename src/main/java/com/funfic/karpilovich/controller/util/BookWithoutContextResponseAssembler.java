@@ -18,14 +18,14 @@ import com.funfic.karpilovich.dto.BookWithoutContextDto;
 import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
 
 @Component
-public class BookWithoutContextResponseAssembler
-        implements RepresentationModelAssembler<BookWithoutContextProjection, EntityModel<BookWithoutContextDto>> {
+public class BookWithoutContextResponseAssembler<T extends BookWithoutContextProjection>
+        implements RepresentationModelAssembler<T, EntityModel<BookWithoutContextDto>> {
 
     @Autowired
     private BookProjectionMapper bookProjectionMapper;
 
     @Override
-    public EntityModel<BookWithoutContextDto> toModel(BookWithoutContextProjection entity) {
+    public EntityModel<BookWithoutContextDto> toModel(T entity) {
         BookWithoutContextDto response = bookProjectionMapper.mapToBookWithoutContextDto(entity);
         return EntityModel.of(response,
                 linkTo(methodOn(BookController.class).getBookById(entity.getId())).withSelfRel(),
@@ -34,7 +34,7 @@ public class BookWithoutContextResponseAssembler
 
     @Override
     public CollectionModel<EntityModel<BookWithoutContextDto>> toCollectionModel(
-            Iterable<? extends BookWithoutContextProjection> entities) {
+            Iterable<? extends T> entities) {
         List<EntityModel<BookWithoutContextDto>> books = StreamSupport.stream(entities.spliterator(), false)
                 .map(this::toModel).collect(Collectors.toList());
         return CollectionModel.of(books);

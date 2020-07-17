@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private UserMapper userMapper;
-    
+
     @Override
     public UserDetails loadUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
@@ -53,14 +53,14 @@ public class UserServiceImpl implements UserService {
         Optional<User> optional = userRepository.findById(id);
         return optional.isPresent() ? optional.get() : new User();
     }
-    
+
     @Override
     public User save(RegistrationRequest registrationRequest) throws ServiceException {
         validateRegistrationRequest(registrationRequest);
         User user = prepareToSaving(registrationRequest);
         return userRepository.save(user);
     }
-    
+
     private void validateRegistrationRequest(RegistrationRequest registrationRequest) throws ServiceException {
         checkPasswords(registrationRequest.getPassword(), registrationRequest.getConfirmPassword());
         checkUserPresents(registrationRequest.getUsername());
@@ -71,11 +71,11 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("User already present");
         }
     }
-    
+
     private User prepareToSaving(RegistrationRequest registrationRequest) {
         User user = userMapper.mapFromRegistrationRequestToUser(registrationRequest);
         setDefaultParametersToUser(user);
-        return user; 
+        return user;
     }
 
     private void checkPasswords(String password, String confirmation) throws ServiceException {
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
     private boolean isTokenActive(VerificationToken token) {
         return token.getTerminationDate().getTime() > Calendar.getInstance().getTimeInMillis();
     }
-    
+
     private void activateUser(User user) {
         user.setEnabled(true);
         userRepository.save(user);

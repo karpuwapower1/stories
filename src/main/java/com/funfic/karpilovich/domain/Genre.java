@@ -1,7 +1,6 @@
 package com.funfic.karpilovich.domain;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -12,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,12 +37,13 @@ public class Genre {
     @NotEmpty
     @Column(unique = true)
     private String name;
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "books_genres", 
                 joinColumns = @JoinColumn(name = "genres_id"), 
                 inverseJoinColumns = @JoinColumn(name = "books_id"),
                 foreignKey = @ForeignKey(name="FK_genres_books"),
-                inverseForeignKey = @ForeignKey(name="FK_books_genres"))
+                inverseForeignKey = @ForeignKey(name="FK_books_genres"),
+                uniqueConstraints = @UniqueConstraint(columnNames = {"genres_id", "books_id" }))
     @JsonIgnore
     private List<Book> books;
 

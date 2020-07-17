@@ -25,16 +25,15 @@ export default class RegistrationPage extends React.Component {
   submit(event) {
     event.preventDefault();
     axios({
-      method: "post",
-      url: this.props.location.state.links.registration.href,
+      method: "POST",
+      url: this.props.location.state.links.register.href, 
       params: {
         username: this.state.email,
         password: this.state.password,
         confirmPassword: this.state.confirmPassword,
         firstName: this.state.firstName,
         lastName: this.state.lastName,
-      },
-      config: { headers: { "Content-Type": "application/json" } },
+      }
     })
       .then((response) => {
         this.setState({
@@ -49,7 +48,6 @@ export default class RegistrationPage extends React.Component {
       .catch((error) => {
         this.setState({ message: "Invalid email or password" });
       });
-    event.preventDefault();
   }
 
   setParameter = (event) => {

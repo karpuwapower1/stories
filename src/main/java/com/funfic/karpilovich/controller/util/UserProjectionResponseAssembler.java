@@ -11,11 +11,11 @@ import com.funfic.karpilovich.controller.BookController;
 import com.funfic.karpilovich.repository.projection.UserProjection;
 
 @Component
-public class UserProjectionResponseAssembler
-        implements RepresentationModelAssembler<UserProjection, EntityModel<UserProjection>> {
+public class UserProjectionResponseAssembler<T extends UserProjection>
+        implements RepresentationModelAssembler<T, EntityModel<T>> {
 
     @Override
-    public EntityModel<UserProjection> toModel(UserProjection user) {
+    public EntityModel<T> toModel(T user) {
         return EntityModel.of(user,
                 linkTo((methodOn(BookController.class)).findBookByAuthor(user.getId())).withRel("author"));
     }

@@ -12,7 +12,6 @@ export default class ToggleToast extends React.Component {
     return (
       <Toast style={this.styles}>
         <Toast.Header>Deleted</Toast.Header>
-
         <Toast.Body>
           Success</Toast.Body>
       </Toast>

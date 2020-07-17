@@ -1,39 +1,37 @@
 import React from "react";
-import { Figure, Image, Container } from "react-bootstrap";
+import { Figure, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import ShadowsIntoLightTwo from "../../fonts/ShadowsIntoLightTwo.ttf";
 
 export default class MainPageMenuItem extends React.Component {
+  styles = {
+    fontSize: "50px",
+    color: "black",
+    fontFamily: { ShadowsIntoLightTwo },
+  };
   render() {
     return (
-      <Container style={{ textAlign: "center" }}>
-        <Figure>
-          <Link to={{pathname: "/books/popular", state:{link: this.props.link}}}>
-            <div
-              style={
-                ({ position: "relative" },
-                { width: "100%" },
-                { textAlign: "center" })
-              }
+      <Container>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "40vh",
+          }}
+        >
+          <Figure>
+            <Link
+              style={this.styles}
+              to={{
+                pathname: "/books/popular",
+                state: { link: this.props.link },
+              }}
             >
-              <Image
-                fluid
-                alt="book.picture"
-                src="https://picsum.photos/2400/1200"
-                rounded
-              />
-              <div
-                style={
-                  ({ position: "absolute" },
-                  { left: "0px" },
-                  { bottom: "0px" },
-                  { width: "100%" })
-                }
-              >
-                {this.props.text}
-              </div>
-            </div>
-          </Link>
-        </Figure>
+              {this.props.text}
+            </Link>
+          </Figure>
+        </div>
       </Container>
     );
   }

@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Col, Row, Form, Link, Button, Card } from "react-bootstrap";
+import { Container, Col, Row, Form, Button, Card } from "react-bootstrap";
 import axios from "axios";
 import "../css/toggle.css";
 import AddChapterComponent from "../components/AddChapterComponent.js";
@@ -21,7 +21,6 @@ export default class AddBookPage extends React.Component {
     try {
       axios.post("http://localhost:8080/books", this.createReturnData());
       this.setState(this.initialState);
-      console.log(this.state);
     } catch (error) {
       console.log(error);
     }
@@ -58,24 +57,24 @@ export default class AddBookPage extends React.Component {
     event.preventDefault();
     const chapters = [...this.state.chapters];
     chapters.splice(index, 1);
-    this.setState({chapters});
-  }
+    this.setState({ chapters });
+  };
 
   render() {
     let { name, description, chapters } = this.state;
     return (
       <Container>
-        <Row className="justify-content-md-center"> 
+        <Row className="justify-content-md-center">
           <Col md={8} xl={8} xs={12} sm={10}>
-            <Card className="text-center" >
-              <Card.Header style={{fontSize:"30px"}}>
-                Book
-              </Card.Header>
+            <Card className="text-center">
+              <Card.Header style={{ fontSize: "30px" }}>Book</Card.Header>
               <Card.Body>
                 <Form onSubmit={this.addBook} id="bookForm">
                   <Card.Text>
-                      <Form.Group controlId="formBasicBookName">
-                        <Form.Control as="textarea" rows="2"
+                    <Form.Group controlId="formBasicBookName">
+                      <Form.Control
+                        as="textarea"
+                        rows="2"
                         type="text"
                         placeholder="Name"
                         name="name"
@@ -83,10 +82,12 @@ export default class AddBookPage extends React.Component {
                         onChange={this.setParameter}
                         required
                       />
-                      </Form.Group>
+                    </Form.Group>
 
                     <Form.Group controlId="formBasicBookDescription">
-                      <Form.Control as="textarea" rows="7"
+                      <Form.Control
+                        as="textarea"
+                        rows="7"
                         type="text"
                         placeholder="Description"
                         name="description"
@@ -104,24 +105,23 @@ export default class AddBookPage extends React.Component {
                           text={text}
                           index={index}
                           key={index}
-                          removeChapter = {this.removeChapter}
+                          removeChapter={this.removeChapter}
                           setChapterParameter={this.setChapterParameter}
                         />
                       );
                     })}
                   </Card.Text>
-                 <Card.Text style={{textAlign: "right"}}>
-                  <Button style = {{color : "green"}}
+                  <Card.Text style={{ textAlign: "right" }}>
+                    <Button
+                      style={{ color: "green" }}
                       variant="link"
                       type="submit"
                       onClick={this.addChapter}
                     >
                       Add chapter
                     </Button>
-                    </Card.Text>
+                  </Card.Text>
                   <Card.Footer className="text-muted">
-                   
-                  
                     <Button
                       variant="primary"
                       type="submit"
@@ -130,13 +130,12 @@ export default class AddBookPage extends React.Component {
                     >
                       Add Book
                     </Button>
-                   
                   </Card.Footer>
                 </Form>
               </Card.Body>
             </Card>
-            </Col>
-        </Row> 
+          </Col>
+        </Row>
       </Container>
     );
   }

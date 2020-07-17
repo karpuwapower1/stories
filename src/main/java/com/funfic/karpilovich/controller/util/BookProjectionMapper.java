@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import com.funfic.karpilovich.dto.BookWithoutContextDto;
 import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
+import com.funfic.karpilovich.repository.projection.GenreProjection;
+import com.funfic.karpilovich.repository.projection.TagProjection;
+import com.funfic.karpilovich.repository.projection.UserProjection;
 
 @Component
 public class BookProjectionMapper {
@@ -16,11 +19,11 @@ public class BookProjectionMapper {
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
-    private UserProjectionResponseAssembler userAssembler;
+    private UserProjectionResponseAssembler<UserProjection> userAssembler;
     @Autowired
-    private GenreProjectionResponseAssembler genreAssembler;
+    private GenreProjectionResponseAssembler<GenreProjection> genreAssembler;
     @Autowired
-    private TagProjectionResponseAssembler tagAssembler;
+    private TagProjectionResponseAssembler<TagProjection> tagAssembler;
 
     public BookWithoutContextDto mapToBookWithoutContextDto(BookWithoutContextProjection projection) {
         return projection == null ? new BookWithoutContextDto()

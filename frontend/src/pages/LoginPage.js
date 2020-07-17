@@ -8,23 +8,19 @@ export default class LoginPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.initialState;
-    this.submit = this.submit.bind(this);
-    this.setParameter = this.setParameter.bind(this);
   }
 
   initialState = { password: "", email: "", message: "" };
 
-  submit(event) {
+  submit = (event) => {
     event.preventDefault();
     axios({
-      method: "post",
-      url: this.props.location.state.links.login.href,
-      params: {
-        username: this.state.email,
-        password: this.state.password,
-      },
-      config: { headers: { "Content-Type": "application/json" } },
-    })
+      method: "POST",
+      url: this.props.location.state.links.login.href, 
+      params :{
+      username: this.state.email,
+      password: this.state.password,}
+      })
       .then((response) => {
         localStorage.setItem("authorization", response.data.jwttoken);
         window.location.href = "/main";

@@ -4,7 +4,7 @@ import LoadingComponent from "../components/general/LoadingComponent.js";
 import ChapterComponent from "../components/book_page/ChapterComponent.js";
 import { Container, Col, Row } from "react-bootstrap";
 import axios from "axios";
-import '../css/toggle.css';
+import "../css/toggle.css";
 
 export default class BookPage extends React.Component {
   constructor(props) {
@@ -19,10 +19,10 @@ export default class BookPage extends React.Component {
   }
 
   componentDidMount = () => {
-    axios.get(this.props.location.state.links)
+    axios
+      .get(this.props.location.state.links)
       .then((response) => response.data)
       .then((data) => {
-        console.log(data);
         this.setState({
           id: data.id,
           bookName: data.name,
@@ -42,19 +42,17 @@ export default class BookPage extends React.Component {
     }
     const chapters = this.state.chapters ? this.state.chapters : [];
     return (
-        <Container >
-      <Row>
-        <Col xs={3} sm={3} md={3} lg = {1}>
-          <LeftMenuComponent chapters = {chapters}/>
-        </Col>
-        <Col md={7} xs={9} sm={9} lg={11}>
-          {chapters.map((chapter) => {
-            return (
-              <ChapterComponent chapter = {chapter} key = {chapter.id} />
-            );
-          })}
-        </Col>
-      </Row>
+      <Container>
+        <Row>
+          <Col xs={3} sm={3} md={3} lg={1}>
+            <LeftMenuComponent chapters={chapters} />
+          </Col>
+          <Col md={7} xs={9} sm={9} lg={11}>
+            {chapters.map((chapter) => {
+              return <ChapterComponent chapter={chapter} key={chapter.id} />;
+            })}
+          </Col>
+        </Row>
       </Container>
     );
   }

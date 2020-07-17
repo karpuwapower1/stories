@@ -1,14 +1,18 @@
 import React from "react";
-import { Button, Table, Container, Nav } from "react-bootstrap";
-import { Link, location } from "react-router-dom";
+import { Button, Table, Container } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import LoadingComponent from "../components/general/LoadingComponent.js";
 import axios from "axios";
 
 export default class BookTablePage extends React.Component {
   constructor(props) {
     super(props);
-    console.log("constuctor");
-    this.state = { books: [], link : this.props.location.state.link, isLoaded: false, show: false };
+    this.state = {
+      books: [],
+      link: this.props.location.state.link,
+      isLoaded: false,
+      show: false,
+    };
     this.deleteBook = this.deleteBook.bind(this);
   }
 
@@ -26,20 +30,17 @@ export default class BookTablePage extends React.Component {
       .then((response) => response.data)
       .then((data) => {
         if (data._embedded) {
-          console.log(data);
           this.setState({ books: data._embedded.bookWithoutContextDtoes });
         }
         this.setState({ isLoaded: true });
       });
-  }
+  };
 
   deleteBook = (href, id) => {
-    console.log(href);
-    console.log(id);
     try {
       axios.delete(href).then(
         this.setState({
-          books: this.state.books.filter((book) => book.id != id),
+          books: this.state.books.filter((book) => book.id !== id),
           show: true,
         })
       );
@@ -49,11 +50,8 @@ export default class BookTablePage extends React.Component {
   };
 
   changeState = (link) => {
-    console.log(link);
-   this.loadData(link);
-}
-
-
+    this.loadData(link);
+  };
 
   render() {
     if (!this.state.isLoaded) {
@@ -95,28 +93,32 @@ export default class BookTablePage extends React.Component {
                           pathname: `/books/users/${book.user.id}`,
                           state: { links: book.user._links.author.href },
                         }}
-                        onClick={(e) => this.changeState(book.user._links.author.href)}
+                        onClick={(e) =>
+                          this.changeState(book.user._links.author.href)
+                        }
                       >
                         {book.user.firstName} {book.user.lastName}
                       </Link>
                     </td>
                     <td>
-                      {book.genres ? book.genres._embedded.genres.map((genre) => {
-                        return (
-                          <Link
-                            style={this.styles}
-                            to={{
-                              pathname: `/books/genres/${genre.name}`,
-                              state: { links: genre._links.genre.href },
-                             
-                            }}  onClick={(e) => this.changeState(genre._links.genre.href)}
-                          >
-                            {genre.name}{" "}
-                          </Link>
-                        );
-                      })
-                    : " "
-                    }
+                      {book.genres
+                        ? book.genres._embedded.genres.map((genre) => {
+                            return (
+                              <Link
+                                style={this.styles}
+                                to={{
+                                  pathname: `/books/genres/${genre.name}`,
+                                  state: { links: genre._links.genre.href },
+                                }}
+                                onClick={(e) =>
+                                  this.changeState(genre._links.genre.href)
+                                }
+                              >
+                                {genre.name}{" "}
+                              </Link>
+                            );
+                          })
+                        : " "}
                     </td>
                     <td style={{ textAlign: "justify" }}>{book.description}</td>
                     <td>

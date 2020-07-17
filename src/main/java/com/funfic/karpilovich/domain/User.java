@@ -17,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
@@ -50,16 +51,17 @@ public class User implements UserDetails {
     private boolean enabled;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", 
-                joinColumns = @JoinColumn(name="users_id"), 
-                inverseJoinColumns = @JoinColumn(name="roles_id"), 
-                foreignKey = @ForeignKey(name="FK_roles_users"), 
-                inverseForeignKey = @ForeignKey(name = "FK_users_roles"))
+                joinColumns = @JoinColumn(name = "users_id"), 
+                inverseJoinColumns = @JoinColumn(name = "roles_id"), 
+                foreignKey = @ForeignKey(name = "FK_roles_users"), 
+                inverseForeignKey = @ForeignKey(name = "FK_users_roles"), 
+                uniqueConstraints = @UniqueConstraint(columnNames = {"users_id", "roles_id" }))
     private Set<Role> roles;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Book> books;
-    @OneToMany(mappedBy="user", cascade = CascadeType.ALL)
-    private List<Comment> coments; 
-    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> coments;
+
     public User() {
         setEnabled(false);
     }

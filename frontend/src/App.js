@@ -9,10 +9,31 @@ import BookPage from "./pages/BookPage.js";
 import AddBookPage from "./pages/AddBookPage.js";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import LoadingComponent from "./components/general/LoadingComponent.js";
+import axios from "axios";
 import interseptors from "./Interceptors.js"
 
 export default class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = ({isLoaded : false})
+  }
+
+  componentDidMount = () => {
+    axios.get("http://localhost:8080/main")
+   .then( response => (response.data))
+   .then (data => {
+    localStorage.setItem("main_data", JSON.stringify(data));
+    this.setState({isLoaded : true})
+    })
+  }
+
+
   render() {
+    if (!this.state.isLoaded) {
+      return  <LoadingComponent/>
+    }
     return (
       <Router>
       <NavbarComponent />
@@ -27,9 +48,6 @@ export default class App extends React.Component {
           <Route path="/books/tags/:name" component={BooksTablePage} />
           <Route path="/books/:id" component={BookPage} />
           <Route path="/add/book" component={AddBookPage} />
-          {/* <Route path="user/:id/books" */}
-          {/* <Route path="/books/{id}" component={BookPage}/>
-          <Route path="/books" component={BooksPage}/> */}
         </Switch>
       </Router>
     );

@@ -1,40 +1,28 @@
 import React from "react";
-import {Button, Nav} from "react-bootstrap";
-import {Link, Redirect} from "react-router-dom";
-import axios from "axios"
+import { Button, Nav } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default class UserAuthorizationComponent extends React.Component {
-
   constructor(props) {
-    super(props);
+    super(props)
     this.state = {
-      success : false,
-      links : [],
+      success: false,
+      links: this.props.links,
+      user: this.props.user
     }
-    this.logout = this.logout.bind(this);
   }
 
   styles = {
     paddingTop: "0px",
     paddingBottom: "0px",
     paddingLeft: "8px",
-    paddingRight: "0px"
+    paddingRight: "0px",
   };
 
-  componentDidMount = () => {
-    this.setState({
-      success : false,
-      links : this.props.links ? this.props.links : [],
-    })
-  }
-
-  logout(event) {
+  logout = (event) => {
     event.preventDefault();
-    axios({
-      method: "post",
-      url: this.state.links.logout.href,
-      config: { headers: { "Content-Type": "application/json"}}
-    })
+    axios.post(this.state.links.logout.href)
       .then((response) => {
         localStorage.setItem("authorization", response.data.jwttoken);
         window.location.href = "/main";
@@ -45,16 +33,22 @@ export default class UserAuthorizationComponent extends React.Component {
   }
 
   render() {
-    const links = this.state.links ? this.state.links : [];
-    if (links.login) {
+    if (this.state.user.id) {
       return (
-       <Nav.Link>
-       <Link to={{pathname: "/auth/login", state:{links: this.props.links}}}>Login</Link>
-       </Nav.Link>
+        <Button variant="link" onClick={this.logout}>
+          Logout
+        </Button>
       );
-      }
-      return (
-        <Button variant="link" onClick={this.logout}>Logout</Button>
-      );
+    }
+    return (
+      <Nav.Link>
+        <Link
+          to={{ pathname: "/auth/login", 
+          state: { links: this.props.links} }}
+        >
+          Login
+        </Link>
+      </Nav.Link>
+    );
   }
 }

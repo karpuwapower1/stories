@@ -16,16 +16,16 @@ import com.funfic.karpilovich.controller.BookController;
 import com.funfic.karpilovich.repository.projection.GenreProjection;
 
 @Component
-public class GenreProjectionResponseAssembler implements RepresentationModelAssembler<GenreProjection, EntityModel<GenreProjection>> {
+public class GenreProjectionResponseAssembler<T extends GenreProjection> implements RepresentationModelAssembler<T, EntityModel<T>> {
 
     @Override
-    public CollectionModel<EntityModel<GenreProjection>> toCollectionModel(Iterable<? extends GenreProjection> entities) {
-        List<EntityModel<GenreProjection>> genres = StreamSupport.stream(entities.spliterator(), false).map(this::toModel).collect(Collectors.toList());
+    public CollectionModel<EntityModel<T>> toCollectionModel(Iterable<? extends T> entities) {
+        List<EntityModel<T>> genres = StreamSupport.stream(entities.spliterator(), false).map(this::toModel).collect(Collectors.toList());
         return  CollectionModel.of(genres);
     }
 
     @Override
-    public EntityModel<GenreProjection> toModel(GenreProjection genre) {
+    public EntityModel<T> toModel(T genre) {
         return EntityModel.of(genre, linkTo(methodOn(BookController.class).findBooksByGenre(genre.getName())).withRel("genre"));
     }
 }

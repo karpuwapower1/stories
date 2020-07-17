@@ -1,9 +1,5 @@
 import React from "react";
-import  {
-  NavItem,
-  NavIcon,
-  NavText,
-} from "@trendmicro/react-sidenav";
+import  {  NavItem, NavIcon, NavText} from "@trendmicro/react-sidenav";
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 
 export default class LeftSideMenuItemComponent extends React.Component {

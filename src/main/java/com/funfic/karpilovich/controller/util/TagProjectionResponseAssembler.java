@@ -16,16 +16,18 @@ import com.funfic.karpilovich.controller.BookController;
 import com.funfic.karpilovich.repository.projection.TagProjection;
 
 @Component
-public class TagProjectionResponseAssembler implements RepresentationModelAssembler<TagProjection, EntityModel<TagProjection>> {
+public class TagProjectionResponseAssembler<T extends TagProjection>
+        implements RepresentationModelAssembler<T, EntityModel<T>> {
 
     @Override
-    public CollectionModel<EntityModel<TagProjection>> toCollectionModel(Iterable<? extends TagProjection> entities) {
-        List<EntityModel<TagProjection>> tags = StreamSupport.stream(entities.spliterator(), false).map(this::toModel).collect(Collectors.toList());
-        return  CollectionModel.of(tags);
+    public CollectionModel<EntityModel<T>> toCollectionModel(Iterable<? extends T> entities) {
+        List<EntityModel<T>> tags = StreamSupport.stream(entities.spliterator(), false).map(this::toModel)
+                .collect(Collectors.toList());
+        return CollectionModel.of(tags);
     }
 
     @Override
-    public EntityModel<TagProjection> toModel(TagProjection tag) {
+    public EntityModel<T> toModel(T tag) {
         return EntityModel.of(tag, linkTo(methodOn(BookController.class).findBooksByTag(tag.getName())).withRel("tag"));
     }
 }
