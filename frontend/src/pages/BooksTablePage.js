@@ -1,7 +1,9 @@
 import React from "react";
-import { Button, Table, Container } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import {Container, Card, Row, Col,
+} from "react-bootstrap";
 import LoadingComponent from "../components/general/LoadingComponent.js";
+import HeaderComponent from "../components/books_table/HeaderComponent.js";
+import FooterItem from "../components/books_table/FooterItem.js";
 import axios from "axios";
 
 export default class BookTablePage extends React.Component {
@@ -16,10 +18,6 @@ export default class BookTablePage extends React.Component {
     this.deleteBook = this.deleteBook.bind(this);
   }
 
-  styles = {
-    color: "black",
-  };
-
   componentDidMount = () => {
     this.loadData(this.state.link);
   };
@@ -28,7 +26,9 @@ export default class BookTablePage extends React.Component {
     axios
       .get(link)
       .then((response) => response.data)
+
       .then((data) => {
+        console.log(data);
         if (data._embedded) {
           this.setState({ books: data._embedded.bookWithoutContextDtoes });
         }
@@ -37,6 +37,7 @@ export default class BookTablePage extends React.Component {
   };
 
   deleteBook = (href, id) => {
+    console.log(href);
     try {
       axios.delete(href).then(
         this.setState({
@@ -49,6 +50,8 @@ export default class BookTablePage extends React.Component {
     }
   };
 
+  readBook = (href) => {};
+
   changeState = (link) => {
     this.loadData(link);
   };
@@ -60,85 +63,76 @@ export default class BookTablePage extends React.Component {
     return (
       <>
         <Container>
-          <Table striped bordered hover style={{ textAlign: "center" }}>
-            <thead>
-              <tr>
-                <th>Book</th>
-                <th>Author</th>
-                <th>Genre</th>
-                <th>Description</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
+          <Row>
+            <Col xl={2}></Col>
+            <Col>
               {this.state.books.map((book) => {
                 return (
-                  <tr key={book.id}>
-                    <td>
-                      <Link
-                        style={this.styles}
-                        to={{
-                          pathname: `/books/${book.id}`,
-                          state: { links: book._links.self.href },
-                        }}
-                      >
-                        {book.name}{" "}
-                      </Link>
-                    </td>
-                    <td>
-                      {" "}
-                      <Link
-                        style={this.styles}
-                        to={{
-                          pathname: `/books/users/${book.user.id}`,
-                          state: { links: book.user._links.author.href },
-                        }}
-                        onClick={(e) =>
-                          this.changeState(book.user._links.author.href)
-                        }
-                      >
-                        {book.user.firstName} {book.user.lastName}
-                      </Link>
-                    </td>
-                    <td>
-                      {book.genres
+                  <Card
+                    border="dark"
+                    style={{
+                      marginTop: "20px",
+                      marginBottom: "20px",
+                      borderRadius: "10px",
+                    }}
+                  >
+                    <Card.Header
+                      style={{ textAlign: "center", borderBottomWidth: "0px" }}
+                    >
+                      <Col sm={1}></Col>
+                      <Row>
+                        <HeaderComponent
+                          book={book}
+                          onClickRead={this.readBook.bind(
+                            this,
+                            book._links.self.href
+                          )}
+                          onClickDelete={this.deleteBook.bind(
+                            this,
+                            book._links.delete.href,
+                            book.id
+                          )}
+                        />
+                      </Row>
+                    </Card.Header>
+                    <Card.Body>{book.description}</Card.Body>
+                    <Card.Footer style={{ borderTopWidth: "0px" }}>
+                      {book.genres._embedded
                         ? book.genres._embedded.genres.map((genre) => {
                             return (
-                              <Link
-                                style={this.styles}
-                                to={{
-                                  pathname: `/books/genres/${genre.name}`,
-                                  state: { links: genre._links.genre.href },
-                                }}
+                              <FooterItem
+                                pathname={`/books/genres/${genre.name}`}
+                                link={genre._links.genre.href}
                                 onClick={(e) =>
                                   this.changeState(genre._links.genre.href)
                                 }
-                              >
-                                {genre.name}{" "}
-                              </Link>
+                                title={genre.name}
+                              />
                             );
                           })
                         : " "}
-                    </td>
-                    <td style={{ textAlign: "justify" }}>{book.description}</td>
-                    <td>
-                      <Button
-                        size="sm"
-                        onClick={this.deleteBook.bind(
-                          this,
-                          book._links.delete.href,
-                          book.id
-                        )}
-                      >
-                        {" "}
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
+
+                      {book.tags._embedded
+                        ? book.tags._embedded.tags.map((tag) => {
+                            return (
+                              <FooterItem
+                                pathname={`/books/tags/${tag.name}`}
+                                link={tag._links.tag.href}
+                                onClick={(e) =>
+                                  this.changeState(tag._links.tag.href)
+                                }
+                                title={tag.name}
+                              />
+                            );
+                          })
+                        : " "}
+                    </Card.Footer>
+                  </Card>
                 );
               })}
-            </tbody>
-          </Table>
+            </Col>
+            <Col xl={2}></Col>
+          </Row>
         </Container>
       </>
     );

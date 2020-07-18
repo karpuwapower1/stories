@@ -4,44 +4,47 @@ import MainPage from "./pages/MainPage.js";
 import LoginPage from "./pages/LoginPage.js";
 import RegistrationPage from "./pages/RegistrationPage.js";
 import BooksTablePage from "./pages/BooksTablePage.js";
-import NavbarComponent from "./components/navbar/NavbarComponent.js"
+import NavbarComponent from "./components/navbar/NavbarComponent.js";
 import BookPage from "./pages/BookPage.js";
 import AddBookPage from "./pages/AddBookPage.js";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 import LoadingComponent from "./components/general/LoadingComponent.js";
+import RegistrationConfirmapotionPage from "./pages/RegistrationConfirmationPage.js";
 import axios from "axios";
-import interseptors from "./Interceptors.js"
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
+import interseptors from "./Interceptors.js";
 
 export default class App extends React.Component {
-
   constructor(props) {
     super(props);
-    this.state = ({isLoaded : false})
+    this.state = { isLoaded: false };
   }
 
   componentDidMount = () => {
-    axios.get("http://localhost:8080/main")
-   .then( response => (response.data))
-   .then (data => {
-    localStorage.setItem("main_data", JSON.stringify(data));
-    this.setState({isLoaded : true})
-    })
-  }
-
+    axios
+      .get("http://localhost:8080/main")
+      .then((response) => response.data)
+      .then((data) => {
+        localStorage.setItem("main_data", JSON.stringify(data));
+        this.setState({ isLoaded: true });
+      });
+  };
 
   render() {
     if (!this.state.isLoaded) {
-      return  <LoadingComponent/>
+      return <LoadingComponent />;
     }
     return (
       <Router>
-      <NavbarComponent />
+        <NavbarComponent />
         <Switch>
           <Route path="/" exact component={MainPage} />
           <Route path="/main" component={MainPage} />
           <Route path="/auth/login" component={LoginPage} />
           <Route path="/auth/registration" component={RegistrationPage} />
+          <Route path="/auth/activation"
+            component={RegistrationConfirmapotionPage}
+          />
           <Route path="/books/popular" component={BooksTablePage} />
           <Route path="/books/genres/:name" component={BooksTablePage} />
           <Route path="/books/users/:id" component={BooksTablePage} />

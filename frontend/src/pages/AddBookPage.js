@@ -8,6 +8,7 @@ export default class AddBookPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.initialState;
+    console.log(this.props);
   }
 
   initialState = {

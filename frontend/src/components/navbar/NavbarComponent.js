@@ -30,7 +30,7 @@ export default class NavbarComponent extends React.Component {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
-            <NavbarMenuComponent user={this.state.user} />
+            <NavbarMenuComponent user={this.state.user} links={this.state.links} />
           </Nav>
           <Nav className="ml-auto">
             <Form inline>

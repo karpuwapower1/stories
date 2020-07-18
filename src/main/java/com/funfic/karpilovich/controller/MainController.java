@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.funfic.karpilovich.controller.constant.LinkRel;
 import com.funfic.karpilovich.controller.util.TagProjectionResponseAssembler;
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.dto.MainPageDto;
@@ -101,11 +102,23 @@ public class MainController {
     }
 
     private EntityModel<MainPageDto> addLinksToResponse(EntityModel<MainPageDto> response) {
-        return response.add(linkTo(methodOn(RegistrationController.class).login(null)).withRel("login"))
-                .add(linkTo(methodOn(RegistrationController.class).logout(null)).withRel("logout"))
-                .add(linkTo(methodOn(RegistrationController.class).register(null, null)).withRel("register"))
-                .add(linkTo(methodOn(MainController.class).main()).withRel("main_page"))
-                .add(linkTo(methodOn(BookController.class).findMostPupular()).withRel("popular"))
-                .add(linkTo(methodOn(BookController.class).findLastUpdated()).withRel("update"));
+        addRegistrationLinks(response);
+        addMainPageLinks(response);
+        return response;
+
+    }
+
+    private void addMainPageLinks(EntityModel<MainPageDto> response) {
+        response.add(linkTo(methodOn(MainController.class).main()).withRel(LinkRel.MAIN_PAGE.getName()))
+                .add(linkTo(methodOn(BookController.class).findMostPupular()).withRel(LinkRel.POPULAR.getName()))
+                .add(linkTo(methodOn(BookController.class).findLastUpdated()).withRel(LinkRel.UPDATE.getName()))
+                .add(linkTo(methodOn(BookController.class).addBook(null)).withRel(LinkRel.ADD_BOOK.getName()));
+    }
+
+    private void addRegistrationLinks(EntityModel<MainPageDto> response) {
+        response.add(linkTo(methodOn(RegistrationController.class).login(null)).withRel(LinkRel.LOGIN.getName()))
+                .add(linkTo(methodOn(RegistrationController.class).logout(null)).withRel(LinkRel.LOGOUT.getName()))
+                .add(linkTo(methodOn(RegistrationController.class).register(null, null)).withRel(LinkRel.REGISTER.getName()))
+                .add(linkTo(methodOn(RegistrationController.class).confirmRegistration(null)).withRel(LinkRel.ACTIVATE.getName()));
     }
 }

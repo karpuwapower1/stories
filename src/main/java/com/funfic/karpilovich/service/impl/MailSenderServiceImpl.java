@@ -19,16 +19,11 @@ public class MailSenderServiceImpl implements MailSenderService {
 
     @Override
     public void sendRegistrationConfirmation(String to, String token) {
-        
         mailSender.send(createMessage(from, to, "Registration confirmation",
-                "Confirm your email by passing a link \n\r" + token));
+                "Your Confirmation code is: \n\r" + token));
     }
     
-    public void sendRegisrationSuccess(String to) {
-        mailSender.send(createMessage(from, to, "Registration confirmation", "Registration success"));
-    }
-
-    private SimpleMailMessage createMessage(String from, String to, String subject,
+   private SimpleMailMessage createMessage(String from, String to, String subject,
             String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);

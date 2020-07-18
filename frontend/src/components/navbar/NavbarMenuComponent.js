@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Nav } from "react-bootstrap";
+import {Link} from "react-router-dom";
 
 export default class NavbarMenuComponent extends React.Component {
   constructor(props) {
@@ -8,7 +8,7 @@ export default class NavbarMenuComponent extends React.Component {
 
   render() {
     if (this.props.user.id) {
-      return <Nav.Link href="/add/book">Add book</Nav.Link>;
+      return <Link to={{pathname: "/add/book", link: this.props.links.add_book}} >Add book</Link>;
     }
     return " ";
   }

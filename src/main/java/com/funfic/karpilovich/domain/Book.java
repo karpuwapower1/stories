@@ -13,10 +13,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -51,7 +53,13 @@ public class Book {
     @DateTimeFormat
     @Column(name = "updated")
     private Calendar updateDate;
-    @ManyToMany(mappedBy = "books")
+    @ManyToMany
+    @JoinTable(name = "books_genres", 
+                joinColumns = @JoinColumn(name = "books_id"), 
+                inverseJoinColumns = @JoinColumn(name = "genres_id"  ),
+                foreignKey = @ForeignKey(name="FK_books_genres"),
+                inverseForeignKey = @ForeignKey(name="FK_genres_books"),
+                uniqueConstraints = @UniqueConstraint(columnNames = {"genres_id", "books_id" }))
     private Set<Genre> genres;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Chapter> chapters;
@@ -59,7 +67,13 @@ public class Book {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_users_books"))
     @JsonIgnore
     private User user;
-    @ManyToMany(mappedBy="books")
+    @ManyToMany
+    @JoinTable(name = "books_tags", 
+                joinColumns = @JoinColumn(name = "books_id"), 
+                inverseJoinColumns = @JoinColumn(name = "tags_id"), 
+                foreignKey = @ForeignKey(name = "FK_books_tags"),
+                inverseForeignKey = @ForeignKey(name = "FK_tags_books"), 
+                uniqueConstraints = @UniqueConstraint(columnNames = {"books_id", "tags_id"}))
     private Set<Tag> tags;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Comment> comments;

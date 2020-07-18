@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Button, Container, Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import InvalidMessage from "../components/general/InvalidMessage.js";
 import axios from "axios";
 
@@ -8,8 +8,6 @@ export default class RegistrationPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.initialState;
-    this.submit = this.submit.bind(this);
-    this.setParameter = this.setParameter.bind(this);
   }
 
   initialState = {
@@ -18,29 +16,28 @@ export default class RegistrationPage extends React.Component {
     password: "",
     confirmPassword: "",
     email: "",
-    success: false,
     message: "",
+    redirect: "",
   };
 
-  submit(event) {
+  submit = (event) => {
     event.preventDefault();
     axios({
       method: "POST",
-      url: this.props.location.state.links.register.href, 
+      url: this.props.location.state.links.register.href,
       params: {
         username: this.state.email,
         password: this.state.password,
         confirmPassword: this.state.confirmPassword,
         firstName: this.state.firstName,
         lastName: this.state.lastName,
-      }
+      },
     })
       .then((response) => {
         this.setState({
-          message: `A confirmation link was send to ${this.state.email}. Follow the sent link to complite registration`,
+          redirect: "/auth/activation",
           firstName: "",
           lastName: "",
-          email: "",
           password: "",
           confirmPassword: "",
         });
@@ -48,7 +45,7 @@ export default class RegistrationPage extends React.Component {
       .catch((error) => {
         this.setState({ message: "Invalid email or password" });
       });
-  }
+  };
 
   setParameter = (event) => {
     this.setState({
@@ -64,7 +61,21 @@ export default class RegistrationPage extends React.Component {
       firstName,
       lastName,
       message,
+      redirect,
     } = this.state;
+    if (redirect) {
+      return (
+        <Redirect
+          to={{
+            pathname: redirect,
+            state: {
+              links: this.props.location.state.links,
+              email: this.state.email,
+            },
+          }}
+        />
+      );
+    }
     return (
       <Container>
         <Row className="justify-content-md-center">

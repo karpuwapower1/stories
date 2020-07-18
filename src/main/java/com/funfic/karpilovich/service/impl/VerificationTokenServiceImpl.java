@@ -1,7 +1,6 @@
 package com.funfic.karpilovich.service.impl;
 
-import java.util.UUID;
-
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +11,8 @@ import com.funfic.karpilovich.service.VerificationTokenService;
 
 @Service
 public class VerificationTokenServiceImpl implements VerificationTokenService {
+    
+    private static final int VERIFICATION_TOKEN_LENGTH = 10;
 
     @Autowired
     private VerificationTokenRepository repository;
@@ -27,6 +28,6 @@ public class VerificationTokenServiceImpl implements VerificationTokenService {
     }
 
     private String createToken() {
-        return UUID.randomUUID().toString();
+        return RandomStringUtils.randomAlphanumeric(VERIFICATION_TOKEN_LENGTH);
     }
 }
