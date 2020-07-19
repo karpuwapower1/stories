@@ -18,4 +18,5 @@ public class BookRequest {
     private String book;
     @NotEmpty
     private List<String> chapters;
+    private List<String> genres;
 }

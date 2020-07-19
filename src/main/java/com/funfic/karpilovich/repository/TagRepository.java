@@ -12,8 +12,11 @@ import com.funfic.karpilovich.repository.projection.TagProjection;
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
-    @Query(value = "SELECT name AS name, count(*) AS totalQuantity  FROM tags LEFT JOIN books_tags ON tags.id = books_tags.tags_id GROUP BY tags_id LIMIT 100", nativeQuery = true)
-    List<TagQuantity> findFits100TagQuantityByTagIdNative();
+    @Query(value = "SELECT name AS name, count(*) AS totalQuantity "
+            + " FROM tags "
+            + " LEFT JOIN books_tags ON tags.id = books_tags.tags_id "
+            + " GROUP BY tags_id LIMIT 100", nativeQuery = true)
+    List<TagQuantity> findFits100TagQuantityByNameNative();
 
     public interface TagQuantity extends TagProjection {
 

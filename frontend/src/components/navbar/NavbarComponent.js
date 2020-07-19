@@ -10,9 +10,13 @@ export default class NavbarComponent extends React.Component {
     super(props);
     const data = JSON.parse(localStorage.getItem("main_data"));
     const tags = data.tags._embedded ? data.tags._embedded.tupleBackedMaps : []
+    const genres = data.genres._embedded ? data.genres._embedded.tupleBackedMaps : []
+    
+    console.log(data);
     this.state = {
       user: data.user,
       tags: tags,
+      genres: genres,
       links: data._links,
       isLoaded: true,
     };

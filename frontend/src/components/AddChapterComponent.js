@@ -1,58 +1,79 @@
 import React from "react";
-import { Form, Card, Col, Row, Button } from "react-bootstrap";
+import { Form, Card, Col, Row, Button, Accordion } from "react-bootstrap";
 
 export default class AddChapterComponent extends React.Component {
   constructor(props) {
     super(props);
   }
 
-  render() {
-    const { name, text, index, setChapterParameter, removeChapter } = this.props;
-    return (
-      <Row className="justify-content-md-center">
-      <Col md={8} xl={8} xs={12} sm={10}>
-      <Card className="text-center">
-        <Card.Header style={{fontSize:"20px"}}>
-          Chapter #{index + 1}
-        </Card.Header>
-        <Card.Body>
-          <Card.Text>
-            <Form.Group id={index}>
-              <Form.Control as="textarea" rows="2"
-                type="text"
-                placeholder="Name"
-                name="name"
-                value={name}
-                id={index}
-                onChange={(e) => setChapterParameter(e, index)}
-                required
-              />
-            </Form.Group>
+  cardHeaderStyles = {
+    paddingBottom: "0px",
+    paddingTop: "0px",
+    marginTop: "0px",
+    marginBottom: "0px",
+    borderRadius: "10px",
+  };
 
-            <Form.Group id={index}>
-              <Form.Control  as="textarea" rows="10"
-                type="text"
-                placeholder="Text"
-                name="text"
-                value={text}
-                onChange={(e) => setChapterParameter(e, index)}
-                required
-              />
-            </Form.Group>
-          </Card.Text>
-          <Card.Text style={{textAlign: "left"}}>
-          <Button style = {{color : "red"}}
-                      variant="link"
-                      type="submit"
-                      onClick={(e) => removeChapter(e, index)}
-                    >
-                      Remove chapter
-                    </Button>
-                    </Card.Text>
-        </Card.Body>
+  cardBodyStyles = {
+    paddingBottom: "5px",
+    paddingTop: "5px",
+    paddingLeft: "5px",
+    paddingRight: "5px",
+  };
+
+  render() {
+    const {
+      name,
+      text,
+      index,
+      setChapterParameter,
+      removeChapter,
+    } = this.props;
+    return (
+      <Card className="text-center" style={{ borderRadius: "15px" }}>
+        <Card.Header style={this.cardHeaderStyles}>
+          <Accordion.Toggle as={Button} variant="link" eventKey={index}>
+            Chapter #{index + 1} {name}
+          </Accordion.Toggle>
+        </Card.Header>
+        <Accordion.Collapse eventKey={index}>
+          <Card.Body style={this.cardBodyStyles}>
+            <Card.Text>
+              <Form.Group id={index} style={{ marginBottom: "5px" }}>
+                <Form.Control
+                  style={{ borderRadius: "10px" }}
+                  as="textarea"
+                  rows="1"
+                  type="text"
+                  placeholder="Name"
+                  name="name"
+                  value={name}
+                  id={index}
+                  onChange={(e) => setChapterParameter(e, index)}
+                  required
+                />
+              </Form.Group>
+
+              <Form.Group
+                id={index}
+                style={{ marginBottom: "5px", borderRadius: "10px" }}
+              >
+                <Form.Control
+                  style={{ borderRadius: "10px" }}
+                  as="textarea"
+                  rows="3"
+                  type="text"
+                  placeholder="Text"
+                  name="text"
+                  value={text}
+                  onChange={(e) => setChapterParameter(e, index)}
+                  required
+                />
+              </Form.Group>
+            </Card.Text>
+          </Card.Body>
+        </Accordion.Collapse>
       </Card>
-      </Col>
-      </Row>
     );
   }
 }

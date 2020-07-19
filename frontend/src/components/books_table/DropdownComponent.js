@@ -1,16 +1,7 @@
 import React from "react";
-import {
-  Button,
-  Table,
-  Container,
-  Card,
-  DropdownButton,
-  Dropdown,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { DropdownButton, Dropdown } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import DropdownItemComponent from "./DropdownItemComponent.js";
-
 
 export default class DropdownComponent extends React.Component {
   constructor(props) {
@@ -19,20 +10,27 @@ export default class DropdownComponent extends React.Component {
 
   render() {
     return (
-        <DropdownButton
+      <DropdownButton
         variant="link"
-        style={{ textAlign: "right", alignItem: "right"}}
+        style={{ textAlign: "right", alignItem: "right" }}
       >
-        <div style={{fontSize: "12px"}}>
+        <div style={{ fontSize: "12px" }}>
+          <Dropdown.Item>
+            <Link
+              style={{ color: "black" }}
+              to={{
+                pathname: `/books/${this.props.book.id}`,
+                state: { links: this.props.book._links.self.href },
+              }}
+            >
+              Read
+            </Link>
+          </Dropdown.Item>
           <DropdownItemComponent
-            onClick={this.props.onClickRead}
-           title="Read"
-          />
-           <DropdownItemComponent
             onClick={this.props.onClickDelete}
-           title="Delete"
+            title="Delete"
           />
-          </div>
+        </div>
       </DropdownButton>
     );
   }

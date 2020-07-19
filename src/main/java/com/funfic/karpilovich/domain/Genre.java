@@ -1,6 +1,8 @@
 package com.funfic.karpilovich.domain;
+
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,7 +36,7 @@ public class Genre {
     @Column(unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "genres")
+    @ManyToMany(mappedBy = "genres", cascade = {CascadeType.MERGE})
     @JsonIgnore
     private List<Book> books;
 

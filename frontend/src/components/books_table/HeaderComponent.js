@@ -1,16 +1,7 @@
 import React from "react";
-import {
-  Button,
-  Table,
-  Container,
-  Card,
-  DropdownButton,
-  Dropdown,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Col } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import DropdownComponent from "./DropdownComponent.js";
-import CardHeaderComponent from "./CardHeaderComponent.js";
 import DropdownItemComponent from "./DropdownItemComponent.js";
 
 export default class HeaderComponent extends React.Component {
@@ -23,22 +14,31 @@ export default class HeaderComponent extends React.Component {
     return (
       <>
         <Col>
-          <CardHeaderComponent
-            pathname={`/books/users/${book.user.id}`}
-            links={book.user._links.author.href}
-            changeState={this.changeState}
-            linkName={book.user.firstName + book.user.lastName}
-          />
+          <Link
+            style={{ color: "black" }}
+            to={{
+              pathname: `/books/users/${book.user.id}`,
+              state: { links: book.user._links.author.href },
+            }}
+            onClick={this.props.changeState}
+          >
+            {" "}
+            {book.user.firstName + book.user.lastName}{" "}
+          </Link>
           <br />
-          <CardHeaderComponent
-            pathname={`/books/${book.id}`}
-            links={book._links.self.href}
-            changeState={this.changeState}
-            linkName={book.name}
-          />
+          <Link
+            style={{ color: "black" }}
+            to={{
+              pathname: `/books/${book.id}`,
+              state: { links: book._links.self.href },
+            }}
+          >
+            {book.name}
+          </Link>
         </Col>
         <Col sm={1}>
           <DropdownComponent
+            book={book}
             onClickRead={this.props.onClickRead}
             onClickDelete={this.props.onClickDelete}
           />

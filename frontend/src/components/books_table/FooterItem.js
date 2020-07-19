@@ -10,8 +10,8 @@ export default class FooterComponent extends React.Component {
   render() {
     return (
         <>
-        <Button variant="light" size="sm"> 
-        <Link  style={{color:"black"}}
+        <Button variant="dark" size="sm" style={{ borderRadius: "15px", marginBottom: "5px"}}> 
+        <Link  style={{color:"white"}}
           to={{
             pathname: this.props.pathname,
             state: this.props.link,

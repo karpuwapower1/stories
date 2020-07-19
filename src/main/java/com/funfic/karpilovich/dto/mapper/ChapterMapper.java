@@ -19,7 +19,7 @@ public class ChapterMapper {
     
     private static final String JSON_DELIMITER = ",";
        
-    public List<Chapter> mapFromBookRequestToCjapter(BookRequest bookRequest) throws JsonMappingException, JsonProcessingException {
+    public List<Chapter> mapFromBookRequestToChapter(BookRequest bookRequest) throws JsonMappingException, JsonProcessingException {
         return bookRequest == null ? Collections.emptyList() : mapBookRequestToChapter(bookRequest);
     }
     

@@ -17,13 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.funfic.karpilovich.controller.constant.LinkRel;
+import com.funfic.karpilovich.controller.util.GenreProjectionResponseAssembler;
 import com.funfic.karpilovich.controller.util.TagProjectionResponseAssembler;
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.dto.MainPageDto;
 import com.funfic.karpilovich.dto.UserDto;
 import com.funfic.karpilovich.dto.mapper.UserMapper;
-import com.funfic.karpilovich.repository.TagRepository;
+import com.funfic.karpilovich.repository.GenreRepository.GenreQuantity;
 import com.funfic.karpilovich.repository.TagRepository.TagQuantity;
+import com.funfic.karpilovich.service.GenreService;
+import com.funfic.karpilovich.service.TagService;
 import com.funfic.karpilovich.service.UserService;
 
 @RestController
@@ -31,11 +34,15 @@ import com.funfic.karpilovich.service.UserService;
 public class MainController {
 
     @Autowired
-    private TagRepository tagRepository;
+    private TagService tagService;
+    @Autowired
+    private GenreService genreService;
     @Autowired
     private UserService userService;
     @Autowired
-    private TagProjectionResponseAssembler<TagQuantity> responseAssembler;
+    private TagProjectionResponseAssembler<TagQuantity> tagResponseAssembler;
+    @Autowired
+    private GenreProjectionResponseAssembler<GenreQuantity> genreResponseAssembler;
     @Autowired
     private UserMapper userMapper;
 
@@ -58,6 +65,7 @@ public class MainController {
     private MainPageDto setParametersToMainPageDto(MainPageDto mainDto) {
         mainDto.setUser(createUserEntityModel());
         mainDto.setTags(createTagsEntityModel());
+        mainDto.setGenres(createGenresEntityModel());
         return mainDto;
     }
 
@@ -90,22 +98,34 @@ public class MainController {
 
     private CollectionModel<EntityModel<TagQuantity>> createTagsEntityModel() {
         List<TagQuantity> tags = findTags();
-        return createResponseModel(tags);
+        return createTagResponseModel(tags);
     }
-
+    
     private List<TagQuantity> findTags() {
-        return tagRepository.findFits100TagQuantityByTagIdNative();
+        return tagService.findPopularTag();
     }
-
-    private CollectionModel<EntityModel<TagQuantity>> createResponseModel(List<TagQuantity> tags) {
-        return responseAssembler.toCollectionModel(tags);
+    
+    private CollectionModel<EntityModel<TagQuantity>> createTagResponseModel(List<TagQuantity> tags) {
+        return tagResponseAssembler.toCollectionModel(tags);
     }
 
     private EntityModel<MainPageDto> addLinksToResponse(EntityModel<MainPageDto> response) {
         addRegistrationLinks(response);
         addMainPageLinks(response);
         return response;
-
+    }
+    
+    private CollectionModel<EntityModel<GenreQuantity>> createGenresEntityModel() {
+        List<GenreQuantity> genres = findGenres();
+        return createGenreResponseModel(genres);
+    }
+    
+    private List<GenreQuantity> findGenres() {
+        return genreService.getAllByPopularity();
+    }
+    
+    private CollectionModel<EntityModel<GenreQuantity>> createGenreResponseModel(List<GenreQuantity> genres) {
+        return genreResponseAssembler.toCollectionModel(genres);
     }
 
     private void addMainPageLinks(EntityModel<MainPageDto> response) {

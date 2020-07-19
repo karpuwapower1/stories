@@ -53,7 +53,7 @@ public class Book {
     @DateTimeFormat
     @Column(name = "updated")
     private Calendar updateDate;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE})
     @JoinTable(name = "books_genres", 
                 joinColumns = @JoinColumn(name = "books_id"), 
                 inverseJoinColumns = @JoinColumn(name = "genres_id"  ),
@@ -77,5 +77,4 @@ public class Book {
     private Set<Tag> tags;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Comment> comments;
-
 }

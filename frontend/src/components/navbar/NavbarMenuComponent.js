@@ -8,7 +8,7 @@ export default class NavbarMenuComponent extends React.Component {
 
   render() {
     if (this.props.user.id) {
-      return <Link to={{pathname: "/add/book", link: this.props.links.add_book}} >Add book</Link>;
+      return <Link to={{pathname: "/add/book", state : {link: this.props.links.add_book.href}}} >Add book</Link>;
     }
     return " ";
   }
