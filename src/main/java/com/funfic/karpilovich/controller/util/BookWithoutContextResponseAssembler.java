@@ -30,6 +30,7 @@ public class BookWithoutContextResponseAssembler<T extends BookWithoutContextPro
         implements RepresentationModelAssembler<T, EntityModel<BookWithoutContextDto>> {
 
     private static final String PAGE_QUERY_PARAM = "page";
+    private static final String SORT_QUERY_PARAM = "sort";
 
     @Autowired
     private BookProjectionMapper bookProjectionMapper;
@@ -51,7 +52,8 @@ public class BookWithoutContextResponseAssembler<T extends BookWithoutContextPro
             UriComponentsBuilder builder) {
         CollectionModel<EntityModel<BookWithoutContextDto>> model = PagedModel.of(toList(entities),
                 createPagedMetadata(entities));
-        addLinks(model, entities, builder);
+        addPaginationLinks(model, entities, builder);
+        addLinkWithoutPageParam(model, builder);
         return model;
     }
 
@@ -63,19 +65,18 @@ public class BookWithoutContextResponseAssembler<T extends BookWithoutContextPro
         return StreamSupport.stream(entities.spliterator(), false).map(this::toModel).collect(Collectors.toList());
     }
 
-    private void addLinks(CollectionModel<EntityModel<BookWithoutContextDto>> model, Page<? extends T> entities,
+    private void addPaginationLinks(CollectionModel<EntityModel<BookWithoutContextDto>> model, Page<? extends T> entities,
             UriComponentsBuilder builder) {
         addFirstPageLink(model, entities.getNumber(), builder);
         addPreviousPageLink(model, entities.getNumber(), builder);
         addCurrentPageLink(model, entities.getNumber(), builder);
         addNextPageLink(model, entities.getNumber(), entities.getTotalPages() - 1, builder);
         addLastPageLink(model, entities.getNumber(), entities.getTotalPages() -1, builder);
-        addLinkWithoutParams(model, builder);
     }
 
-    private void addLinkWithoutParams(CollectionModel<EntityModel<BookWithoutContextDto>> model,
+    private void addLinkWithoutPageParam(CollectionModel<EntityModel<BookWithoutContextDto>> model,
             UriComponentsBuilder builder) {
-        String link = builder.replaceQueryParam(PAGE_QUERY_PARAM).build().toString();
+        String link = builder.replaceQueryParam(PAGE_QUERY_PARAM).replaceQueryParam(SORT_QUERY_PARAM).build().toString();
         model.add(Link.of(link).withRel(IanaLinkRelations.ABOUT));
     }
 

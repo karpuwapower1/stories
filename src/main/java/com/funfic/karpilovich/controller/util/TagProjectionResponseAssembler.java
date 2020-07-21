@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.funfic.karpilovich.controller.BookController;
 import com.funfic.karpilovich.controller.constant.LinkRel;
 import com.funfic.karpilovich.repository.projection.TagProjection;
+import com.funfic.karpilovich.service.util.SortingType;
 
 @Component
 public class TagProjectionResponseAssembler<T extends TagProjection> extends PageMapper
@@ -29,7 +30,7 @@ public class TagProjectionResponseAssembler<T extends TagProjection> extends Pag
 
     @Override
     public EntityModel<T> toModel(T tag) {
-        return EntityModel.of(tag, linkTo(methodOn(BookController.class).findBooksByTag(tag.getName(), firstPageNumber))
+        return EntityModel.of(tag, linkTo(methodOn(BookController.class).findBooksByTag(tag.getName(), firstPageNumber, SortingType.NONE.toString()))
                 .withRel(LinkRel.TAG.getName()));
     }
 }

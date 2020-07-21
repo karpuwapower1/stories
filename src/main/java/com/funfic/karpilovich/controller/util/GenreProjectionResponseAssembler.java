@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.funfic.karpilovich.controller.BookController;
 import com.funfic.karpilovich.controller.constant.LinkRel;
 import com.funfic.karpilovich.repository.projection.GenreProjection;
+import com.funfic.karpilovich.service.util.SortingType;
 
 @Component
 public class GenreProjectionResponseAssembler<T extends GenreProjection> extends PageMapper
@@ -30,7 +31,7 @@ public class GenreProjectionResponseAssembler<T extends GenreProjection> extends
     @Override
     public EntityModel<T> toModel(T genre) {
         return EntityModel.of(genre,
-                linkTo(methodOn(BookController.class).findBooksByGenre(genre.getName(), firstPageNumber))
+                linkTo(methodOn(BookController.class).findBooksByGenre(genre.getName(), firstPageNumber, SortingType.NONE.toString()))
                         .withRel(LinkRel.GENRE.getName()));
     }
 }

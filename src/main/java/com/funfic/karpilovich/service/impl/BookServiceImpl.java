@@ -19,6 +19,7 @@ import com.funfic.karpilovich.repository.BookRepository;
 import com.funfic.karpilovich.repository.projection.BookProjection;
 import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
 import com.funfic.karpilovich.service.BookService;
+import com.funfic.karpilovich.service.util.SortingType;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -29,8 +30,6 @@ public class BookServiceImpl implements BookService {
     private BookMapper bookMapper;
 
     private static final int DEFAULT_PAGE_SIZE = 10;
-    private static final String ID_COLUMN_NAME = "id";
-    private static final String UPDATE_DATE_COLUMN_NAME = "updated";
 
     @Override
     public BookProjection findById(Long id) throws ServiceException {
@@ -38,30 +37,27 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<BookWithoutContextProjection> findMostPopular(int page) {
-        System.out.println(page);
-        return bookRepository.findBy(PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by(ID_COLUMN_NAME).descending()));
+    public Page<BookWithoutContextProjection> findBook(int page, String sort) {
+        Sort sortingColumn = getSortingColumn(sort);
+        return bookRepository.findBy(PageRequest.of(page, DEFAULT_PAGE_SIZE, sortingColumn));
     }
 
     @Override
-    public Page<BookWithoutContextProjection> findLastUpdated(int page) {
-        return bookRepository
-                .findBy(PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by(UPDATE_DATE_COLUMN_NAME).descending()));
+    public Page<BookWithoutContextProjection> findByUserId(Long id, int page, String sort) {
+        Sort sortingColumn = getSortingColumn(sort);
+        return bookRepository.findByUserId(PageRequest.of(page, DEFAULT_PAGE_SIZE, sortingColumn), id);
     }
 
     @Override
-    public Page<BookWithoutContextProjection> findByUserId(Long id, int page) {
-        return bookRepository.findByUserId(PageRequest.of(page, DEFAULT_PAGE_SIZE), id);
+    public Page<BookWithoutContextProjection> findByGenre(String name, int page, String sort) {
+        Sort sortingColumn = getSortingColumn(sort);
+        return bookRepository.findByGenresName(PageRequest.of(page, DEFAULT_PAGE_SIZE, sortingColumn), name);
     }
 
     @Override
-    public Page<BookWithoutContextProjection> findByGenre(String name, int page) {
-        return bookRepository.findByGenresName(PageRequest.of(page, DEFAULT_PAGE_SIZE), name);
-    }
-
-    @Override
-    public Page<BookWithoutContextProjection> findByTag(String name, int page) {
-        return bookRepository.findByTagsName(PageRequest.of(page, DEFAULT_PAGE_SIZE), name);
+    public Page<BookWithoutContextProjection> findByTag(String name, int page, String sort) {
+        Sort sortingColumn = getSortingColumn(sort);
+        return bookRepository.findByTagsName(PageRequest.of(page, DEFAULT_PAGE_SIZE, sortingColumn), name);
     }
 
     @Override
@@ -81,6 +77,26 @@ public class BookServiceImpl implements BookService {
             e.printStackTrace();
             throw new ServiceException(e);
         }
+    }
+
+    private Sort getSortingColumn(String sort) {
+        try {
+            return mapStringToSort(sort);
+        } catch (IllegalArgumentException e) {
+            return Sort.unsorted();
+        }
+    }
+
+    private Sort mapStringToSort(String sort) {
+        SortingType type = SortingType.valueOf(sort.toUpperCase());
+        return mapSortingTypeToSort(type);
+    }
+    
+    private Sort mapSortingTypeToSort(SortingType type) {
+        if (type == SortingType.NONE) {
+            return Sort.unsorted();
+        }
+        return Sort.by(type.getSortingColumn());
     }
 
     private Book takeBookFromRequest(BookRequest bookRequest, User user)

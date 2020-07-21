@@ -28,11 +28,12 @@ import com.funfic.karpilovich.repository.TagRepository.TagQuantity;
 import com.funfic.karpilovich.service.GenreService;
 import com.funfic.karpilovich.service.TagService;
 import com.funfic.karpilovich.service.UserService;
+import com.funfic.karpilovich.service.util.SortingType;
 
 @RestController
 @RequestMapping("/main")
 public class MainController {
-    
+
     private static final int FIRST_PAGE_NUMBER = 0;
 
     @Autowired
@@ -102,11 +103,11 @@ public class MainController {
         List<TagQuantity> tags = findTags();
         return createTagResponseModel(tags);
     }
-    
+
     private List<TagQuantity> findTags() {
         return tagService.findPopularTag();
     }
-    
+
     private CollectionModel<EntityModel<TagQuantity>> createTagResponseModel(List<TagQuantity> tags) {
         return tagResponseAssembler.toCollectionModel(tags);
     }
@@ -116,31 +117,35 @@ public class MainController {
         addMainPageLinks(response);
         return response;
     }
-    
+
     private CollectionModel<EntityModel<GenreQuantity>> createGenresEntityModel() {
         List<GenreQuantity> genres = findGenres();
         return createGenreResponseModel(genres);
     }
-    
+
     private List<GenreQuantity> findGenres() {
         return genreService.getAllByPopularity();
     }
-    
+
     private CollectionModel<EntityModel<GenreQuantity>> createGenreResponseModel(List<GenreQuantity> genres) {
         return genreResponseAssembler.toCollectionModel(genres);
     }
 
     private void addMainPageLinks(EntityModel<MainPageDto> response) {
         response.add(linkTo(methodOn(MainController.class).main()).withRel(LinkRel.MAIN_PAGE.getName()))
-                .add(linkTo(methodOn(BookController.class).findMostPupular(FIRST_PAGE_NUMBER)).withRel(LinkRel.POPULAR.getName()))
-                .add(linkTo(methodOn(BookController.class).findLastUpdated(FIRST_PAGE_NUMBER)).withRel(LinkRel.UPDATE.getName()))
+                .add(linkTo(methodOn(BookController.class).findBook(FIRST_PAGE_NUMBER,
+                        SortingType.RAITING.toString().toLowerCase())).withRel(LinkRel.POPULAR.getName()))
+                .add(linkTo(methodOn(BookController.class).findBook(FIRST_PAGE_NUMBER,
+                        SortingType.LAST_UPDATE.toString().toLowerCase())).withRel(LinkRel.UPDATE.getName()))
                 .add(linkTo(methodOn(BookController.class).addBook(null)).withRel(LinkRel.ADD_BOOK.getName()));
     }
 
     private void addRegistrationLinks(EntityModel<MainPageDto> response) {
         response.add(linkTo(methodOn(RegistrationController.class).login(null)).withRel(LinkRel.LOGIN.getName()))
                 .add(linkTo(methodOn(RegistrationController.class).logout(null)).withRel(LinkRel.LOGOUT.getName()))
-                .add(linkTo(methodOn(RegistrationController.class).register(null, null)).withRel(LinkRel.REGISTER.getName()))
-                .add(linkTo(methodOn(RegistrationController.class).confirmRegistration(null)).withRel(LinkRel.ACTIVATE.getName()));
+                .add(linkTo(methodOn(RegistrationController.class).register(null, null))
+                        .withRel(LinkRel.REGISTER.getName()))
+                .add(linkTo(methodOn(RegistrationController.class).confirmRegistration(null))
+                        .withRel(LinkRel.ACTIVATE.getName()));
     }
 }

@@ -68,7 +68,7 @@ export default class Cloud extends React.Component {
       );
     }
     return (
-      <Container style={{textAlign: "center"}}>
+      <Container style={{ textAlign: "center" }}>
         <div
           style={{
             display: "flex",
@@ -77,7 +77,6 @@ export default class Cloud extends React.Component {
             height: "40vh",
           }}
         >
-          {this.cloudItem.map((item) => console.log(item))}
           <TagCloud
             minSize={16}
             maxSize={50}

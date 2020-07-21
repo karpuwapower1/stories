@@ -45,7 +45,7 @@ export default class App extends React.Component {
           <Route path="/auth/activation"
             component={RegistrationConfirmapotionPage}
           />
-          <Route path="/books/popular" component={BooksTablePage} />
+          <Route path="/books" exact component={BooksTablePage} />
           <Route path="/books/genres/:name" component={BooksTablePage} />
           <Route path="/books/users/:id" component={BooksTablePage} />
           <Route path="/books/tags/:name" component={BooksTablePage} />

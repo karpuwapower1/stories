@@ -10,19 +10,17 @@ import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection
 
 public interface BookService {
 
-    Page<BookWithoutContextProjection> findMostPopular(int page);
+    Page<BookWithoutContextProjection> findBook(int page, String sort);
 
-    Page<BookWithoutContextProjection> findLastUpdated(int page);
-    
-    Page<BookWithoutContextProjection> findByUserId(Long id, int page);
-    
-    void delete(Long id) throws ServiceException;
-    
-    void addBook(BookRequest bookRequest, User user) throws ServiceException;
+    Page<BookWithoutContextProjection> findByUserId(Long id, int page, String sort);
 
-    Page<BookWithoutContextProjection> findByGenre(String name, int page);
+    Page<BookWithoutContextProjection> findByGenre(String name, int page, String sort);
 
-    Page<BookWithoutContextProjection> findByTag(String name, int page);
-    
+    Page<BookWithoutContextProjection> findByTag(String name, int page, String sort);
+
     BookProjection findById(Long id) throws ServiceException;
+
+    void delete(Long id) throws ServiceException;
+
+    void addBook(BookRequest bookRequest, User user) throws ServiceException;
 }

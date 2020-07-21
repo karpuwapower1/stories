@@ -1,5 +1,5 @@
 import React from "react";
-import { Figure, Container } from "react-bootstrap";
+import { Card, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ShadowsIntoLightTwo from "../../fonts/ShadowsIntoLightTwo.ttf";
 
@@ -12,26 +12,20 @@ export default class MainPageMenuItem extends React.Component {
   render() {
     return (
       <Container>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "40vh",
-          }}
-        >
-          <Figure>
-            <Link
+            <Link 
               style={this.styles}
               to={{
-                pathname: "/books/popular",
+                pathname: "/books",
                 state: { link: this.props.link },
               }}
             >
+              <Card border="light" style={{ fontStyle: "italic", display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "40vh",}}>
               {this.props.text}
+              </Card>
             </Link>
-          </Figure>
-        </div>
       </Container>
     );
   }

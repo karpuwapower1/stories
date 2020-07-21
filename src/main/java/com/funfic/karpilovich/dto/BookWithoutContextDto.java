@@ -11,12 +11,11 @@ import lombok.Data;
 
 @Data
 public class BookWithoutContextDto {
-    
+
     private Long id;
     private String name;
     private String description;
     private EntityModel<UserProjection> user;
     private CollectionModel<EntityModel<GenreProjection>> genres;
     private CollectionModel<EntityModel<TagProjection>> tags;
-
 }

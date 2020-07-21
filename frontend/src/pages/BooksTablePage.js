@@ -1,17 +1,12 @@
 import React from "react";
-import {
-  Container,
-  Card,
-  Row,
-  Col,
-  Button,
-  Pagination
-} from "react-bootstrap";
+import { Container, Card, Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import LoadingComponent from "../components/general/LoadingComponent.js";
 import HeaderComponent from "../components/books_table/HeaderComponent.js";
-import FooterItem from "../components/books_table/FooterItem.js";
-import Select from "react-select";
+import FooterTagComponent from "../components/books_table/FooterTagComponent.js";
+import FooterGenreComponent from "../components/books_table/FooterGenreComponent.js";
+import SortComponent from "../components/books_table/SortComponent.js";
+import PaginationComponent from "../components/books_table/PaginationComponent.js";
 import axios from "axios";
 
 export default class BookTablePage extends React.Component {
@@ -21,6 +16,7 @@ export default class BookTablePage extends React.Component {
       books: [],
       page: {},
       paginationLinks: [],
+      sorts: [],
       link: this.props.location.state.link,
       isLoaded: false,
       show: false,
@@ -29,6 +25,7 @@ export default class BookTablePage extends React.Component {
   }
 
   pages = [];
+  sorts = [];
 
   componentDidMount = () => {
     this.loadData(this.state.link);
@@ -39,7 +36,7 @@ export default class BookTablePage extends React.Component {
       .get(link)
       .then((response) => response.data)
       .then((data) => {
-        this.setDataToState(data);
+        this.setData(data);
       });
   };
 
@@ -48,23 +45,32 @@ export default class BookTablePage extends React.Component {
       .get(link, { params: { page: event.value } })
       .then((response) => response.data)
       .then((data) => {
-        this.setDataToState(data);
+        this.setData(data);
       });
   };
 
-  setDataToState = (data) => {
-    if (data._embedded) {
+  loadSortPage = (event, link) => {
+    axios
+      .get(link, { params: { sort: event.value } })
+      .then((response) => response.data)
+      .then((data) => {
+        this.setData(data);
+      });
+  };
+
+  setData = (data) => {
+    if (data.books._embedded) {
       this.setState({
-        books: data._embedded.bookWithoutContextDtoes,
-        paginationLinks: data._links,
-        page: data.page,
+        books: data.books._embedded.bookWithoutContextDtoes,
+        paginationLinks: data.books._links,
+        page: data.books.page,
+        sorts: data.sorts,
       });
     }
     this.setState({ isLoaded: true });
   };
 
   deleteBook = (href, id) => {
-    console.log(href);
     try {
       axios.delete(href).then(
         this.setState({
@@ -88,25 +94,37 @@ export default class BookTablePage extends React.Component {
     }
   };
 
+  loadSorts = (sorts) => {
+    this.sorts = [];
+    this.state.sorts.map((sort) => {
+      this.sorts.push({ value: sort, label: sort });
+    });
+  };
+
   render() {
     if (!this.state.isLoaded) {
       return <LoadingComponent />;
     }
+    this.loadSorts();
     this.loadPages();
     return (
       <>
         <Container>
+          <SortComponent
+            sorts={this.sorts}
+            loadSortPage={this.loadSortPage}
+            link={this.state.paginationLinks.about.href}
+          />
           <Row>
-            <Col xl={2}></Col>
+            <Col xl={1}></Col>
             <Col>
               {this.state.books.map((book) => {
                 return (
                   <Card
-                    border="dark"
                     style={{
-                      marginTop: "20px",
-                      marginBottom: "20px",
-                      borderRadius: "20px",
+                      marginTop: "10px",
+                      marginBottom: "10px",
+                      borderRadius: "30px",
                     }}
                   >
                     <Card.Header
@@ -131,35 +149,16 @@ export default class BookTablePage extends React.Component {
                     <Card.Footer style={{ borderTopWidth: "0px" }}>
                       <Row>
                         <Col>
-                          {book.genres._embedded
-                            ? book.genres._embedded.genres.map((genre) => {
-                                return (
-                                  <FooterItem
-                                    pathname={`/books/genres/${genre.name}`}
-                                    link={genre._links.genre.href}
-                                    onClick={(e) =>
-                                      this.changeState(genre._links.genre.href)
-                                    }
-                                    title={genre.name}
-                                  />
-                                );
-                              })
-                            : " "}
-
-                          {book.tags._embedded
-                            ? book.tags._embedded.tags.map((tag) => {
-                                return (
-                                  <FooterItem
-                                    pathname={`/books/tags/${tag.name}`}
-                                    link={tag._links.tag.href}
-                                    onClick={(e) =>
-                                      this.changeState(tag._links.tag.href)
-                                    }
-                                    title={tag.name}
-                                  />
-                                );
-                              })
-                            : " "}
+                          <FooterGenreComponent
+                            genres={book.genres}
+                            path={"/books/genres/"}
+                            changeState={this.changeState}
+                          />
+                          <FooterTagComponent
+                            tags={book.tags}
+                            path={"/books/tags/"}
+                            changeState={this.changeState}
+                          />
                         </Col>
                         <Col xs={2} style={{ alignItem: "right" }}>
                           <Button style={{ borderRadius: "18px" }}>
@@ -182,73 +181,16 @@ export default class BookTablePage extends React.Component {
                 );
               })}
             </Col>
-            <Col xl={2}></Col>
+            <Col xl={1}></Col>
           </Row>
         </Container>
-        <Container fluid>
-          <Row className="justify-content-center">
-            <Pagination>
-              <Pagination.First
-                md="2"
-                disabled={this.state.page.number === 0 ? true : false}
-                onClick={(e) => {
-                  this.state.paginationLinks.first
-                    ? this.changeState(this.state.paginationLinks.first.href)
-                    : this.changeState("");
-                }}
-              />
-              <Pagination.Prev
-                disabled={this.state.page.number === 0 ? true : false}
-                onClick={(e) => {
-                  this.state.paginationLinks.previous
-                    ? this.changeState(this.state.paginationLinks.previous.href)
-                    : this.changeState("");
-                }}
-                md="2"
-              />
-                <Select  maxMenuHeight={60}
-                maxMenuItemHeight={10}
-                  placeholder={`Page ${this.state.page.number + 1} of ${
-                    this.state.page.totalPages
-                  }`}
-                  name="page"
-                  options={this.pages}
-                  onFocus={this.size}
-                  onChange={(e) =>
-                    this.loadPage(e, this.state.paginationLinks.about.href)
-                  }
-                  classNamePrefix="select"
-                />
-            
-              <Pagination.Next
-                disabled={
-                  this.state.page.number === this.state.page.totalPages - 1
-                    ? true
-                    : false
-                }
-                onClick={(e) => {
-                  this.state.paginationLinks.next
-                    ? this.changeState(this.state.paginationLinks.next.href)
-                    : this.changeState("");
-                }}
-                md="2"
-              />
-              <Pagination.Last
-                disabled={
-                  this.state.page.number === this.state.page.totalPages - 1
-                    ? true
-                    : false
-                }
-                onClick={(e) => {
-                  this.state.paginationLinks.last
-                    ? this.changeState(this.state.paginationLinks.last.href)
-                    : this.changeState("");
-                }}
-                md="2"
-              />
-            </Pagination>
-          </Row>
-        </Container>
+
+        <PaginationComponent links={this.state.paginationLinks}
+        page={this.state.page}
+        changeState={this.changeState}
+        pages={this.pages}
+        loadPage={this.loadPage}
+        />
       </>
     );
   }
