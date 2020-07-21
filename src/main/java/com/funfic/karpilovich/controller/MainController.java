@@ -32,6 +32,8 @@ import com.funfic.karpilovich.service.UserService;
 @RestController
 @RequestMapping("/main")
 public class MainController {
+    
+    private static final int FIRST_PAGE_NUMBER = 0;
 
     @Autowired
     private TagService tagService;
@@ -130,8 +132,8 @@ public class MainController {
 
     private void addMainPageLinks(EntityModel<MainPageDto> response) {
         response.add(linkTo(methodOn(MainController.class).main()).withRel(LinkRel.MAIN_PAGE.getName()))
-                .add(linkTo(methodOn(BookController.class).findMostPupular()).withRel(LinkRel.POPULAR.getName()))
-                .add(linkTo(methodOn(BookController.class).findLastUpdated()).withRel(LinkRel.UPDATE.getName()))
+                .add(linkTo(methodOn(BookController.class).findMostPupular(FIRST_PAGE_NUMBER)).withRel(LinkRel.POPULAR.getName()))
+                .add(linkTo(methodOn(BookController.class).findLastUpdated(FIRST_PAGE_NUMBER)).withRel(LinkRel.UPDATE.getName()))
                 .add(linkTo(methodOn(BookController.class).addBook(null)).withRel(LinkRel.ADD_BOOK.getName()));
     }
 

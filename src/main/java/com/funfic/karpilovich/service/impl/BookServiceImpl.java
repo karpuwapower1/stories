@@ -29,7 +29,6 @@ public class BookServiceImpl implements BookService {
     private BookMapper bookMapper;
 
     private static final int DEFAULT_PAGE_SIZE = 10;
-    private static final int MIN_PAGE_SIZE = 0;
     private static final String ID_COLUMN_NAME = "id";
     private static final String UPDATE_DATE_COLUMN_NAME = "updated";
 
@@ -39,30 +38,30 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<BookWithoutContextProjection> findMostPopular() {
+    public Page<BookWithoutContextProjection> findMostPopular(int page) {
+        System.out.println(page);
+        return bookRepository.findBy(PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by(ID_COLUMN_NAME).descending()));
+    }
+
+    @Override
+    public Page<BookWithoutContextProjection> findLastUpdated(int page) {
         return bookRepository
-                .findBy(PageRequest.of(MIN_PAGE_SIZE, DEFAULT_PAGE_SIZE, Sort.by(ID_COLUMN_NAME).descending()));
+                .findBy(PageRequest.of(page, DEFAULT_PAGE_SIZE, Sort.by(UPDATE_DATE_COLUMN_NAME).descending()));
     }
 
     @Override
-    public Page<BookWithoutContextProjection> findLastUpdated() {
-        return bookRepository.findBy(
-                PageRequest.of(MIN_PAGE_SIZE, DEFAULT_PAGE_SIZE, Sort.by(UPDATE_DATE_COLUMN_NAME).descending()));
+    public Page<BookWithoutContextProjection> findByUserId(Long id, int page) {
+        return bookRepository.findByUserId(PageRequest.of(page, DEFAULT_PAGE_SIZE), id);
     }
 
     @Override
-    public Page<BookWithoutContextProjection> findByUserId(Long id) {
-        return bookRepository.findByUserId(PageRequest.of(MIN_PAGE_SIZE, DEFAULT_PAGE_SIZE), id);
+    public Page<BookWithoutContextProjection> findByGenre(String name, int page) {
+        return bookRepository.findByGenresName(PageRequest.of(page, DEFAULT_PAGE_SIZE), name);
     }
 
     @Override
-    public Page<BookWithoutContextProjection> findByGenre(String name) {
-        return bookRepository.findByGenresName(PageRequest.of(MIN_PAGE_SIZE, DEFAULT_PAGE_SIZE), name);
-    }
-
-    @Override
-    public Page<BookWithoutContextProjection> findByTag(String name) {
-        return bookRepository.findByTagsName(PageRequest.of(MIN_PAGE_SIZE, DEFAULT_PAGE_SIZE), name);
+    public Page<BookWithoutContextProjection> findByTag(String name, int page) {
+        return bookRepository.findByTagsName(PageRequest.of(page, DEFAULT_PAGE_SIZE), name);
     }
 
     @Override

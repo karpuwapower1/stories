@@ -1,11 +1,15 @@
 package com.funfic.karpilovich.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.nio.charset.StandardCharsets;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +20,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.funfic.karpilovich.controller.util.BookWithoutContextResponseAssembler;
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.dto.BookRequest;
-import com.funfic.karpilovich.dto.BookWithoutContextDto;
 import com.funfic.karpilovich.exception.ServiceException;
 import com.funfic.karpilovich.repository.projection.BookProjection;
 import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
@@ -50,33 +55,42 @@ public class BookController {
     }
 
     @GetMapping("/popular")
-    public ResponseEntity<?> findMostPupular() {
-        Page<BookWithoutContextProjection> books = bookService.findMostPopular();
-        return createResponseEntity(books);
+    public ResponseEntity<?> findMostPupular(@RequestParam(name="page", required = false, defaultValue = "0") Integer page) {
+        Page<BookWithoutContextProjection> books = bookService.findMostPopular(page);
+        WebMvcLinkBuilder builder = linkTo(methodOn(BookController.class).findMostPupular(books.getNumber()));
+        return createResponseEntity(books, builder);
     }
 
     @GetMapping("/updated")
-    public ResponseEntity<?> findLastUpdated() {
-        Page<BookWithoutContextProjection> books = bookService.findLastUpdated();
-        return createResponseEntity(books);
+    public ResponseEntity<?> findLastUpdated(@RequestParam(defaultValue = "0", required = false) int page) {
+        Page<BookWithoutContextProjection> books = bookService.findLastUpdated(page);
+        WebMvcLinkBuilder builder = linkTo(methodOn(BookController.class).findLastUpdated(books.getNumber()));
+        return createResponseEntity(books, builder);
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<?> findBookByAuthor(@PathVariable("id") Long id) {
-        Page<BookWithoutContextProjection> books = bookService.findByUserId(id);
-        return createResponseEntity(books);
+    public ResponseEntity<?> findBookByAuthor(@PathVariable("id") Long id,
+            @RequestParam(defaultValue = "0", required = false) int page) {
+        Page<BookWithoutContextProjection> books = bookService.findByUserId(id, page);
+        WebMvcLinkBuilder builder = linkTo(methodOn(BookController.class).findBookByAuthor(id, books.getNumber()));
+        return createResponseEntity(books, builder);
     }
 
     @GetMapping("/genres/{name}")
-    public ResponseEntity<?> findBooksByGenre(@PathVariable("name") String name) {
-        Page<BookWithoutContextProjection> books = bookService.findByGenre(name);
-        return createResponseEntity(books);
+    public ResponseEntity<?> findBooksByGenre(@PathVariable("name") String name,
+            @RequestParam(defaultValue = "0", required = false) int page) {
+        Page<BookWithoutContextProjection> books = bookService.findByGenre(name, page);
+        WebMvcLinkBuilder builder = linkTo(methodOn(BookController.class).findBooksByGenre(name, books.getNumber()));
+        return createResponseEntity(books, builder);
     }
 
     @GetMapping("/tags/{name}")
-    public ResponseEntity<?> findBooksByTag(@PathVariable("name") String name) {
-        Page<BookWithoutContextProjection> books = bookService.findByTag(name);
-        return createResponseEntity(books);
+    public ResponseEntity<?> findBooksByTag(@PathVariable("name") String name,
+            @RequestParam(defaultValue = "0", required = false) int page) {
+        System.out.println(name);
+        Page<BookWithoutContextProjection> books = bookService.findByTag(name, page);
+        WebMvcLinkBuilder builder = linkTo(methodOn(BookController.class).findBooksByTag(name, books.getNumber()));
+        return createResponseEntity(books, builder);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -113,8 +127,14 @@ public class BookController {
         bookService.addBook(bookRequest, user);
     }
 
-    private ResponseEntity<?> createResponseEntity(Page<BookWithoutContextProjection> books) {
-        CollectionModel<EntityModel<BookWithoutContextDto>> entities = assembler.toCollectionModel(books);
-        return ResponseEntity.ok(entities);
+    private ResponseEntity<?> createResponseEntity(Page<BookWithoutContextProjection> books,
+            WebMvcLinkBuilder builder) {
+        UriComponentsBuilder uriBuilder = convertWebMvcLinkBuilderToUriComponentsBuilder(builder);
+        return ResponseEntity.ok(assembler.toPagedModel(books, uriBuilder));
+    }
+
+    private UriComponentsBuilder convertWebMvcLinkBuilderToUriComponentsBuilder(WebMvcLinkBuilder link) {
+        String uri = new String(link.toString().getBytes(), StandardCharsets.UTF_8);
+        return UriComponentsBuilder.fromUriString(uri);
     }
 }

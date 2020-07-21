@@ -22,8 +22,7 @@ export default class HeaderComponent extends React.Component {
             }}
             onClick={this.props.changeState}
           >
-            {" "}
-            {book.user.firstName + book.user.lastName}{" "}
+            {book.user.firstName}{ book.user.lastName}
           </Link>
           <br />
           <Link

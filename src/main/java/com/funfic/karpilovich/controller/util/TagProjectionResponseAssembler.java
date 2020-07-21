@@ -13,10 +13,11 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
 import com.funfic.karpilovich.controller.BookController;
+import com.funfic.karpilovich.controller.constant.LinkRel;
 import com.funfic.karpilovich.repository.projection.TagProjection;
 
 @Component
-public class TagProjectionResponseAssembler<T extends TagProjection>
+public class TagProjectionResponseAssembler<T extends TagProjection> extends PageMapper
         implements RepresentationModelAssembler<T, EntityModel<T>> {
 
     @Override
@@ -28,6 +29,7 @@ public class TagProjectionResponseAssembler<T extends TagProjection>
 
     @Override
     public EntityModel<T> toModel(T tag) {
-        return EntityModel.of(tag, linkTo(methodOn(BookController.class).findBooksByTag(tag.getName())).withRel("tag"));
+        return EntityModel.of(tag, linkTo(methodOn(BookController.class).findBooksByTag(tag.getName(), firstPageNumber))
+                .withRel(LinkRel.TAG.getName()));
     }
 }

@@ -6,6 +6,8 @@ import com.funfic.karpilovich.domain.Tag;
 
 @Projection(name = "tagProjection", types = { Tag.class })
 public interface TagProjection {
+    
+    Long getId();
 
     String getName();
 }

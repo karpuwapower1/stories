@@ -53,10 +53,10 @@ consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cu
 nt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, 
 enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. ', 2, 3);
 
-INSERT IGNORE INTO tags (id, name) VALUES (1, "Для_всех"); 
-INSERT IGNORE INTO tags (id, name) VALUES (2, "Книга");
-INSERT IGNORE INTO tags (id, name) VALUES (3, "Моя"); 
-INSERT IGNORE INTO tags (id, name) VALUES (4, "Обо_всем");
+INSERT IGNORE INTO tags (id, name) VALUES (1, 'Для_всех'); 
+INSERT IGNORE INTO tags (id, name) VALUES (2, 'Книга');
+INSERT IGNORE INTO tags (id, name) VALUES (3, 'Моя'); 
+INSERT IGNORE INTO tags (id, name) VALUES (4, 'Обо_всем');
 
 INSERT IGNORE INTO books_tags (books_id, tags_id) VALUES (1, 1); 
 INSERT IGNORE INTO books_tags (books_id, tags_id) VALUES (1, 2); 
@@ -69,10 +69,10 @@ INSERT IGNORE INTO books_tags (books_id, tags_id) VALUES (3, 2);
 INSERT IGNORE INTO books_tags (books_id, tags_id) VALUES (3, 4); 
 INSERT IGNORE INTO books_tags (books_id, tags_id) VALUES (3, 1); 
 
-INSERT IGNORE INTO genres (id, name) VALUES (1, "Детектив"); 
-INSERT IGNORE INTO genres (id, name) VALUES (2, "Наука"); 
-INSERT IGNORE INTO genres (id, name) VALUES (3, "Фентези"); 
-INSERT IGNORE INTO genres (id, name) VALUES (4, "Бред");
+INSERT IGNORE INTO genres (id, name) VALUES (1, 'Детектив'); 
+INSERT IGNORE INTO genres (id, name) VALUES (2, 'Наука'); 
+INSERT IGNORE INTO genres (id, name) VALUES (3, 'Фентези'); 
+INSERT IGNORE INTO genres (id, name) VALUES (4, 'Бред');
 
 INSERT IGNORE INTO books_genres (books_id, genres_id) VALUES (1, 1); 
 INSERT IGNORE INTO books_genres (books_id, genres_id) VALUES (1, 2); 

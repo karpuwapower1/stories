@@ -1,9 +1,17 @@
 import React from "react";
-import { Container, Card, Row, Col, Button } from "react-bootstrap";
+import {
+  Container,
+  Card,
+  Row,
+  Col,
+  Button,
+  Pagination
+} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import LoadingComponent from "../components/general/LoadingComponent.js";
 import HeaderComponent from "../components/books_table/HeaderComponent.js";
 import FooterItem from "../components/books_table/FooterItem.js";
+import Select from "react-select";
 import axios from "axios";
 
 export default class BookTablePage extends React.Component {
@@ -11,13 +19,16 @@ export default class BookTablePage extends React.Component {
     super(props);
     this.state = {
       books: [],
+      page: {},
+      paginationLinks: [],
       link: this.props.location.state.link,
       isLoaded: false,
       show: false,
       redirect: "",
     };
-    this.deleteBook = this.deleteBook.bind(this);
   }
+
+  pages = [];
 
   componentDidMount = () => {
     this.loadData(this.state.link);
@@ -28,12 +39,28 @@ export default class BookTablePage extends React.Component {
       .get(link)
       .then((response) => response.data)
       .then((data) => {
-        console.log(data);
-        if (data._embedded) {
-          this.setState({ books: data._embedded.bookWithoutContextDtoes });
-        }
-        this.setState({ isLoaded: true });
+        this.setDataToState(data);
       });
+  };
+
+  loadPage = (event, link) => {
+    axios
+      .get(link, { params: { page: event.value } })
+      .then((response) => response.data)
+      .then((data) => {
+        this.setDataToState(data);
+      });
+  };
+
+  setDataToState = (data) => {
+    if (data._embedded) {
+      this.setState({
+        books: data._embedded.bookWithoutContextDtoes,
+        paginationLinks: data._links,
+        page: data.page,
+      });
+    }
+    this.setState({ isLoaded: true });
   };
 
   deleteBook = (href, id) => {
@@ -54,10 +81,18 @@ export default class BookTablePage extends React.Component {
     this.loadData(link);
   };
 
+  loadPages = () => {
+    this.pages = [];
+    for (let i = 0; i < this.state.page.totalPages; i++) {
+      this.pages.push({ value: i, label: i + 1 });
+    }
+  };
+
   render() {
     if (!this.state.isLoaded) {
       return <LoadingComponent />;
     }
+    this.loadPages();
     return (
       <>
         <Container>
@@ -148,6 +183,70 @@ export default class BookTablePage extends React.Component {
               })}
             </Col>
             <Col xl={2}></Col>
+          </Row>
+        </Container>
+        <Container fluid>
+          <Row className="justify-content-center">
+            <Pagination>
+              <Pagination.First
+                md="2"
+                disabled={this.state.page.number === 0 ? true : false}
+                onClick={(e) => {
+                  this.state.paginationLinks.first
+                    ? this.changeState(this.state.paginationLinks.first.href)
+                    : this.changeState("");
+                }}
+              />
+              <Pagination.Prev
+                disabled={this.state.page.number === 0 ? true : false}
+                onClick={(e) => {
+                  this.state.paginationLinks.previous
+                    ? this.changeState(this.state.paginationLinks.previous.href)
+                    : this.changeState("");
+                }}
+                md="2"
+              />
+                <Select  maxMenuHeight={60}
+                maxMenuItemHeight={10}
+                  placeholder={`Page ${this.state.page.number + 1} of ${
+                    this.state.page.totalPages
+                  }`}
+                  name="page"
+                  options={this.pages}
+                  onFocus={this.size}
+                  onChange={(e) =>
+                    this.loadPage(e, this.state.paginationLinks.about.href)
+                  }
+                  classNamePrefix="select"
+                />
+            
+              <Pagination.Next
+                disabled={
+                  this.state.page.number === this.state.page.totalPages - 1
+                    ? true
+                    : false
+                }
+                onClick={(e) => {
+                  this.state.paginationLinks.next
+                    ? this.changeState(this.state.paginationLinks.next.href)
+                    : this.changeState("");
+                }}
+                md="2"
+              />
+              <Pagination.Last
+                disabled={
+                  this.state.page.number === this.state.page.totalPages - 1
+                    ? true
+                    : false
+                }
+                onClick={(e) => {
+                  this.state.paginationLinks.last
+                    ? this.changeState(this.state.paginationLinks.last.href)
+                    : this.changeState("");
+                }}
+                md="2"
+              />
+            </Pagination>
           </Row>
         </Container>
       </>
