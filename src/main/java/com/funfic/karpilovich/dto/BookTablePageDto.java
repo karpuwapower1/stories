@@ -14,6 +14,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class BookTablePageDto {
+    
     private CollectionModel<EntityModel<BookWithoutContextDto>> books;
     private final List<SortingType> sorts = Arrays.asList(SortingType.values());
 }

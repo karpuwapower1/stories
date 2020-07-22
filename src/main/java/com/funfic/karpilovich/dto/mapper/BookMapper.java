@@ -2,6 +2,7 @@ package com.funfic.karpilovich.dto.mapper;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -49,11 +50,11 @@ public class BookMapper {
         return new String(bookRequest.getBook().getBytes(), StandardCharsets.UTF_8);
     }
 
-    private List<Chapter> getChaptersFromRequest(BookRequest bookRequest, Book book)
+    private Set<Chapter> getChaptersFromRequest(BookRequest bookRequest, Book book)
             throws JsonMappingException, JsonProcessingException {
         List<Chapter> chapters = chapterMapper.mapFromBookRequestToChapter(bookRequest);
         setParametersToChapters(chapters, book);
-        return chapters;
+        return new HashSet<Chapter>(chapters);
     }
 
     private void setParametersToChapters(List<Chapter> chapters, Book book) {

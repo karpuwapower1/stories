@@ -23,7 +23,6 @@ import com.funfic.karpilovich.dto.JwtResponse;
 import com.funfic.karpilovich.dto.LoginRequest;
 import com.funfic.karpilovich.dto.RegistrationRequest;
 import com.funfic.karpilovich.dto.TokenRequest;
-import com.funfic.karpilovich.exception.ServiceException;
 import com.funfic.karpilovich.service.MailSenderService;
 import com.funfic.karpilovich.service.UserService;
 import com.funfic.karpilovich.service.VerificationTokenService;
@@ -46,21 +45,13 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public ResponseEntity<?> register(@Valid RegistrationRequest registrationRequest, HttpServletRequest request) {
-        try {
-            User user = registerUser(registrationRequest, request);
-            return ResponseEntity.ok(user);
-        } catch (ServiceException e) {
-            return ResponseEntity.badRequest().body(registrationRequest);
-        }
+        registerUser(registrationRequest, request);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/activation")
     public ResponseEntity<?> confirmRegistration(@Valid TokenRequest token) {
-        try {
-            return confirmToken(token.getToken());
-        } catch (ServiceException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        return confirmToken(token.getToken());
     }
 
     @PostMapping("/login")
@@ -83,27 +74,26 @@ public class RegistrationController {
     }
 
     private String authenticate(String username, String password) {
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return jwtTokenUtil.generateToken(authentication);
     }
 
-    private User registerUser(RegistrationRequest registrationRequest, HttpServletRequest request)
-            throws ServiceException {
+    private void registerUser(RegistrationRequest registrationRequest, HttpServletRequest request) {
         User user = userService.save(registrationRequest);
         sendTokenToUser(user.getUsername(), verificationTokenService.createToken(user));
-        return user;
     }
 
-    private void sendTokenToUser(String email,VerificationToken token) {
+    private void sendTokenToUser(String email, VerificationToken token) {
         mailSenderService.sendRegistrationConfirmation(email, token.getToken());
     }
-    
-    private ResponseEntity<?> confirmToken(String token) throws ServiceException {
+
+    private ResponseEntity<?> confirmToken(String token) {
         userService.confirmRegistration(token);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
-    
+
     private ResponseEntity<?> authoriseUser(LoginRequest loginRequest) {
         String jwt = authenticate(loginRequest.getUsername(), loginRequest.getPassword());
         return ResponseEntity.ok(new JwtResponse(jwt));

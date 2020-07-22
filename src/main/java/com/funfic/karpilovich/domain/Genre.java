@@ -35,9 +35,7 @@ public class Genre {
     @NotEmpty
     @Column(unique = true)
     private String name;
-
-    @ManyToMany(mappedBy = "genres", cascade = {CascadeType.MERGE})
+    @ManyToMany(mappedBy = "genres", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JsonIgnore
     private List<Book> books;
-
 }

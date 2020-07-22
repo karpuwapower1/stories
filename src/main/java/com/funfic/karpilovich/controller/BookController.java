@@ -16,22 +16,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.funfic.karpilovich.controller.util.BookWithoutContextResponseAssembler;
+import com.funfic.karpilovich.controller.util.assembler.BookWithoutContextResponseAssembler;
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.dto.BookRequest;
 import com.funfic.karpilovich.dto.BookTablePageDto;
 import com.funfic.karpilovich.dto.BookWithoutContextDto;
-import com.funfic.karpilovich.exception.ServiceException;
 import com.funfic.karpilovich.repository.projection.BookProjection;
 import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
 import com.funfic.karpilovich.service.BookService;
@@ -58,17 +58,13 @@ public class BookController {
 
     @GetMapping("{id}")
     public ResponseEntity<?> getBookById(@PathVariable("id") Long id) {
-        try {
-            BookProjection book = bookService.findById(id);
-            return ResponseEntity.ok(book);
-        } catch (ServiceException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        BookProjection book = bookService.findById(id);
+        return ResponseEntity.ok(book);
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<?> findBookByAuthor(@PathVariable("id") Long id,
-            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "0", required = false) Integer page,
             @RequestParam(name = "sort", required = false, defaultValue = "none") String sort) {
         Page<BookWithoutContextProjection> books = bookService.findByUserId(id, page, sort);
         WebMvcLinkBuilder builder = linkTo(
@@ -78,7 +74,7 @@ public class BookController {
 
     @GetMapping("/genres/{name}")
     public ResponseEntity<?> findBooksByGenre(@PathVariable("name") String name,
-            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "0", required = false) Integer page,
             @RequestParam(name = "sort", required = false, defaultValue = "none") String sort) {
         Page<BookWithoutContextProjection> books = bookService.findByGenre(name, page, sort);
         WebMvcLinkBuilder builder = linkTo(
@@ -88,7 +84,7 @@ public class BookController {
 
     @GetMapping("/tags/{name}")
     public ResponseEntity<?> findBooksByTag(@PathVariable("name") String name,
-            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "0", required = false) Integer page,
             @RequestParam(name = "sort", required = false, defaultValue = "none") String sort) {
         Page<BookWithoutContextProjection> books = bookService.findByTag(name, page, sort);
         WebMvcLinkBuilder builder = linkTo(
@@ -96,38 +92,37 @@ public class BookController {
         return createResponseEntity(books, builder);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<?> deleteBook(@PathVariable("id") Long id) {
-        try {
-            bookService.delete(id);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (ServiceException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        bookService.delete(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> addBook(@Valid BookRequest bookRequest) {
-        try {
-            saveBook(bookRequest);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (ServiceException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity<?> addBook(@Valid BookRequest bookRequest, BindingResult bindingResult) {
+        return bindingResult.hasErrors() ? ResponseEntity.badRequest().build() : saveBook(bookRequest);
     }
 
-    private User findCurrentUser() throws ServiceException {
-        try {
-            String username = SecurityContextHolder.getContext().getAuthentication().getName();
-            return (User) userService.loadUserByUsername(username);
-        } catch (UsernameNotFoundException e) {
-            throw new ServiceException();
-        }
+    @PutMapping(path = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateBook(@PathVariable("id") Long id, @Valid BookRequest bookRequest,
+            BindingResult bindingResult) {
+        return bindingResult.hasErrors() ? ResponseEntity.badRequest().build() : updateBook(id, bookRequest);
     }
 
-    private void saveBook(BookRequest bookRequest) throws ServiceException {
+    private User findCurrentUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return (User) userService.loadUserByUsername(username);
+    }
+
+    private ResponseEntity<?> saveBook(BookRequest bookRequest) {
         User user = findCurrentUser();
         bookService.addBook(bookRequest, user);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    private ResponseEntity<?> updateBook(Long id, BookRequest bookRequest) {
+        bookService.updateBook(id, bookRequest);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     private ResponseEntity<?> createResponseEntity(Page<BookWithoutContextProjection> books,

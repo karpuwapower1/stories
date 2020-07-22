@@ -121,6 +121,7 @@ export default class BookTablePage extends React.Component {
               {this.state.books.map((book) => {
                 return (
                   <Card
+                    key={book.id}
                     style={{
                       marginTop: "10px",
                       marginBottom: "10px",
@@ -134,12 +135,13 @@ export default class BookTablePage extends React.Component {
                       <Row>
                         <HeaderComponent
                           book={book}
+                          link = {book._links.self.href}
                           changeState={(e) =>
                             this.changeState(book.user._links.author.href)
                           }
                           onClickDelete={this.deleteBook.bind(
                             this,
-                            book._links.delete.href,
+                            book._links.self.href,
                             book.id
                           )}
                         />
@@ -185,11 +187,12 @@ export default class BookTablePage extends React.Component {
           </Row>
         </Container>
 
-        <PaginationComponent links={this.state.paginationLinks}
-        page={this.state.page}
-        changeState={this.changeState}
-        pages={this.pages}
-        loadPage={this.loadPage}
+        <PaginationComponent
+          links={this.state.paginationLinks}
+          page={this.state.page}
+          changeState={this.changeState}
+          pages={this.pages}
+          loadPage={this.loadPage}
         />
       </>
     );

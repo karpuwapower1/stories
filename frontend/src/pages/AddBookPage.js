@@ -8,30 +8,7 @@ export default class AddBookPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = this.initialState;
-    const data = JSON.parse(localStorage.getItem("main_data"));
-    this.initiateGenres(data);
-    this.initiateTags(data);
   }
-
-  genres = [];
-
-  initiateGenres = (data) => {
-    if (data.genres._embedded) {
-      data.genres._embedded.tupleBackedMaps.map((genre) =>
-        this.genres.push({ value: {name: genre.name, id: genre.id}, label: genre.name })
-      );
-    }
-  };
-
-  tags = [];
-
-  initiateTags = (data) => {
-    if (data.tags._embedded) {
-      data.tags._embedded.tupleBackedMaps.map((tag) =>
-        this.tags.push({ value: {name: tag.name, id: tag.id}, label: tag.name })
-      );
-    }
-  };
 
   initialState = {
     name: "",
@@ -40,8 +17,6 @@ export default class AddBookPage extends React.Component {
     genres: [],
     tags: [],
   };
-
-
 
   addBook = (e) => {
     e.preventDefault();
@@ -100,8 +75,7 @@ export default class AddBookPage extends React.Component {
       description={this.state.description}
       chapters={this.state.chapters}
       stateGenres={this.state.genres}
-      selectGenres={this.genres}
-      addBook={this.addBook}
+      setBook={this.addBook}
       setParameter = {this.setParameter}
       addGenre={this.addGenre}
       removeChapter= {this.removeChapter}

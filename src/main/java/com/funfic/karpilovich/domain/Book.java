@@ -17,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
@@ -53,7 +54,7 @@ public class Book {
     @DateTimeFormat
     @Column(name = "updated")
     private Calendar updateDate;
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany
     @JoinTable(name = "books_genres", 
                 joinColumns = @JoinColumn(name = "books_id"), 
                 inverseJoinColumns = @JoinColumn(name = "genres_id"  ),
@@ -62,7 +63,8 @@ public class Book {
                 uniqueConstraints = @UniqueConstraint(columnNames = {"genres_id", "books_id" }))
     private Set<Genre> genres;
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Chapter> chapters;
+    @OrderBy("number")
+    private Set<Chapter> chapters;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_users_books"))
     @JsonIgnore

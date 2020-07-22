@@ -1,7 +1,8 @@
 import React from "react";
 import { TagCloud } from "react-tagcloud";
-import { Container } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import { Redirect } from "react-router-dom";
+var randomColor = require("randomcolor");
 
 export default class Cloud extends React.Component {
   constructor(props) {
@@ -12,6 +13,11 @@ export default class Cloud extends React.Component {
       link: "",
     };
   }
+
+  color = randomColor({
+    count: 10,
+    hue: "blue",
+  });
 
   cloudItem = [];
 
@@ -69,22 +75,30 @@ export default class Cloud extends React.Component {
     }
     return (
       <Container style={{ textAlign: "center" }}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "40vh",
-          }}
-        >
-          <TagCloud
-            minSize={16}
-            maxSize={50}
-            tags={this.cloudItem}
-            onClick={(tag) => this.chooseTag(tag.value)}
-            shuffle={true}
-          />
-        </div>
+        <Row>
+          <Col xl={2}> </Col>
+          <Col>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "40vh",
+              }}
+            >
+              <TagCloud
+                style={{ color: "#969393" }}
+                disableRandomColor={true}
+                minSize={16}
+                maxSize={40}
+                tags={this.cloudItem}
+                onClick={(tag) => this.chooseTag(tag.value)}
+                shuffle={true}
+              />
+            </div>
+          </Col>
+          <Col xl={2}> </Col>
+        </Row>
       </Container>
     );
   }

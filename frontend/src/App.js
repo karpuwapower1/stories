@@ -9,6 +9,7 @@ import BookPage from "./pages/BookPage.js";
 import AddBookPage from "./pages/AddBookPage.js";
 import LoadingComponent from "./components/general/LoadingComponent.js";
 import RegistrationConfirmapotionPage from "./pages/RegistrationConfirmationPage.js";
+import UpdateBookPage from "./pages/UpdateBookPage.js";
 import axios from "axios";
 // import "slick-carousel/slick/slick.css";
 // import "slick-carousel/slick/slick-theme.css";
@@ -49,8 +50,9 @@ export default class App extends React.Component {
           <Route path="/books/genres/:name" component={BooksTablePage} />
           <Route path="/books/users/:id" component={BooksTablePage} />
           <Route path="/books/tags/:name" component={BooksTablePage} />
-          <Route path="/books/:id" component={BookPage} />
-          <Route path="/add/book" component={AddBookPage} />
+          <Route path="/books/add" exact component={AddBookPage} />
+          <Route path="/books/:id" exact component={BookPage} />
+          <Route path="/books/update/:id" component={UpdateBookPage} />
         </Switch>
       </Router>
     );

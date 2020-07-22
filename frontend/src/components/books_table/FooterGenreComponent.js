@@ -11,7 +11,7 @@ export default class FooterGenreComponent extends React.Component {
     if (genres._embedded) {
       return genres._embedded.genres.map((genre) => {
         return (
-          <FooterItem
+          <FooterItem key={genre.id}
             pathname={`${path}${genre.name}`}
             link={genre._links.genre.href}
             onClick={(e) => changeState(genre._links.genre.href)}

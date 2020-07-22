@@ -42,5 +42,4 @@ public class Chapter {
     @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "FK_books_chapters"))
     @JsonIgnore
     private Book book;
-
 }

@@ -1,7 +1,6 @@
 import React from "react";
 import { DropdownButton, Dropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import DropdownItemComponent from "./DropdownItemComponent.js";
 
 export default class DropdownComponent extends React.Component {
   constructor(props) {
@@ -9,6 +8,8 @@ export default class DropdownComponent extends React.Component {
   }
 
   render() {
+    let {book, link, onClickDelete} = this.props;
+    console.log(link);
     return (
       <DropdownButton
         variant="link"
@@ -19,17 +20,18 @@ export default class DropdownComponent extends React.Component {
             <Link
               style={{ color: "black" }}
               to={{
-                pathname: `/books/${this.props.book.id}`,
-                state: { links: this.props.book._links.self.href },
+                pathname: `/books/${book.id}`,
+                state: { links: link },
               }}
             >
               Read
             </Link>
           </Dropdown.Item>
-          <DropdownItemComponent
-            onClick={this.props.onClickDelete}
-            title="Delete"
-          />
+          <Dropdown.Item>
+            <Link style={{ color: "black" }} to={{ pathname: `/books/update/${book.id}`, 
+          state: {links: link}}}>Update</Link>
+          </Dropdown.Item>
+          <Dropdown.Item onClick={onClickDelete}>Delete</Dropdown.Item>
         </div>
       </DropdownButton>
     );

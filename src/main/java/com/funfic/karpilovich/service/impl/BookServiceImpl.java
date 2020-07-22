@@ -14,7 +14,8 @@ import com.funfic.karpilovich.domain.Book;
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.dto.BookRequest;
 import com.funfic.karpilovich.dto.mapper.BookMapper;
-import com.funfic.karpilovich.exception.ServiceException;
+import com.funfic.karpilovich.exception.BadRequestException;
+import com.funfic.karpilovich.exception.ResourceNotFoundException;
 import com.funfic.karpilovich.repository.BookRepository;
 import com.funfic.karpilovich.repository.projection.BookProjection;
 import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
@@ -32,8 +33,8 @@ public class BookServiceImpl implements BookService {
     private static final int DEFAULT_PAGE_SIZE = 10;
 
     @Override
-    public BookProjection findById(Long id) throws ServiceException {
-        return bookRepository.findByIdOrderByChaptersNumber(id).orElseThrow(() -> new ServiceException());
+    public BookProjection findById(Long id) {
+        return bookRepository.findByIdOrderByChaptersNumber(id).orElseThrow(() -> new ResourceNotFoundException());
     }
 
     @Override
@@ -61,21 +62,25 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void delete(Long id) throws ServiceException {
-        if (id == null) {
-            throw new ServiceException();
-        }
+    public void delete(Long id) {
         bookRepository.deleteById(id);
     }
 
     @Override
-    public void addBook(BookRequest bookRequest, User user) throws ServiceException {
+    public void addBook(BookRequest bookRequest, User user) {
         try {
-            Book book = takeBookFromRequest(bookRequest, user);
-            bookRepository.saveAndFlush(book);
+            addNewBook(bookRequest, user);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new ServiceException(e);
+            throw new BadRequestException(e);
+        }
+    }
+
+    @Override
+    public void updateBook(Long id, BookRequest bookRequest) {
+        try {
+           update(id, bookRequest);
+        } catch (JsonProcessingException e) {
+            throw new BadRequestException(e);
         }
     }
 
@@ -91,12 +96,17 @@ public class BookServiceImpl implements BookService {
         SortingType type = SortingType.valueOf(sort.toUpperCase());
         return mapSortingTypeToSort(type);
     }
-    
+
     private Sort mapSortingTypeToSort(SortingType type) {
         if (type == SortingType.NONE) {
             return Sort.unsorted();
         }
         return Sort.by(type.getSortingColumn());
+    }
+
+    private void addNewBook(BookRequest bookRequest, User user) throws JsonMappingException, JsonProcessingException {
+        Book book = takeBookFromRequest(bookRequest, user);
+        bookRepository.saveAndFlush(book);
     }
 
     private Book takeBookFromRequest(BookRequest bookRequest, User user)
@@ -110,5 +120,21 @@ public class BookServiceImpl implements BookService {
         book.setUpdateDate(Calendar.getInstance());
         book.setUser(user);
         return book;
+    }
+
+    private void update(Long id, BookRequest bookRequest) throws JsonMappingException, JsonProcessingException {
+        Book book = bookMapper.mapFromBookRequestToBook(bookRequest);
+        Book bookFromDb = bookRepository.getOne(id);
+        updateBookParameters(book, bookFromDb);
+        bookRepository.save(bookFromDb);
+    }
+
+    private void updateBookParameters(Book book, Book bookFromDb) {
+        bookFromDb.setUpdateDate(Calendar.getInstance());
+        bookFromDb.setChapters(book.getChapters());
+        bookFromDb.setDescription(book.getDescription());
+        bookFromDb.setName(book.getName());
+        bookFromDb.setGenres(book.getGenres());
+        bookFromDb.setTags(book.getTags());
     }
 }

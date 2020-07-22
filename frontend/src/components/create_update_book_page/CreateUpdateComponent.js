@@ -14,7 +14,29 @@ import {
 export default class CreateUpdateBookComponent extends React.Component {
   constructor(props) {
     super(props);
+    const data = JSON.parse(localStorage.getItem("main_data"));
+    this.initiateGenres(data);
+    this.initiateTags(data);
   }
+
+  genres = [];
+  tags = [];
+
+  initiateGenres = (data) => {
+    if (data.genres._embedded) {
+      data.genres._embedded.tupleBackedMaps.map((genre) =>
+        this.genres.push({ value: {name: genre.name, id: genre.id}, label: genre.name })
+      );
+    }
+  };
+
+  initiateTags = (data) => {
+    if (data.tags._embedded) {
+      data.tags._embedded.tupleBackedMaps.map((tag) =>
+        this.tags.push({ value: {name: tag.name, id: tag.id}, label: tag.name })
+      );
+    }
+  };
 
   cardHeaderStyles = {
     paddingBottom: "0px",
@@ -37,22 +59,19 @@ export default class CreateUpdateBookComponent extends React.Component {
       name,
       description,
       chapters,
-      stateGenres,
-      selectGenres,
-      addBook,
+      setBook,
       setParameter,
       addGenre,
       removeChapter,
       setChapterParameter,
       addChapter,
-      buttonTitle,
     } = this.props;
     return (
       <Container>
         <Row className="justify-content-md-center">
           <Col md={8} xl={8} xs={12} sm={10}>
             <Card className="text-center" style={{ borderRadius: "15px" }}>
-              <Form onSubmit={addBook} id="bookForm">
+              <Form onSubmit={setBook} id="bookForm">
                 <Card.Header style={this.cardHeaderStyles}>
                   <h1>Book {name}</h1>
                 </Card.Header>
@@ -90,7 +109,7 @@ export default class CreateUpdateBookComponent extends React.Component {
                       placeholder="Genres"
                       isMulti
                       name="genres"
-                      options={selectGenres}
+                      options={this.genres}
                       onChange={addGenre}
                       className="basic-multi-select"
                       classNamePrefix="select"
@@ -157,7 +176,7 @@ export default class CreateUpdateBookComponent extends React.Component {
                         variant="link"
                         color="blue"
                         type="submit"
-                        onClick={addBook}
+                        onClick={setBook}
                       >
                         Add Book
                       </Button>

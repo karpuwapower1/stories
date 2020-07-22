@@ -2,6 +2,7 @@ package com.funfic.karpilovich.domain;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,8 +24,8 @@ import lombok.ToString;
 @Table(name = "tags")
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(exclude = "books")
+@ToString(exclude = "books")
 public class Tag {
 
     @Id
@@ -33,7 +34,7 @@ public class Tag {
     @NonNull
     @Column(unique = true)
     private String name;
-    @ManyToMany(mappedBy = "tags")
+    @ManyToMany(mappedBy = "tags", cascade = {CascadeType.REFRESH, CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnore
     private List<Book> books;
 }

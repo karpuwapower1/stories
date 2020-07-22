@@ -2,7 +2,6 @@ import React from "react";
 import { Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import DropdownComponent from "./DropdownComponent.js";
-import DropdownItemComponent from "./DropdownItemComponent.js";
 
 export default class HeaderComponent extends React.Component {
   constructor(props) {
@@ -10,7 +9,9 @@ export default class HeaderComponent extends React.Component {
   }
 
   render() {
-    const book = this.props.book;
+    let {book, link} = this.props;
+    console.log(book);
+    console.log(link);
     return (
       <>
         <Col>
@@ -29,7 +30,7 @@ export default class HeaderComponent extends React.Component {
             style={{ color: "black" }}
             to={{
               pathname: `/books/${book.id}`,
-              state: { links: book._links.self.href },
+              state: { links:link },
             }}
           >
             {book.name}
@@ -38,7 +39,7 @@ export default class HeaderComponent extends React.Component {
         <Col sm={1}>
           <DropdownComponent
             book={book}
-            onClickRead={this.props.onClickRead}
+            link={link}
             onClickDelete={this.props.onClickDelete}
           />
         </Col>

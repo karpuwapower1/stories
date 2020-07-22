@@ -33,7 +33,7 @@ export default class UserAuthorizationComponent extends React.Component {
   }
 
   render() {
-    if (this.state.user.id) {
+    if (this.state.user != null) {
       return (
         <Button variant="link" onClick={this.logout}>
           Logout

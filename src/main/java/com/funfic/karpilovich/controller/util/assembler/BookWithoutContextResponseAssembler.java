@@ -1,4 +1,4 @@
-package com.funfic.karpilovich.controller.util;
+package com.funfic.karpilovich.controller.util.assembler;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -21,16 +21,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.funfic.karpilovich.controller.BookController;
-import com.funfic.karpilovich.controller.constant.LinkRel;
+import com.funfic.karpilovich.controller.util.mapper.BookProjectionMapper;
 import com.funfic.karpilovich.dto.BookWithoutContextDto;
 import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
 
 @Component
-public class BookWithoutContextResponseAssembler<T extends BookWithoutContextProjection> extends PageMapper
+public class BookWithoutContextResponseAssembler<T extends BookWithoutContextProjection>
         implements RepresentationModelAssembler<T, EntityModel<BookWithoutContextDto>> {
 
     private static final String PAGE_QUERY_PARAM = "page";
     private static final String SORT_QUERY_PARAM = "sort";
+    private static final int FIRST_PAGE_NUMBER = 0;
 
     @Autowired
     private BookProjectionMapper bookProjectionMapper;
@@ -39,8 +40,7 @@ public class BookWithoutContextResponseAssembler<T extends BookWithoutContextPro
     public EntityModel<BookWithoutContextDto> toModel(T entity) {
         BookWithoutContextDto response = bookProjectionMapper.mapToBookWithoutContextDto(entity);
         return EntityModel.of(response,
-                linkTo(methodOn(BookController.class).getBookById(entity.getId())).withSelfRel(),
-                linkTo(methodOn(BookController.class).deleteBook(entity.getId())).withRel(LinkRel.DELETE.getName()));
+                linkTo(methodOn(BookController.class).getBookById(entity.getId())).withSelfRel());
     }
 
     @Override
@@ -53,7 +53,6 @@ public class BookWithoutContextResponseAssembler<T extends BookWithoutContextPro
         CollectionModel<EntityModel<BookWithoutContextDto>> model = PagedModel.of(toList(entities),
                 createPagedMetadata(entities));
         addPaginationLinks(model, entities, builder);
-        addLinkWithoutPageParam(model, builder);
         return model;
     }
 
@@ -65,51 +64,46 @@ public class BookWithoutContextResponseAssembler<T extends BookWithoutContextPro
         return StreamSupport.stream(entities.spliterator(), false).map(this::toModel).collect(Collectors.toList());
     }
 
-    private void addPaginationLinks(CollectionModel<EntityModel<BookWithoutContextDto>> model, Page<? extends T> entities,
-            UriComponentsBuilder builder) {
-        addFirstPageLink(model, entities.getNumber(), builder);
-        addPreviousPageLink(model, entities.getNumber(), builder);
-        addCurrentPageLink(model, entities.getNumber(), builder);
-        addNextPageLink(model, entities.getNumber(), entities.getTotalPages() - 1, builder);
-        addLastPageLink(model, entities.getNumber(), entities.getTotalPages() -1, builder);
+    private void addPaginationLinks(CollectionModel<EntityModel<BookWithoutContextDto>> model,
+            Page<? extends T> entities, UriComponentsBuilder builder) {
+        addFirstPageLink(model, entities, builder);
+        addPreviousPageLink(model, entities, builder);
+        addSelfLink(model, builder);
+        addNextPageLink(model, entities, builder);
+        addLastPageLink(model, entities, builder);
     }
 
-    private void addLinkWithoutPageParam(CollectionModel<EntityModel<BookWithoutContextDto>> model,
-            UriComponentsBuilder builder) {
-        String link = builder.replaceQueryParam(PAGE_QUERY_PARAM).replaceQueryParam(SORT_QUERY_PARAM).build().toString();
+    private void addSelfLink(CollectionModel<EntityModel<BookWithoutContextDto>> model, UriComponentsBuilder builder) {
+        String link = builder.replaceQueryParam(PAGE_QUERY_PARAM).replaceQueryParam(SORT_QUERY_PARAM).build()
+                .toString();
         model.add(Link.of(link).withRel(IanaLinkRelations.ABOUT));
     }
 
-    private void addFirstPageLink(CollectionModel<EntityModel<BookWithoutContextDto>> model, int pageNumber,
+    private void addFirstPageLink(CollectionModel<EntityModel<BookWithoutContextDto>> model, Page<? extends T> entities,
             UriComponentsBuilder builder) {
-        if (pageNumber != 0) {
-            model.add(createLink(builder, firstPageNumber, IanaLinkRelations.FIRST));
+        if (!entities.isFirst()) {
+            model.add(createLink(builder, FIRST_PAGE_NUMBER, IanaLinkRelations.FIRST));
         }
     }
 
-    private void addPreviousPageLink(CollectionModel<EntityModel<BookWithoutContextDto>> model, int pageNumber,
-            UriComponentsBuilder builder) {
-        if (pageNumber > 0) {
-            model.add(createLink(builder, pageNumber - 1, IanaLinkRelations.PREVIOUS));
+    private void addPreviousPageLink(CollectionModel<EntityModel<BookWithoutContextDto>> model,
+            Page<? extends T> entities, UriComponentsBuilder builder) {
+        if (!entities.isFirst()) {
+            model.add(createLink(builder, entities.getNumber() - 1, IanaLinkRelations.PREVIOUS));
         }
     }
 
-    private void addCurrentPageLink(CollectionModel<EntityModel<BookWithoutContextDto>> model, int pageNumber,
+    private void addNextPageLink(CollectionModel<EntityModel<BookWithoutContextDto>> model, Page<? extends T> entities,
             UriComponentsBuilder builder) {
-        model.add(createLink(builder, pageNumber, IanaLinkRelations.SELF));
-    }
-
-    private void addNextPageLink(CollectionModel<EntityModel<BookWithoutContextDto>> model, int pageNumber,
-            int totalPages, UriComponentsBuilder builder) {
-        if (pageNumber < totalPages) {
-            model.add(createLink(builder, pageNumber + 1, IanaLinkRelations.NEXT));
+        if (entities.isLast()) {
+            model.add(createLink(builder, entities.getNumber() + 1, IanaLinkRelations.NEXT));
         }
     }
 
-    private void addLastPageLink(CollectionModel<EntityModel<BookWithoutContextDto>> model, int pageNumber,
-            int totalPages, UriComponentsBuilder builder) {
-        if (pageNumber < totalPages) {
-            model.add(createLink(builder, totalPages, IanaLinkRelations.LAST));
+    private void addLastPageLink(CollectionModel<EntityModel<BookWithoutContextDto>> model, Page<? extends T> entities,
+            UriComponentsBuilder builder) {
+        if (entities.isLast()) {
+            model.add(createLink(builder, entities.getTotalPages() - 1, IanaLinkRelations.LAST));
         }
     }
 

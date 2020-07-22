@@ -11,7 +11,7 @@ export default class FooterTagComponent extends React.Component {
     if (tags._embedded) {
       return tags._embedded.tags.map((tag) => {
         return (
-          <FooterItem
+          <FooterItem key={tag.id}
             pathname={`${path}${tag.name}`}
             link={tag._links.tag.href}
             onClick={(e) => changeState(tag._links.tag.href)}

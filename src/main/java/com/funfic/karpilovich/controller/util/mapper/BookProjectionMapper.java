@@ -1,4 +1,4 @@
-package com.funfic.karpilovich.controller.util;
+package com.funfic.karpilovich.controller.util.mapper;
 
 import javax.annotation.PostConstruct;
 
@@ -7,6 +7,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.funfic.karpilovich.controller.util.assembler.GenreProjectionResponseAssembler;
+import com.funfic.karpilovich.controller.util.assembler.TagProjectionResponseAssembler;
+import com.funfic.karpilovich.controller.util.assembler.UserProjectionResponseAssembler;
 import com.funfic.karpilovich.dto.BookWithoutContextDto;
 import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
 import com.funfic.karpilovich.repository.projection.GenreProjection;
@@ -43,10 +46,14 @@ public class BookProjectionMapper {
         return context -> {
             BookWithoutContextProjection source = context.getSource();
             BookWithoutContextDto destination = context.getDestination();
-            destination.setUser(userAssembler.toModel(source.getUser()));
-            destination.setGenres(genreAssembler.toCollectionModel(source.getGenres()));
-            destination.setTags(tagAssembler.toCollectionModel(source.getTags()));
+            setParamentersToDestination(source, destination);
             return destination;
         };
+    }
+
+    private void setParamentersToDestination(BookWithoutContextProjection source, BookWithoutContextDto destination) {
+        destination.setUser(userAssembler.toModel(source.getUser()));
+        destination.setGenres(genreAssembler.toCollectionModel(source.getGenres()));
+        destination.setTags(tagAssembler.toCollectionModel(source.getTags()));
     }
 }

@@ -35,13 +35,10 @@ public class JwtAuthentificationFilter extends OncePerRequestFilter {
         authentificateUser(token, request);
         chain.doFilter(request, response);
     }
-    
+
     private String getJwtFromRequest(HttpServletRequest request) {
         String token = request.getHeader(AUTHORIZATION_HEADER);
-        if (token != null && token.startsWith(JWT_TOKEN_START)) {
-            return token.substring(JWT_TOKEN_START.length());
-        }
-        return "";
+        return (token != null && token.startsWith(JWT_TOKEN_START)) ? token.substring(JWT_TOKEN_START.length()) : "";
     }
 
     private void authentificateUser(String token, HttpServletRequest request) {
@@ -51,19 +48,19 @@ public class JwtAuthentificationFilter extends OncePerRequestFilter {
             setUserAuthentification(authentication);
         }
     }
-    
+
     private User getUserFromToken(String token) {
         String username = jwtTokenUtil.getUsernameFromJWT(token);
         return (User) userService.loadUserByUsername(username);
     }
-    
+
     private UsernamePasswordAuthenticationToken configureAuthentification(User user, HttpServletRequest request) {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null,
                 user.getAuthorities());
-       authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-       return authentication;
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        return authentication;
     }
-    
+
     private void setUserAuthentification(UsernamePasswordAuthenticationToken authentication) {
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

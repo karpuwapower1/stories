@@ -4,13 +4,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.dto.RegistrationRequest;
-import com.funfic.karpilovich.exception.ServiceException;
+import com.funfic.karpilovich.repository.projection.UserProjection;
 
 public interface UserService extends UserDetailsService {
 
-    User confirmRegistration(String token) throws ServiceException;
+    User confirmRegistration(String token);
 
-    User getById(Long id);
+    UserProjection getById(Long id);
+    
+    UserProjection getByUsername(String username);
 
-    User save(RegistrationRequest registrationRequest) throws ServiceException;
+    User save(RegistrationRequest registrationRequest);
 }
