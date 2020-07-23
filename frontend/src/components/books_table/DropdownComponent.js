@@ -9,7 +9,6 @@ export default class DropdownComponent extends React.Component {
 
   render() {
     let {book, link, onClickDelete} = this.props;
-    console.log(link);
     return (
       <DropdownButton
         variant="link"

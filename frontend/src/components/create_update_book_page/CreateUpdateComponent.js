@@ -1,6 +1,7 @@
 import React from "react";
 import AddChapterComponent from "./AddChapterComponent.js";
 import Select from "react-select";
+import InputTagComponent from "./InputTagComponent.js";
 import {
   Container,
   Col,
@@ -18,9 +19,11 @@ export default class CreateUpdateBookComponent extends React.Component {
     this.initiateGenres(data);
     this.initiateTags(data);
   }
-
-  genres = [];
+  
+  genres=[]
   tags = [];
+  choosedGenres = [];
+  values = [];
 
   initiateGenres = (data) => {
     if (data.genres._embedded) {
@@ -54,6 +57,15 @@ export default class CreateUpdateBookComponent extends React.Component {
     borderRadius: "15px",
   };
 
+  prepareValues = (data) => {
+    this.values = [];
+    if (data) {
+      data.map((genre) =>
+        this.values.push({ value: {name: genre.name, id: genre.id}, label: genre.name })
+      );
+    }
+  };
+
   render() {
     let {
       name,
@@ -65,7 +77,12 @@ export default class CreateUpdateBookComponent extends React.Component {
       removeChapter,
       setChapterParameter,
       addChapter,
+      addTag,
+      deleteTag,
+      choosedTags,
+      choosedGenres,
     } = this.props;
+    this.prepareValues(choosedGenres);
     return (
       <Container>
         <Row className="justify-content-md-center">
@@ -111,9 +128,17 @@ export default class CreateUpdateBookComponent extends React.Component {
                       name="genres"
                       options={this.genres}
                       onChange={addGenre}
+                      value={this.values}
+                      isClearable={true}
                       className="basic-multi-select"
                       classNamePrefix="select"
                     />
+                    <Form.Group controlId="selectTag">
+                    <InputTagComponent addTag={addTag}
+                    deleteTag={deleteTag}
+                    choosedTags={choosedTags}
+                    />
+                    </Form.Group>
 
                     <Accordion>
                       {chapters.map((chapter, index) => {
@@ -126,6 +151,7 @@ export default class CreateUpdateBookComponent extends React.Component {
                                 text={text}
                                 index={index}
                                 key={index}
+                                number={chapter.number}
                                 removeChapter={removeChapter}
                                 setChapterParameter={setChapterParameter}
                               />

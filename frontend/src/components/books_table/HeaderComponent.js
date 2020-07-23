@@ -10,8 +10,6 @@ export default class HeaderComponent extends React.Component {
 
   render() {
     let {book, link} = this.props;
-    console.log(book);
-    console.log(link);
     return (
       <>
         <Col>

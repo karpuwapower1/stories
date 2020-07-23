@@ -26,6 +26,7 @@ export default class AddChapterComponent extends React.Component {
       name,
       text,
       index,
+      number,
       setChapterParameter,
       removeChapter,
     } = this.props;
@@ -33,7 +34,7 @@ export default class AddChapterComponent extends React.Component {
       <Card className="text-center" style={{ borderRadius: "15px" }}>
         <Card.Header style={this.cardHeaderStyles}>
           <Accordion.Toggle as={Button} variant="link" eventKey={index}>
-            Chapter #{index + 1} {name}
+            Chapter #{number} {name}
           </Accordion.Toggle>
         </Card.Header>
         <Accordion.Collapse eventKey={index}>

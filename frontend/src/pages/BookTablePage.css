@@ -1,0 +1,7 @@
+.card-header:first-child {
+    border-radius: 25rem;
+}
+
+.card-footer:first-child {
+    border-radius: 25px;
+}

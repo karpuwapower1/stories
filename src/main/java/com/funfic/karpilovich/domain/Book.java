@@ -62,14 +62,14 @@ public class Book {
                 inverseForeignKey = @ForeignKey(name="FK_genres_books"),
                 uniqueConstraints = @UniqueConstraint(columnNames = {"genres_id", "books_id" }))
     private Set<Genre> genres;
-    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("number")
     private Set<Chapter> chapters;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_users_books"))
     @JsonIgnore
     private User user;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
     @JoinTable(name = "books_tags", 
                 joinColumns = @JoinColumn(name = "books_id"), 
                 inverseJoinColumns = @JoinColumn(name = "tags_id"), 

@@ -1,5 +1,6 @@
 package com.funfic.karpilovich.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -37,7 +38,7 @@ public class Role implements GrantedAuthority {
     private Integer id;
     @Transient
     @ManyToMany(fetch = FetchType.LAZY)
-    private Set<User> users;
+    private Set<User> users = new HashSet<>();
     @Column(unique = true)
     private String name;
 

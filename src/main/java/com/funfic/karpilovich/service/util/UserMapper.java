@@ -1,4 +1,4 @@
-package com.funfic.karpilovich.dto.mapper;
+package com.funfic.karpilovich.service.util;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -7,7 +7,9 @@ import FooterTagComponent from "../components/books_table/FooterTagComponent.js"
 import FooterGenreComponent from "../components/books_table/FooterGenreComponent.js";
 import SortComponent from "../components/books_table/SortComponent.js";
 import PaginationComponent from "../components/books_table/PaginationComponent.js";
+import "./BookTablePage.css";
 import axios from "axios";
+
 
 export default class BookTablePage extends React.Component {
   constructor(props) {
@@ -24,6 +26,7 @@ export default class BookTablePage extends React.Component {
     };
   }
 
+  
   pages = [];
   sorts = [];
 

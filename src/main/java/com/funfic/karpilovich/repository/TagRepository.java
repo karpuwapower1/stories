@@ -17,6 +17,10 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
             + " LEFT JOIN books_tags ON tags.id = books_tags.tags_id "
             + " GROUP BY tags_id LIMIT 100", nativeQuery = true)
     List<TagQuantity> findFits100TagQuantityByNameNative();
+    
+    boolean existsByName(String name);
+    
+    Tag findByName(String name);
 
     public interface TagQuantity extends TagProjection {
 

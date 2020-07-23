@@ -1,8 +1,6 @@
 import React from "react";
-
-import axios from "axios";
-import "../css/toggle.css";
 import CreateUpdateComponent from "../components/create_update_book_page/CreateUpdateComponent.js";
+import creationBookService from "../Services/book/AddBookService.js";
 
 export default class AddBookPage extends React.Component {
   constructor(props) {
@@ -19,23 +17,8 @@ export default class AddBookPage extends React.Component {
   };
 
   addBook = (e) => {
-    e.preventDefault();
-    try {
-      axios.post(this.props.location.state.link, this.createReturnData());
-      this.setState(this.initialState);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  createReturnData = () => {
-    const data = new FormData();
-    const book = { name: this.state.name, description: this.state.description };
-    data.append("book", JSON.stringify(book));
-    data.append("chapters", JSON.stringify(this.state.chapters));
-    data.append("genres", JSON.stringify(this.state.genres));
-    return data;
-  };
+    creationBookService.addBook(e, this.props.location.state.link, this.state);
+  }
 
   setParameter = (event) => {
     this.setState({
@@ -56,7 +39,7 @@ export default class AddBookPage extends React.Component {
   addChapter = (event) => {
     event.preventDefault();
     this.setState((state) => ({
-      chapters: [...this.state.chapters, { name: "", text: "" }],
+      chapters: [...this.state.chapters, { number: this.state.chapters.length + 1, name: "", text: "" }],
     }));
   };
 
@@ -64,11 +47,24 @@ export default class AddBookPage extends React.Component {
     event.preventDefault();
     const chapters = [...this.state.chapters];
     chapters.splice(index, 1);
+    for (let i = index; i < chapters.length; i++) {
+        chapters[i].number = chapters[i].number - 1;
+    }
     this.setState({ chapters });
   };
 
+  deleteTag = (i) => {
+    const { tags } = this.state;
+    this.setState({
+     tags: tags.filter((tag, index) => index !== i),
+    });
+}
+
+addTag = (tag) => {
+    this.setState(state => ({ tags: [...state.tags, tag] }));
+}
+
   render() {
-    console.log(this.genres);
     return (
     <CreateUpdateComponent
       name={this.state.name}
@@ -78,10 +74,14 @@ export default class AddBookPage extends React.Component {
       setBook={this.addBook}
       setParameter = {this.setParameter}
       addGenre={this.addGenre}
+      addTag={this.addTag}
+      deleteTag={this.deleteTag}
+      choosedTags={this.state.tags}
       removeChapter= {this.removeChapter}
       setChapterParameter={this.setChapterParameter}
       addChapter = {this.addChapter}
       buttonTitle={"Add book"}
+      choosedGenres={this.state.genres}
     />               
     );
   }

@@ -13,13 +13,13 @@ import com.funfic.karpilovich.domain.Role;
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.domain.VerificationToken;
 import com.funfic.karpilovich.dto.RegistrationRequest;
-import com.funfic.karpilovich.dto.mapper.UserMapper;
 import com.funfic.karpilovich.exception.BadRequestException;
 import com.funfic.karpilovich.exception.ResourceNotFoundException;
 import com.funfic.karpilovich.repository.UserRepository;
 import com.funfic.karpilovich.repository.VerificationTokenRepository;
 import com.funfic.karpilovich.repository.projection.UserProjection;
 import com.funfic.karpilovich.service.UserService;
+import com.funfic.karpilovich.service.util.UserMapper;
 
 @Service
 public class UserServiceImpl implements UserService {

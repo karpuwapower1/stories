@@ -19,4 +19,5 @@ public class BookRequest {
     @NotEmpty
     private List<String> chapters;
     private List<String> genres;
+    private List<String> tags;
 }
