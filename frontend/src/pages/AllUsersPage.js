@@ -82,7 +82,7 @@ export default class AllUsersPage extends React.Component {
 
   prepareData = (user) => {
     let data = new FormData();
-    let updateUser = {id : user.id, firstName: user.firstName, lastName: user.lastName, enabled: user.enabled, password: user.password, confirmPassword: user.confirmPassword}
+    let updateUser = {id : user.id, enabled: user.enabled}
    let roles = [];
    user.roles.map(role => roles.push({id: role.id, name:role.name}));
     data.append("user", JSON.stringify(updateUser));
@@ -160,6 +160,7 @@ export default class AllUsersPage extends React.Component {
     }
     return (
       <>
+      <Container>
         <Table striped bordered hover>
           <thead>
             <tr>
@@ -237,6 +238,7 @@ export default class AllUsersPage extends React.Component {
             })}
           </tbody>
         </Table>
+        </Container>
 
         <PaginationComponent
           links={this.state.paginationLinks}

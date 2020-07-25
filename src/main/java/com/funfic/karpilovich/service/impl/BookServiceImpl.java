@@ -8,17 +8,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.funfic.karpilovich.domain.Book;
+import com.funfic.karpilovich.domain.Role;
 import com.funfic.karpilovich.domain.Tag;
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.dto.projection.BookProjection;
 import com.funfic.karpilovich.dto.projection.BookWithoutContextProjection;
 import com.funfic.karpilovich.dto.request.BookRequest;
 import com.funfic.karpilovich.exception.BadRequestException;
+import com.funfic.karpilovich.exception.ForbiddenException;
 import com.funfic.karpilovich.exception.ResourceNotFoundException;
 import com.funfic.karpilovich.repository.BookRepository;
 import com.funfic.karpilovich.service.BookService;
@@ -41,41 +46,54 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookProjection findById(Long id) {
-        return bookRepository.findByIdOrderByChaptersNumber(id).orElseThrow(() -> new ResourceNotFoundException());
+        return bookRepository.findBookProjectionByIdOrderByChaptersNumber(id)
+                .orElseThrow(() -> new ResourceNotFoundException());
     }
 
     @Override
     public Page<BookWithoutContextProjection> findBooks(int page, String sortingColumn, String order) {
         Sort sort = getSort(sortingColumn, order);
-        return bookRepository.findBy(PageRequest.of(page, DEFAULT_PAGE_SIZE, sort));
+        return bookRepository.findBookWithoutContextProjectionBy(PageRequest.of(page, DEFAULT_PAGE_SIZE, sort));
     }
 
     @Override
     public Page<BookWithoutContextProjection> findByUserId(Long id, int page, String sortingColumn, String order) {
         Sort sort = getSort(sortingColumn, order);
-        return bookRepository.findByUserId(PageRequest.of(page, DEFAULT_PAGE_SIZE, sort), id);
+        return bookRepository.findBookWithoutContextProjectionByUserId(PageRequest.of(page, DEFAULT_PAGE_SIZE, sort),
+                id);
     }
 
     @Override
     public Page<BookWithoutContextProjection> findByGenre(String name, int page, String sortingColumn, String order) {
         Sort sort = getSort(sortingColumn, order);
-        return bookRepository.findByGenresName(PageRequest.of(page, DEFAULT_PAGE_SIZE, sort), name);
+        return bookRepository
+                .findBookWithoutContextProjectionByGenresName(PageRequest.of(page, DEFAULT_PAGE_SIZE, sort), name);
     }
 
     @Override
     public Page<BookWithoutContextProjection> findByTag(String name, int page, String sortingColumn, String order) {
         Sort sort = getSort(sortingColumn, order);
-        return bookRepository.findByTagsName(PageRequest.of(page, DEFAULT_PAGE_SIZE, sort), name);
+        return bookRepository.findBookWithoutContextProjectionByTagsName(PageRequest.of(page, DEFAULT_PAGE_SIZE, sort),
+                name);
     }
 
     @Override
+    public Book findBookById(Long id) {
+        return bookRepository.findById(id).orElseThrow(() -> new BadRequestException());
+    }
+
+    @Override
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     public void delete(Long id) {
+        checkActionPermission(id);
         bookRepository.deleteById(id);
     }
 
     @Override
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     public void addBook(BookRequest bookRequest, User user) {
         try {
+            checkActionPermission();
             addNewBook(bookRequest, user);
         } catch (JsonProcessingException e) {
             throw new BadRequestException(e);
@@ -83,12 +101,38 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     public void updateBook(Long id, BookRequest bookRequest) {
         try {
+            checkActionPermission(id);
             update(id, bookRequest);
         } catch (JsonProcessingException e) {
             throw new BadRequestException(e);
         }
+    }
+
+    private void checkActionPermission() {
+        if (!isCurrentUserAdmin()) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private void checkActionPermission(Long bookId) {
+        if (!isCurrentUserAdmin() & !isCurrentUserBookowner(bookId)) {
+            throw new ForbiddenException();
+        }
+    }
+
+    private boolean isCurrentUserAdmin() {
+        return getAuthentication().getAuthorities().contains(Role.ROLE_ADMIN);
+    }
+
+    private boolean isCurrentUserBookowner(Long id) {
+        return findBookById(id).getUser().getUsername().equals(getAuthentication().getName());
+    }
+
+    private Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 
     private Sort getSort(String sortingParam, String orderParam) {
@@ -140,10 +184,14 @@ public class BookServiceImpl implements BookService {
     private void update(Long id, BookRequest bookRequest) throws JsonMappingException, JsonProcessingException {
         Book book = bookMapper.mapFromBookRequestToBook(bookRequest);
         Book bookFromDb = bookRepository.getOne(id);
+        setParameters(book, bookFromDb);
+        bookRepository.saveAndFlush(book);
+    }
+
+    private void setParameters(Book book, Book bookFromDb) {
         book.setCreated(bookFromDb.getCreated());
         book.setUpdated(Calendar.getInstance());
         book.setUser(bookFromDb.getUser());
         prepareTags(book);
-        bookRepository.saveAndFlush(book);
     }
 }

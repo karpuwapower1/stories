@@ -75,8 +75,9 @@ export default class BookTablePage extends React.Component {
 
   setData = (data) => {
     if (data.books._embedded) {
+      console.log(data);
       this.setState({
-        books: data.books._embedded.bookWithoutContextDtoes,
+        books: data.books._embedded.bookWithoutContextResponses,
         paginationLinks: data.books._links,
         page: data.books.page,
         sorts: data.sorts,

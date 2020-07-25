@@ -18,7 +18,9 @@ export default class Main extends React.Component {
       links: data._links,
       genres: genres,
       isLoaded: true,
+     
     };
+    console.log(props);
   }
 
   render() {

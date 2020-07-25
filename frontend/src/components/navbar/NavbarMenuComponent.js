@@ -33,6 +33,8 @@ export default class NavbarMenuComponent extends React.Component {
             Add book
           </Link>
           </Nav.Link>
+          
+         
           {this.props.user.roles.find(role => role.name === "ROLE_ADMIN") ? 
             (<Nav.Link>
             <Link
@@ -47,6 +49,14 @@ export default class NavbarMenuComponent extends React.Component {
             </Nav.Link>
             ): ""
           }
+          <Nav.Link>
+          <Link
+            to = {{ pathname : `/users/${this.props.user.id}/update`, state : {link: this.props.user._links.self.href}}}
+            style={{ color: "black" }}
+          >
+            Settings
+          </Link>
+          </Nav.Link>
           </Nav>
       );
     }

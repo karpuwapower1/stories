@@ -17,6 +17,8 @@ public interface UserService extends UserDetailsService {
     UserProjection getByUsername(String username);
 
     User save(RegistrationRequest registrationRequest);
+    
+    User findById(Long id);
 
     Page<UserProjection> getAll(Integer page);
 

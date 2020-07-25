@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -61,6 +62,8 @@ public class User implements UserDetails {
     private List<Book> books;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Comment> coments;
+    @OneToOne(mappedBy="user", cascade = CascadeType.ALL)
+    private VerificationToken token;
 
     public User() {
         setEnabled(false);
