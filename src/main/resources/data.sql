@@ -5,12 +5,23 @@ INSERT IGNORE INTO users (id, username, password, first_name, last_name, enabled
 INSERT IGNORE INTO users (id, username, password, first_name, last_name, enabled) VALUES (2, '1@gmail.com', '$2a$10$8RsBxWVIk8Wq879Nz9EQyO8BkRw4f/QZ0.3yP/JNd293Bg9wnrXrK', 'Aliaksei', 'Karpilovich', true);
 
 
+INSERT IGNORE INTO users (id, username, password, first_name, last_name, enabled) VALUES (3, 'blabla@gmail.com', '$2a$10$8RsBxWVIk8Wq879Nz9EQyO8BkRw4f/QZ0.3yP/JNd293Bg9wnrXrK', 'Aliaksei', 'Karpilovich', true);
+INSERT IGNORE INTO users (id, username, password, first_name, last_name, enabled) VALUES (4, 'lalala@gmail.com', '$2a$10$8RsBxWVIk8Wq879Nz9EQyO8BkRw4f/QZ0.3yP/JNd293Bg9wnrXrK', 'Aliaksei', 'Karpilovich', true);
+INSERT IGNORE INTO users (id, username, password, first_name, last_name, enabled) VALUES (5, 'ablablabl@gmail.com', '$2a$10$8RsBxWVIk8Wq879Nz9EQyO8BkRw4f/QZ0.3yP/JNd293Bg9wnrXrK', 'Aliaksei', 'Karpilovich', true);
+INSERT IGNORE INTO users (id, username, password, first_name, last_name, enabled) VALUES (6, 'lalalalalal@gmail.com', '$2a$10$8RsBxWVIk8Wq879Nz9EQyO8BkRw4f/QZ0.3yP/JNd293Bg9wnrXrK', 'Aliaksei', 'Karpilovich', true);
+
+
 INSERT IGNORE INTO users_roles (users_id, roles_id) VALUES (1, 2); 
 INSERT IGNORE INTO users_roles (users_id, roles_id) VALUES (2, 1);
+INSERT IGNORE INTO users_roles (users_id, roles_id) VALUES (3, 2);
+INSERT IGNORE INTO users_roles (users_id, roles_id) VALUES (4, 2);
+INSERT IGNORE INTO users_roles (users_id, roles_id) VALUES (5, 2);
+INSERT IGNORE INTO users_roles (users_id, roles_id) VALUES (6, 2);
 
-INSERT IGNORE INTO books (id, name, description, user_id) VALUES (1, 'Think as a mathematic', 'Book about mathematic', 2);
-INSERT IGNORE INTO books (id, name, description, user_id) VALUES (2, 'English grammar in use', 'Good book for encrease yout english level', 2);
-INSERT IGNORE INTO books (id, name, description, user_id) VALUES (3, 'Effective java', 'Must have', 2);
+
+INSERT IGNORE INTO books (id, name, description, created, updated, user_id) VALUES (1, 'Think as a mathematic', 'Book about mathematic', '2020-01-01', '2020-05-06', 2);
+INSERT IGNORE INTO books (id, name, description, created, updated, user_id) VALUES (2, 'English grammar in use', 'Good book for encrease yout english level', '2020-05-06', '2020-05-06', 2);
+INSERT IGNORE INTO books (id, name, description, created, updated, user_id) VALUES (3, 'Effective java', 'Must have', '2020-06-07', '2020-07-07', 2);
 
 INSERT IGNORE INTO chapters (id, name, text, number, book_id) VALUES (1, 'First chapter', 'Повседневная практика показывает, что рамки и место обучения 
 кадров способствует подготовки и реализации модели развития. Идейные соображения высшего порядка,', 1, 1);

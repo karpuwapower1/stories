@@ -15,6 +15,8 @@ import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,13 +33,16 @@ import lombok.ToString;
 public class Role implements GrantedAuthority {
 
     private static final long serialVersionUID = 1L;
+    public static final Role ROLE_ADMIN = new Role(1, "ROLE_ADMIN");
+    public static final Role ROLE_USER= new Role(2, "ROLE_USER");
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "TINYINT UNSIGNED")
     private Integer id;
     @Transient
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy="roles", fetch = FetchType.LAZY)
+    @JsonIgnore
     private Set<User> users = new HashSet<>();
     @Column(unique = true)
     private String name;

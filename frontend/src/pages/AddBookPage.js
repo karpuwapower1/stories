@@ -1,6 +1,6 @@
 import React from "react";
 import CreateUpdateComponent from "../components/create_update_book_page/CreateUpdateComponent.js";
-import creationBookService from "../Services/book/AddBookService.js";
+import axios from "axios";
 
 export default class AddBookPage extends React.Component {
   constructor(props) {
@@ -16,9 +16,39 @@ export default class AddBookPage extends React.Component {
     tags: [],
   };
 
-  addBook = (e) => {
-    creationBookService.addBook(e, this.props.location.state.link, this.state);
-  }
+
+
+  addBook = (event) => {
+    event.preventDefault();
+    console.log("add book");
+      try {
+        axios.post(this.props.location.state.link, this.createReturnData());
+        this.setState(this.initialState);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
+  createReturnData = () => {
+      const data = new FormData();
+      const book = { name: this.state.name, 
+          description: this.state.description };
+      data.append("book", JSON.stringify(book));
+      data.append("chapters", JSON.stringify(this.state.chapters));
+      data.append("genres", JSON.stringify(this.state.genres));
+      data.append("tags", JSON.stringify(this.prepareTags()));
+      return data;
+    };
+  
+    prepareTags = () => {
+      let tags = [];
+      if (this.state.tags) {
+        this.state.tags.map(tag => {
+          tags.push({name: tag.text})
+        })
+      }
+      return tags;
+    }
 
   setParameter = (event) => {
     this.setState({

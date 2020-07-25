@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.funfic.karpilovich.controller.util.assembler.MainPageResponseAssembler;
 import com.funfic.karpilovich.controller.util.mapper.MainPageDtoMapper;
-import com.funfic.karpilovich.dto.MainPageDto;
+import com.funfic.karpilovich.dto.projection.UserProjection;
+import com.funfic.karpilovich.dto.response.MainPageResponse;
 import com.funfic.karpilovich.repository.GenreRepository.GenreQuantity;
 import com.funfic.karpilovich.repository.TagRepository.TagQuantity;
-import com.funfic.karpilovich.repository.projection.UserProjection;
 import com.funfic.karpilovich.service.GenreService;
 import com.funfic.karpilovich.service.TagService;
 import com.funfic.karpilovich.service.UserService;
@@ -34,20 +34,20 @@ public class MainController {
     @Autowired
     private MainPageDtoMapper mainPageMapper;
     @Autowired
-    private MainPageResponseAssembler<MainPageDto> mainPageResponseAssembler;
+    private MainPageResponseAssembler<MainPageResponse> mainPageResponseAssembler;
 
     @GetMapping
     public ResponseEntity<?> main() {
-        EntityModel<MainPageDto> response = createResponse();
+        EntityModel<MainPageResponse> response = createResponse();
         return ResponseEntity.ok(response);
     }
 
-    private EntityModel<MainPageDto> createResponse() {
-        MainPageDto dto = createMainPageDto();
+    private EntityModel<MainPageResponse> createResponse() {
+        MainPageResponse dto = createMainPageDto();
         return mainPageResponseAssembler.toModel(dto);
     }
 
-    private MainPageDto createMainPageDto() {
+    private MainPageResponse createMainPageDto() {
         return mainPageMapper.mapToMainPageDto(getCurrentUser(), findTags(), findGenres());
     }
 

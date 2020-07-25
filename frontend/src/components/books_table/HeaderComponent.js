@@ -9,7 +9,7 @@ export default class HeaderComponent extends React.Component {
   }
 
   render() {
-    let {book, link} = this.props;
+    let {book, link, user} = this.props;
     return (
       <>
         <Col>
@@ -38,6 +38,7 @@ export default class HeaderComponent extends React.Component {
           <DropdownComponent
             book={book}
             link={link}
+            user={user}
             onClickDelete={this.props.onClickDelete}
           />
         </Col>

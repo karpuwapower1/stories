@@ -19,6 +19,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotEmpty;
 
@@ -49,11 +51,12 @@ public class Book {
     @NotEmpty
     private String description;
     @DateTimeFormat
-    @Column(name = "created")
-    private Calendar creationDate;
+    @Column
+    @Temporal(TemporalType.DATE)
+    private Calendar created;
     @DateTimeFormat
-    @Column(name = "updated")
-    private Calendar updateDate;
+    @Temporal(TemporalType.DATE)
+    private Calendar updated;
     @ManyToMany
     @JoinTable(name = "books_genres", 
                 joinColumns = @JoinColumn(name = "books_id"), 

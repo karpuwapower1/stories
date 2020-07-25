@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.funfic.karpilovich.domain.Tag;
-import com.funfic.karpilovich.repository.projection.TagProjection;
+import com.funfic.karpilovich.dto.projection.TagProjection;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {

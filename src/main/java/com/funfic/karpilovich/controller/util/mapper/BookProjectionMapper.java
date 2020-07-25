@@ -10,11 +10,11 @@ import org.springframework.stereotype.Component;
 import com.funfic.karpilovich.controller.util.assembler.GenreProjectionResponseAssembler;
 import com.funfic.karpilovich.controller.util.assembler.TagProjectionResponseAssembler;
 import com.funfic.karpilovich.controller.util.assembler.UserProjectionResponseAssembler;
-import com.funfic.karpilovich.dto.BookWithoutContextDto;
-import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
-import com.funfic.karpilovich.repository.projection.GenreProjection;
-import com.funfic.karpilovich.repository.projection.TagProjection;
-import com.funfic.karpilovich.repository.projection.UserProjection;
+import com.funfic.karpilovich.dto.projection.BookWithoutContextProjection;
+import com.funfic.karpilovich.dto.projection.GenreProjection;
+import com.funfic.karpilovich.dto.projection.TagProjection;
+import com.funfic.karpilovich.dto.projection.UserProjection;
+import com.funfic.karpilovich.dto.response.BookWithoutContextResponse;
 
 @Component
 public class BookProjectionMapper {
@@ -28,30 +28,30 @@ public class BookProjectionMapper {
     @Autowired
     private TagProjectionResponseAssembler<TagProjection> tagAssembler;
 
-    public BookWithoutContextDto mapToBookWithoutContextDto(BookWithoutContextProjection projection) {
-        return projection == null ? new BookWithoutContextDto()
-                : modelMapper.map(projection, BookWithoutContextDto.class);
+    public BookWithoutContextResponse mapToBookWithoutContextDto(BookWithoutContextProjection projection) {
+        return projection == null ? new BookWithoutContextResponse()
+                : modelMapper.map(projection, BookWithoutContextResponse.class);
     }
 
     @PostConstruct
     public void setup() {
-        modelMapper.createTypeMap(BookWithoutContextProjection.class, BookWithoutContextDto.class).addMappings(m -> {
-            m.skip(BookWithoutContextDto::setUser);
-            m.skip(BookWithoutContextDto::setGenres);
-            m.skip(BookWithoutContextDto::setTags);
+        modelMapper.createTypeMap(BookWithoutContextProjection.class, BookWithoutContextResponse.class).addMappings(m -> {
+            m.skip(BookWithoutContextResponse::setUser);
+            m.skip(BookWithoutContextResponse::setGenres);
+            m.skip(BookWithoutContextResponse::setTags);
         }).setPostConverter(toBookWithoutContextDtoConverter());
     }
 
-    private Converter<BookWithoutContextProjection, BookWithoutContextDto> toBookWithoutContextDtoConverter() {
+    private Converter<BookWithoutContextProjection, BookWithoutContextResponse> toBookWithoutContextDtoConverter() {
         return context -> {
             BookWithoutContextProjection source = context.getSource();
-            BookWithoutContextDto destination = context.getDestination();
+            BookWithoutContextResponse destination = context.getDestination();
             setParamentersToDestination(source, destination);
             return destination;
         };
     }
 
-    private void setParamentersToDestination(BookWithoutContextProjection source, BookWithoutContextDto destination) {
+    private void setParamentersToDestination(BookWithoutContextProjection source, BookWithoutContextResponse destination) {
         destination.setUser(userAssembler.toModel(source.getUser()));
         destination.setGenres(genreAssembler.toCollectionModel(source.getGenres()));
         destination.setTags(tagAssembler.toCollectionModel(source.getTags()));

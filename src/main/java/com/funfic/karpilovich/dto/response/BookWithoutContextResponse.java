@@ -1,16 +1,16 @@
-package com.funfic.karpilovich.dto;
+package com.funfic.karpilovich.dto.response;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 
-import com.funfic.karpilovich.repository.projection.GenreProjection;
-import com.funfic.karpilovich.repository.projection.TagProjection;
-import com.funfic.karpilovich.repository.projection.UserProjection;
+import com.funfic.karpilovich.dto.projection.GenreProjection;
+import com.funfic.karpilovich.dto.projection.TagProjection;
+import com.funfic.karpilovich.dto.projection.UserProjection;
 
 import lombok.Data;
 
 @Data
-public class BookWithoutContextDto {
+public class BookWithoutContextResponse {
 
     private Long id;
     private String name;

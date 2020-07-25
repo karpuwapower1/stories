@@ -10,6 +10,7 @@ import AddBookPage from "./pages/AddBookPage.js";
 import LoadingComponent from "./components/general/LoadingComponent.js";
 import RegistrationConfirmapotionPage from "./pages/RegistrationConfirmationPage.js";
 import UpdateBookPage from "./pages/UpdateBookPage.js";
+import AllUsersPage from "./pages/AllUsersPage.js";
 import axios from "axios";
 import interseptors from "./Interceptors.js";
 
@@ -44,6 +45,7 @@ export default class App extends React.Component {
           <Route path="/auth/activation"
             component={RegistrationConfirmapotionPage}
           />
+          <Route path="/users" exact component={AllUsersPage} />
           <Route path="/books" exact component={BooksTablePage} />
           <Route path="/books/genres/:name" component={BooksTablePage} />
           <Route path="/books/users/:id" component={BooksTablePage} />

@@ -2,7 +2,7 @@ package com.funfic.karpilovich.service.util;
 
 public enum SortingType {
 
-    RAITING("name"), LAST_UPDATE("id"), AUTHOR("user.firstName"), NONE("none"), NAME("name");
+    RAITING("id"), LAST_UPDATE("updated"), AUTHOR("user.firstName"), NONE("none"), NAME("name"), DATE_POSTED("created");
 
     private String sortingColumn;
 

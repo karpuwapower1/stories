@@ -27,7 +27,7 @@ export default class PaginationComponent extends React.Component {
           pages={pages}
           loadPage={loadPage}
           page={page}
-          link={links.about.href}
+          link={links.self.href}
         />
         <Pagination.Next
           disabled={page.number === page.totalPages - 1 ? true : false}

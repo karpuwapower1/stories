@@ -1,4 +1,4 @@
-package com.funfic.karpilovich.repository.projection;
+package com.funfic.karpilovich.dto.projection;
 
 import org.springframework.data.rest.core.config.Projection;
 

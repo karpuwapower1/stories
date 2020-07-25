@@ -1,4 +1,4 @@
-package com.funfic.karpilovich.dto;
+package com.funfic.karpilovich.dto.response;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,8 +13,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class BookTablePageDto {
+public class BookTablePageResponse {
     
-    private CollectionModel<EntityModel<BookWithoutContextDto>> books;
+    private CollectionModel<EntityModel<BookWithoutContextResponse>> books;
     private final List<SortingType> sorts = Arrays.asList(SortingType.values());
 }

@@ -24,6 +24,7 @@ export default class NavbarComponent extends React.Component {
     if (!this.state.isLoaded) {
       return <LoadingComponent />;
     }
+    console.log(this.state.links);
     return (
       <Navbar collapseOnSelect expand="md" bg="light" variant="light">
         <Navbar.Brand href="/" style={{ fontSize: "18px" }}>
@@ -31,9 +32,9 @@ export default class NavbarComponent extends React.Component {
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="mr-auto">
+         
             <NavbarMenuComponent user={this.state.user} links={this.state.links} />
-          </Nav>
+         
           <Nav className="ml-auto">
             <Form inline>
               <FormControl

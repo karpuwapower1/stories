@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import com.funfic.karpilovich.domain.Genre;
-import com.funfic.karpilovich.repository.projection.GenreProjection;
+import com.funfic.karpilovich.dto.projection.GenreProjection;
 
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, Integer> {

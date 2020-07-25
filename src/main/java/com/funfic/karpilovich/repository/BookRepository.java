@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import com.funfic.karpilovich.domain.Book;
-import com.funfic.karpilovich.repository.projection.BookProjection;
-import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
+import com.funfic.karpilovich.dto.projection.BookProjection;
+import com.funfic.karpilovich.dto.projection.BookWithoutContextProjection;
 
 @RepositoryRestResource
 public interface BookRepository extends JpaRepository<Book, Long> {

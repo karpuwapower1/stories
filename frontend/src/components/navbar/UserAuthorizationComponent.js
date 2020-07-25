@@ -24,7 +24,8 @@ export default class UserAuthorizationComponent extends React.Component {
     event.preventDefault();
     axios.post(this.state.links.logout.href)
       .then((response) => {
-        localStorage.setItem("authorization", response.data.jwttoken);
+        localStorage.removeItem("authorization", response.data.jwttoken);
+        localStorage.removeItem("main_data", response.data.jwttoken);
         window.location.href = "/main";
       })
       .catch((error) => {

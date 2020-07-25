@@ -1,4 +1,4 @@
-package com.funfic.karpilovich.dto;
+package com.funfic.karpilovich.dto.request;
 
 import java.util.List;
 

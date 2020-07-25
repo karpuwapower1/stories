@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,12 +15,12 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.funfic.karpilovich.domain.Book;
 import com.funfic.karpilovich.domain.Tag;
 import com.funfic.karpilovich.domain.User;
-import com.funfic.karpilovich.dto.BookRequest;
+import com.funfic.karpilovich.dto.projection.BookProjection;
+import com.funfic.karpilovich.dto.projection.BookWithoutContextProjection;
+import com.funfic.karpilovich.dto.request.BookRequest;
 import com.funfic.karpilovich.exception.BadRequestException;
 import com.funfic.karpilovich.exception.ResourceNotFoundException;
 import com.funfic.karpilovich.repository.BookRepository;
-import com.funfic.karpilovich.repository.projection.BookProjection;
-import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
 import com.funfic.karpilovich.service.BookService;
 import com.funfic.karpilovich.service.TagService;
 import com.funfic.karpilovich.service.util.BookMapper;
@@ -36,6 +37,7 @@ public class BookServiceImpl implements BookService {
     private TagService tagService;
 
     private static final int DEFAULT_PAGE_SIZE = 10;
+    private static final String DESCENDING_ORDER = "desc";
 
     @Override
     public BookProjection findById(Long id) {
@@ -43,27 +45,27 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Page<BookWithoutContextProjection> findBook(int page, String sort) {
-        Sort sortingColumn = getSortingColumn(sort);
-        return bookRepository.findBy(PageRequest.of(page, DEFAULT_PAGE_SIZE, sortingColumn));
+    public Page<BookWithoutContextProjection> findBooks(int page, String sortingColumn, String order) {
+        Sort sort = getSort(sortingColumn, order);
+        return bookRepository.findBy(PageRequest.of(page, DEFAULT_PAGE_SIZE, sort));
     }
 
     @Override
-    public Page<BookWithoutContextProjection> findByUserId(Long id, int page, String sort) {
-        Sort sortingColumn = getSortingColumn(sort);
-        return bookRepository.findByUserId(PageRequest.of(page, DEFAULT_PAGE_SIZE, sortingColumn), id);
+    public Page<BookWithoutContextProjection> findByUserId(Long id, int page, String sortingColumn, String order) {
+        Sort sort = getSort(sortingColumn, order);
+        return bookRepository.findByUserId(PageRequest.of(page, DEFAULT_PAGE_SIZE, sort), id);
     }
 
     @Override
-    public Page<BookWithoutContextProjection> findByGenre(String name, int page, String sort) {
-        Sort sortingColumn = getSortingColumn(sort);
-        return bookRepository.findByGenresName(PageRequest.of(page, DEFAULT_PAGE_SIZE, sortingColumn), name);
+    public Page<BookWithoutContextProjection> findByGenre(String name, int page, String sortingColumn, String order) {
+        Sort sort = getSort(sortingColumn, order);
+        return bookRepository.findByGenresName(PageRequest.of(page, DEFAULT_PAGE_SIZE, sort), name);
     }
 
     @Override
-    public Page<BookWithoutContextProjection> findByTag(String name, int page, String sort) {
-        Sort sortingColumn = getSortingColumn(sort);
-        return bookRepository.findByTagsName(PageRequest.of(page, DEFAULT_PAGE_SIZE, sortingColumn), name);
+    public Page<BookWithoutContextProjection> findByTag(String name, int page, String sortingColumn, String order) {
+        Sort sort = getSort(sortingColumn, order);
+        return bookRepository.findByTagsName(PageRequest.of(page, DEFAULT_PAGE_SIZE, sort), name);
     }
 
     @Override
@@ -89,24 +91,26 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-    private Sort getSortingColumn(String sort) {
+    private Sort getSort(String sortingParam, String orderParam) {
+        SortingType sortingType = takeSortingTypeFromString(sortingParam);
+        Direction direction = getDirection(orderParam);
+        return mapToSort(sortingType, direction);
+    }
+
+    private SortingType takeSortingTypeFromString(String type) {
         try {
-            return mapStringToSort(sort);
+            return SortingType.valueOf(type.toUpperCase());
         } catch (IllegalArgumentException e) {
-            return Sort.unsorted();
+            return SortingType.NONE;
         }
     }
 
-    private Sort mapStringToSort(String sort) {
-        SortingType type = SortingType.valueOf(sort.toUpperCase());
-        return mapSortingTypeToSort(type);
+    private Sort mapToSort(SortingType type, Direction direction) {
+        return type == SortingType.NONE ? Sort.unsorted() : Sort.by(direction, type.getSortingColumn());
     }
 
-    private Sort mapSortingTypeToSort(SortingType type) {
-        if (type == SortingType.NONE) {
-            return Sort.unsorted();
-        }
-        return Sort.by(type.getSortingColumn());
+    private Direction getDirection(String order) {
+        return DESCENDING_ORDER.equalsIgnoreCase(order) ? Direction.DESC : Direction.ASC;
     }
 
     private void addNewBook(BookRequest bookRequest, User user) throws JsonMappingException, JsonProcessingException {
@@ -122,8 +126,8 @@ public class BookServiceImpl implements BookService {
 
     private Book prepareBook(Book book, User user) {
         prepareTags(book);
-        book.setCreationDate(Calendar.getInstance());
-        book.setUpdateDate(Calendar.getInstance());
+        book.setCreated(Calendar.getInstance());
+        book.setUpdated(Calendar.getInstance());
         book.setUser(user);
         return book;
     }
@@ -134,23 +138,12 @@ public class BookServiceImpl implements BookService {
     }
 
     private void update(Long id, BookRequest bookRequest) throws JsonMappingException, JsonProcessingException {
-        System.out.println(bookRequest.getChapters());
         Book book = bookMapper.mapFromBookRequestToBook(bookRequest);
         Book bookFromDb = bookRepository.getOne(id);
+        book.setCreated(bookFromDb.getCreated());
+        book.setUpdated(Calendar.getInstance());
         book.setUser(bookFromDb.getUser());
         prepareTags(book);
-        updateBookParameters(book, bookFromDb);
         bookRepository.saveAndFlush(book);
-    }
-
-    private void updateBookParameters(Book book, Book bookFromDb) {
-        bookFromDb.setUpdateDate(Calendar.getInstance());
-        bookFromDb.getChapters().clear();
-        bookFromDb.getChapters().addAll(book.getChapters());
-        bookFromDb.setDescription(book.getDescription());
-        bookFromDb.setName(book.getName());
-        bookFromDb.setGenres(book.getGenres());
-        bookFromDb.setTags(book.getTags());
-        prepareTags(bookFromDb);
     }
 }

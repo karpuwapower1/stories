@@ -13,7 +13,7 @@ import com.funfic.karpilovich.domain.Book;
 import com.funfic.karpilovich.domain.Chapter;
 import com.funfic.karpilovich.domain.Genre;
 import com.funfic.karpilovich.domain.Tag;
-import com.funfic.karpilovich.dto.BookRequest;
+import com.funfic.karpilovich.dto.request.BookRequest;
 
 @Component
 public class BookMapper {
@@ -64,10 +64,7 @@ public class BookMapper {
 
     private void setParametersToGenres(Set<Genre> genres, Book book) {
         for (Genre genre : genres) {
-            if (genre.getBooks() == null) {
-                genre.setBooks(new HashSet<Book>(Arrays.asList(book)));
-            }
-            genre.getBooks().add(book);
+            genre.setBooks(new HashSet<Book>(Arrays.asList(book)));
         }
     }
 

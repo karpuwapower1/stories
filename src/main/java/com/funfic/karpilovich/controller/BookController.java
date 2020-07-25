@@ -29,11 +29,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.funfic.karpilovich.controller.util.assembler.BookWithoutContextResponseAssembler;
 import com.funfic.karpilovich.domain.User;
-import com.funfic.karpilovich.dto.BookRequest;
-import com.funfic.karpilovich.dto.BookTablePageDto;
-import com.funfic.karpilovich.dto.BookWithoutContextDto;
-import com.funfic.karpilovich.repository.projection.BookProjection;
-import com.funfic.karpilovich.repository.projection.BookWithoutContextProjection;
+import com.funfic.karpilovich.dto.projection.BookProjection;
+import com.funfic.karpilovich.dto.projection.BookWithoutContextProjection;
+import com.funfic.karpilovich.dto.request.BookRequest;
+import com.funfic.karpilovich.dto.response.BookTablePageResponse;
+import com.funfic.karpilovich.dto.response.BookWithoutContextResponse;
 import com.funfic.karpilovich.service.BookService;
 import com.funfic.karpilovich.service.UserService;
 
@@ -49,10 +49,11 @@ public class BookController {
     private BookWithoutContextResponseAssembler<BookWithoutContextProjection> assembler;
 
     @GetMapping
-    public ResponseEntity<?> findBook(@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(name = "sort", required = false, defaultValue = "none") String sort) {
-        Page<BookWithoutContextProjection> books = bookService.findBook(page, sort);
-        WebMvcLinkBuilder builder = linkTo(methodOn(BookController.class).findBook(books.getNumber(), sort));
+    public ResponseEntity<?> findBooks(@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
+            @RequestParam(name = "sort", required = false, defaultValue = "none") String sort,
+            @RequestParam(name = "order", required = false, defaultValue = "desc") String order) {
+        Page<BookWithoutContextProjection> books = bookService.findBooks(page, sort, order);
+        WebMvcLinkBuilder builder = linkTo(methodOn(BookController.class).findBooks(books.getNumber(), sort, order));
         return createResponseEntity(books, builder);
     }
 
@@ -65,30 +66,33 @@ public class BookController {
     @GetMapping("/users/{id}")
     public ResponseEntity<?> findBookByAuthor(@PathVariable("id") Long id,
             @RequestParam(defaultValue = "0", required = false) Integer page,
-            @RequestParam(name = "sort", required = false, defaultValue = "none") String sort) {
-        Page<BookWithoutContextProjection> books = bookService.findByUserId(id, page, sort);
+            @RequestParam(name = "sort", required = false, defaultValue = "none") String sort,
+            @RequestParam(name = "order", required = false, defaultValue = "desc") String order) {
+        Page<BookWithoutContextProjection> books = bookService.findByUserId(id, page, sort, order);
         WebMvcLinkBuilder builder = linkTo(
-                methodOn(BookController.class).findBookByAuthor(id, books.getNumber(), sort));
+                methodOn(BookController.class).findBookByAuthor(id, books.getNumber(), sort, order));
         return createResponseEntity(books, builder);
     }
 
     @GetMapping("/genres/{name}")
     public ResponseEntity<?> findBooksByGenre(@PathVariable("name") String name,
             @RequestParam(defaultValue = "0", required = false) Integer page,
-            @RequestParam(name = "sort", required = false, defaultValue = "none") String sort) {
-        Page<BookWithoutContextProjection> books = bookService.findByGenre(name, page, sort);
+            @RequestParam(name = "sort", required = false, defaultValue = "none") String sort,
+            @RequestParam(name = "order", required = false, defaultValue = "desc") String order) {
+        Page<BookWithoutContextProjection> books = bookService.findByGenre(name, page, sort, order);
         WebMvcLinkBuilder builder = linkTo(
-                methodOn(BookController.class).findBooksByGenre(name, books.getNumber(), sort));
+                methodOn(BookController.class).findBooksByGenre(name, books.getNumber(), sort, order));
         return createResponseEntity(books, builder);
     }
 
     @GetMapping("/tags/{name}")
     public ResponseEntity<?> findBooksByTag(@PathVariable("name") String name,
             @RequestParam(defaultValue = "0", required = false) Integer page,
-            @RequestParam(name = "sort", required = false, defaultValue = "none") String sort) {
-        Page<BookWithoutContextProjection> books = bookService.findByTag(name, page, sort);
+            @RequestParam(name = "sort", required = false, defaultValue = "none") String sort,
+            @RequestParam(name = "order", required = false, defaultValue = "desc") String order) {
+        Page<BookWithoutContextProjection> books = bookService.findByTag(name, page, sort, order);
         WebMvcLinkBuilder builder = linkTo(
-                methodOn(BookController.class).findBooksByTag(name, books.getNumber(), sort));
+                methodOn(BookController.class).findBooksByTag(name, books.getNumber(), sort, order));
         return createResponseEntity(books, builder);
     }
 
@@ -128,8 +132,8 @@ public class BookController {
     private ResponseEntity<?> createResponseEntity(Page<BookWithoutContextProjection> books,
             WebMvcLinkBuilder builder) {
         UriComponentsBuilder uriBuilder = convertWebMvcLinkBuilderToUriComponentsBuilder(builder);
-        CollectionModel<EntityModel<BookWithoutContextDto>> requestBooks = assembler.toPagedModel(books, uriBuilder);
-        return ResponseEntity.ok(EntityModel.of(new BookTablePageDto(requestBooks)));
+        CollectionModel<EntityModel<BookWithoutContextResponse>> requestBooks = assembler.toPagedModel(books, uriBuilder);
+        return ResponseEntity.ok(EntityModel.of(new BookTablePageResponse(requestBooks)));
     }
 
     private UriComponentsBuilder convertWebMvcLinkBuilderToUriComponentsBuilder(WebMvcLinkBuilder link) {

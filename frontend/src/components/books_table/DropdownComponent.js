@@ -8,7 +8,10 @@ export default class DropdownComponent extends React.Component {
   }
 
   render() {
-    let {book, link, onClickDelete} = this.props;
+    let {book, link, user, onClickDelete} = this.props;
+    console.log(user);
+    console.log(book);
+    if (user != null && (user.id === book.user.id || user.role === "ROLE_ADMIN")) {
     return (
       <DropdownButton
         variant="link"
@@ -34,5 +37,7 @@ export default class DropdownComponent extends React.Component {
         </div>
       </DropdownButton>
     );
+    };
+            return " ";
   }
 }

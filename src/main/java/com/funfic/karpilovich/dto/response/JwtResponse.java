@@ -1,4 +1,4 @@
-package com.funfic.karpilovich.dto;
+package com.funfic.karpilovich.dto.response;
 
 import java.io.Serializable;
 

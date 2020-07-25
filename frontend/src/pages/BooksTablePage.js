@@ -23,16 +23,27 @@ export default class BookTablePage extends React.Component {
       isLoaded: false,
       show: false,
       redirect: "",
+      user: JSON.parse(localStorage.getItem("main_data")).user,
     };
+    this.loadData(this.state.link);
+   
   }
 
-  
   pages = [];
   sorts = [];
 
   componentDidMount = () => {
-    this.loadData(this.state.link);
+    console.log(this.props.location.state.link);
   };
+
+  componentWillUpdate = (event) => {
+    console.log("update");
+    console.log(event);
+    console.log(this.props.location.state.link);
+    if (this.props.location.state.link != event.location.state.link) {
+      this.loadData(event.location.state.link) 
+    }
+  }
 
   loadData = (link) => {
     axios
@@ -53,8 +64,9 @@ export default class BookTablePage extends React.Component {
   };
 
   loadSortPage = (event, link) => {
+    console.log(event.value);
     axios
-      .get(link, { params: { sort: event.value } })
+      .get(link, { params: { sort: event.value.sort, order: event.value.order } })
       .then((response) => response.data)
       .then((data) => {
         this.setData(data);
@@ -100,7 +112,8 @@ export default class BookTablePage extends React.Component {
   loadSorts = (sorts) => {
     this.sorts = [];
     this.state.sorts.map((sort) => {
-      this.sorts.push({ value: sort, label: sort });
+      this.sorts.push({ value: {sort: sort, order: "desc"}, label: `${sort} desc` });
+      this.sorts.push({ value: {sort: sort, order: "asc"}, label: `${sort} asc` });
     });
   };
 
@@ -108,15 +121,24 @@ export default class BookTablePage extends React.Component {
     if (!this.state.isLoaded) {
       return <LoadingComponent />;
     }
+    console.log(this.state);
     this.loadSorts();
     this.loadPages();
+    if (!this.state.books || this.state.books.length == 0) {
+      return <h1  style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "80vh",
+      }}>No such books</h1>
+    }
     return (
       <>
         <Container>
           <SortComponent
             sorts={this.sorts}
             loadSortPage={this.loadSortPage}
-            link={this.state.paginationLinks.about.href}
+            link={this.state.paginationLinks.self.href}
           />
           <Row>
             <Col xl={1}></Col>
@@ -138,6 +160,7 @@ export default class BookTablePage extends React.Component {
                       <Row>
                         <HeaderComponent
                           book={book}
+                          user={this.state.user}
                           link = {book._links.self.href}
                           changeState={(e) =>
                             this.changeState(book.user._links.author.href)

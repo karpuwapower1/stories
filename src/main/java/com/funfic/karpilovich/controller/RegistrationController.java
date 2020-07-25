@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.funfic.karpilovich.domain.User;
 import com.funfic.karpilovich.domain.VerificationToken;
-import com.funfic.karpilovich.dto.JwtResponse;
-import com.funfic.karpilovich.dto.LoginRequest;
-import com.funfic.karpilovich.dto.RegistrationRequest;
-import com.funfic.karpilovich.dto.TokenRequest;
+import com.funfic.karpilovich.dto.request.LoginRequest;
+import com.funfic.karpilovich.dto.request.RegistrationRequest;
+import com.funfic.karpilovich.dto.request.TokenRequest;
+import com.funfic.karpilovich.dto.response.JwtResponse;
 import com.funfic.karpilovich.service.MailSenderService;
 import com.funfic.karpilovich.service.UserService;
 import com.funfic.karpilovich.service.VerificationTokenService;
