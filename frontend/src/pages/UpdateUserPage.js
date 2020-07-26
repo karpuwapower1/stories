@@ -9,9 +9,8 @@ import {
   Form,
 } from "react-bootstrap";
 import LoadingComponent from "../components/general/LoadingComponent.js";
-import PaginationComponent from "../components/books_table/PaginationComponent.js";
-import "./BookTablePage.css";
 import axios from "axios";
+import Constants from "../constants.js";
 
 export default class AllUsersPage extends React.Component {
   constructor(props) {
@@ -23,17 +22,23 @@ export default class AllUsersPage extends React.Component {
       password: "",
       roles: [],
       enabled: "",
-      isLoaded: false
-    }
+      isLoaded: false,
+    };
   }
 
   componentDidMount = () => {
     axios
       .get(this.props.location.state.link)
       .then((response) => response.data)
-      .then((data) => {
-        this.setData(data);
-      });
+      .then((data) => this.setData(data))
+      .catch((error) => this.setHistory(error));
+  };
+
+  setHistory = (error) => {
+    this.props.history.push({
+      pathname: Constants.ERROR_PAGE_ROUTE,
+      status: { code: error.response.status },
+    });
   };
 
   setData = (data) => {
@@ -48,41 +53,54 @@ export default class AllUsersPage extends React.Component {
   };
 
   deleteUser = (event) => {
-       event.preventDefault();
-    try {
-      axios.delete(this.props.location.state.link).then((response) => {
-        localStorage.clear();
-        window.location.href = "/main";
-      });
-    } catch (error) {
-      this.setState({ show: false });
-    }
+    event.preventDefault();
+    axios
+      .delete(this.props.location.state.link)
+      .then((response) => this.clearUser())
+      .catch((error) => this.setHistory(error));
+  };
+
+  clearUser = () => {
+    localStorage.clear();
+    window.location.href = Constants.MAIN_PAGE_ROUTE;
   };
 
   updateUser = (event) => {
     event.preventDefault();
-    try {
-      axios
-        .put(this.props.location.state.link, this.prepareData());
-    } catch (error) {
-      this.setState({ show: false });
-    }
+    axios
+      .put(this.props.location.state.link, this.prepareData())
+      .catch((error) => this.setHistory(error));
   };
 
   prepareData = () => {
     let data = new FormData();
-    let updateUser = {
+    data.append(
+      Constants.RESPONSE_USER_NAME,
+      JSON.stringify(this.prepareUser())
+    );
+    data.append(
+      Constants.RESPONSE_ROLES_NAME,
+      JSON.stringify(this.prepareRoles())
+    );
+    return data;
+  };
+
+  prepareUser = () => {
+    return {
       id: this.state.id,
       firstName: this.state.firstName,
       lastName: this.state.lastName,
       password: this.state.password,
-      enabled: this.state.enabled
+      enabled: this.state.enabled,
     };
+  };
+
+  prepareRoles = () => {
     let roles = [];
-    this.state.roles.map(role => roles.push({id: role.id, name:role.name}));
-    data.append("user", JSON.stringify(updateUser));
-    data.append("roles", JSON.stringify(roles));
-    return data;
+    this.state.roles.map((role) =>
+      roles.push({ id: role.id, name: role.name })
+    );
+    return roles;
   };
 
   setParameter = (event) => {
@@ -94,7 +112,7 @@ export default class AllUsersPage extends React.Component {
   render() {
     const { password, firstName, lastName } = this.state;
     if (!this.state.isLoaded) {
-        return <LoadingComponent />
+      return <LoadingComponent />;
     }
     return (
       <Container>
@@ -133,7 +151,11 @@ export default class AllUsersPage extends React.Component {
                 />
               </Form.Group>
 
-              <Button variant="primary" type="submit" onClick={(e) => this.updateUser(e)}>
+              <Button
+                variant="primary"
+                type="submit"
+                onClick={(e) => this.updateUser(e)}
+              >
                 Submit
               </Button>
 
@@ -141,7 +163,7 @@ export default class AllUsersPage extends React.Component {
                 <Button
                   variant="danger"
                   type="submit"
-                  onClick={(e) =>this.deleteUser(e)}
+                  onClick={(e) => this.deleteUser(e)}
                 >
                   Delete
                 </Button>

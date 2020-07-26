@@ -1,17 +1,36 @@
 import React from "react";
+import ErrorPageTitleComponent from "../components/error_page/ErrorPageTitleComponent.js";
 
 export default class ErrorPage extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-    constructor(props) {
-        super(props);
-
-        console.log(props);
-    }
-
-
-    render() {
+  render() {
+    switch (this.props.location.status.code) {
+      case 403:
         return (
-            <h1>Error page</h1>
-        )
+          <ErrorPageTitleComponent
+            code={this.props.location.status.code}
+            title={"Forbidden"}
+          />
+        );
+      case 404:
+        return (
+          <ErrorPageTitleComponent
+            code={this.props.location.status.code}
+            title={"Bad Request"}
+          />
+        );
+      case 500:
+        return (
+          <ErrorPageTitleComponent
+            code={this.props.location.status.code}
+            title={"Server Error"}
+          />
+        );
+      default:
+        return "";
     }
+  }
 }

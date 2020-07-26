@@ -4,36 +4,45 @@ import LoadingComponent from "../components/general/LoadingComponent.js";
 import ChapterComponent from "../components/book_page/ChapterComponent.js";
 import { Container, Col, Row } from "react-bootstrap";
 import axios from "axios";
-import "../css/toggle.css";
+import Constants from "../constants.js";
 
 export default class BookPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      id: "",
-      bookName: "",
-      bookDescription: "",
-      chapters: [],
-      isLoaded: false,
-    };
+    this.state = this.initialState;
   }
+
+  initialState = {
+    id: "",
+    bookName: "",
+    bookDescription: "",
+    chapters: [],
+    isLoaded: false,
+  };
 
   componentDidMount = () => {
     axios
       .get(this.props.location.state.links)
       .then((response) => response.data)
-      .then((data) => {
-        this.setState({
-          id: data.id,
-          bookName: data.name,
-          bookDescription: data.description,
-          chapters: data.chapters,
-          isLoaded: true,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      .then((data) => this.updateState(data))
+      .catch((error) => this.setHistory(error))
+  };
+
+  updateState = (data) => {
+    this.setState({
+      id: data.id,
+      bookName: data.name,
+      bookDescription: data.description,
+      chapters: data.chapters,
+      isLoaded: true,
+    });
+  };
+
+  setHistory = (error) => {
+    this.props.history.push({
+      pathname: Constants.ERROR_PAGE_ROUTE,
+      status: { code: error.response.status },
+    });
   };
 
   render() {

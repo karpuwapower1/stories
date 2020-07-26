@@ -8,7 +8,7 @@ export default class PaginationComponent extends React.Component {
   }
 
   render() {
-    let { links, changeState, page, pages, loadPage } = this.props;
+    let { links, changeState, page, pages, loadPage } = this.props
     return (
       <Pagination className="justify-content-center">
         <Pagination.First

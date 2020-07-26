@@ -93,7 +93,6 @@ public class BookServiceImpl implements BookService {
     @Secured({ "ROLE_USER", "ROLE_ADMIN" })
     public void addBook(BookRequest bookRequest, User user) {
         try {
-            checkActionPermission();
             addNewBook(bookRequest, user);
         } catch (JsonProcessingException e) {
             throw new BadRequestException(e);

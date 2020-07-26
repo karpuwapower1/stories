@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Constants from "../../constants.js";
 
 export default class UserAuthorizationComponent extends React.Component {
   constructor(props) {
@@ -23,15 +24,21 @@ export default class UserAuthorizationComponent extends React.Component {
   logout = (event) => {
     event.preventDefault();
     axios.post(this.state.links.logout.href)
-      .then((response) => {
-        localStorage.removeItem("authorization", response.data.jwttoken);
-        localStorage.removeItem("main_data", response.data.jwttoken);
-        window.location.href = "/main";
-      })
-      .catch((error) => {
-        this.setState({ message: "Invalid email or password" });
-      });
+      .then((response) => this.clearUser())
+      .catch((error) =>  this.setHistory(error))
   }
+
+  clearUser = () => {
+    localStorage.clear();
+    window.location.href = Constants.MAIN_PAGE_ROUTE;
+  };
+
+  setHistory = (error) => {
+    this.props.history.push({
+      path: Constants.ERROR_PAGE_ROUTE,
+      state: error.response.status,
+    });
+  };
 
   render() {
     if (this.state.user != null) {

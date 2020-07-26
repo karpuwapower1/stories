@@ -3,6 +3,7 @@ import axios from "axios";
 import { Redirect } from "react-router-dom";
 import CreateUpdateComponent from "../components/create_update_book_page/CreateUpdateComponent.js";
 import LoadingComponent from "../components/general/LoadingComponent.js";
+import Constants from "../constants.js";
 
 export default class UpdateBookPage extends React.Component {
   constructor(props) {
@@ -25,54 +26,67 @@ export default class UpdateBookPage extends React.Component {
     axios
       .get(this.props.location.state.links)
       .then((response) => response.data)
-      .then((data) => {
-        this.setState({
-          id: data.id,
-          name: data.name,
-          description: data.description,
-          chapters: data.chapters,
-          genres: data.genres,
-          tags: this.makeAppriciteTags(data.tags),
-          isLoaded: true,
-          redirect: "",
-        });
-      });
+      .then((data) => this.updateState(data))
+      .catch((error) => this.setHistory(error));
+  };
+
+  setHistory = (error) => {
+    this.props.history.push({
+      pathname: Constants.ERROR_PAGE_ROUTE,
+      status: { code: error.response.status },
+    });
+  };
+
+  updateState = (data) => {
+    this.setState({
+      id: data.id,
+      name: data.name,
+      description: data.description,
+      chapters: data.chapters,
+      genres: data.genres,
+      tags: this.makeAppriciteTags(data.tags),
+      isLoaded: true,
+      redirect: "",
+    });
   };
 
   updateBook = (e) => {
     e.preventDefault();
-    try {
-      axios
-        .put(this.props.location.state.links, this.createReturnData(this.state))
-        .then((response) => {
-          this.setState({
-            redirect: `/books/${this.state.id}`,
-          });
-        });
-    } catch (error) {
-      console.log(error);
-    }
+    axios
+      .put(this.props.location.state.links, this.createReturnData(this.state))
+      .then((response) =>
+        this.setState({
+          redirect: `/books/${this.state.id}`,
+        })
+      )
+      .catch((error) => this.setHistory(error));
   };
 
   createReturnData = () => {
     let data = new FormData();
-    let book = {
-      id: this.state.id,
-      name: this.state.name,
-      description: this.state.description,
-    };
-    data.append("book", JSON.stringify(book));
+    data.append(Constants.RESPONSE_BOOK_NAME, JSON.stringify(this.prepareBook()));
     data.append(
-      "chapters",
+      Constants.RESPONSE_CHAPTERS_NAME,
       JSON.stringify(this.state.chapters ? this.state.chapters : [])
     );
     data.append(
-      "genres",
+      Constants.RESPONSE_GENRES_NAME,
       JSON.stringify(this.state.genres ? this.state.genres : [])
     );
-    data.append("tags", JSON.stringify(this.prepareTags()));
+    data.append(
+      Constants.RESPONSE_TAGS_NAME,
+      JSON.stringify(this.prepareTags())
+    );
     return data;
   };
+
+  prepareBook = () => {
+        return  {
+        id: this.state.id,
+        name: this.state.name,
+        description: this.state.description,
+      };
+  }
 
   prepareTags = () => {
     let loadedTags = [];

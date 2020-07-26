@@ -81,6 +81,7 @@ export default class CreateUpdateBookComponent extends React.Component {
       deleteTag,
       choosedTags,
       choosedGenres,
+      buttonTitle
     } = this.props;
     this.prepareValues(choosedGenres);
     return (
@@ -204,7 +205,7 @@ export default class CreateUpdateBookComponent extends React.Component {
                         type="submit"
                         onClick={setBook}
                       >
-                        Add Book
+                       {buttonTitle}
                       </Button>
                     </Col>
                   </Row>

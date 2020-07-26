@@ -2,25 +2,34 @@ import React from "react";
 import MainPageMenuComponent from "../components/main_page/MainPageMenuComponent.js";
 import LoadingComponent from "../components/general/LoadingComponent.js";
 import { Container } from "react-bootstrap";
+import Constants from "../constants.js";
 import TagCloud from "../components/main_page/TagCloud.js";
 
 export default class Main extends React.Component {
   constructor(props) {
     super(props);
-    const data = JSON.parse(localStorage.getItem("main_data"));
-    const tags = data.tags._embedded ? data.tags._embedded.tupleBackedMaps : [];
-    const genres = data.genres._embedded
-      ? data.genres._embedded.tupleBackedMaps
-      : [];
+   this.state = this.initialState;
+   this.initiateState();
+  }
+
+  initialState = {
+    user: {},
+    tags: [],
+    links: [],
+    genres: [],
+    isLoaded: false,
+  }
+
+  initiateState = () => {
+    let data = JSON.parse(localStorage.getItem(Constants.MAIN_DATA_STORAGE_NAME));
     this.state = {
       user: data.user,
-      tags: tags,
+      tags: data.tags._embedded ? data.tags._embedded.tupleBackedMaps : [],
       links: data._links,
-      genres: genres,
+      genres: data.genres._embedded  ? data.genres._embedded.tupleBackedMaps
+      : [],
       isLoaded: true,
-     
     };
-    console.log(props);
   }
 
   render() {

@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import MainPage from "./pages/MainPage.js";
 import LoginPage from "./pages/LoginPage.js";
 import RegistrationPage from "./pages/RegistrationPage.js";
@@ -14,27 +19,29 @@ import AllUsersPage from "./pages/AllUsersPage.js";
 import UpdateUserPage from "./pages/UpdateUserPage.js";
 import ErrorPage from "./pages/ErrorPage.js";
 import axios from "axios";
+import Constants from "./constants.js";
 import interseptors from "./Interceptors.js";
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isLoaded: false, 
-    redirect: "",
-  status: "" };
+    this.state = { isLoaded: false };
   }
 
   componentDidMount = () => {
     axios
-      .get("http://localhost:8080/main")
-      .then((response) =>  response.data)
+      .get(Constants.DEFAULT_SERVER_ROOT)
+      .then((response) => response.data)
       .then((data) => {
-        localStorage.setItem("main_data", JSON.stringify(data));
+        localStorage.setItem(
+          Constants.MAIN_DATA_STORAGE_NAME,
+          JSON.stringify(data)
+        );
         this.setState({ isLoaded: true });
       })
-      .catch(error => {
-        this.setState({ isLoaded: false})
-      })
+      .catch((error) => {
+        this.setState({ isLoaded: false });
+      });
   };
 
   render() {
@@ -49,7 +56,8 @@ export default class App extends React.Component {
           <Route path="/main" component={MainPage} />
           <Route path="/auth/login" component={LoginPage} />
           <Route path="/auth/registration" component={RegistrationPage} />
-          <Route path="/auth/activation"
+          <Route
+            path="/auth/activation"
             component={RegistrationConfirmapotionPage}
           />
           <Route path="/users" exact component={AllUsersPage} />
@@ -61,8 +69,8 @@ export default class App extends React.Component {
           <Route path="/books/add" exact component={AddBookPage} />
           <Route path="/books/:id" exact component={BookPage} />
           <Route path="/books/update/:id" exact component={UpdateBookPage} />
-          <Route path="/error"  component={ErrorPage} />
-          <Route path="*"  component={ErrorPage} />
+          <Route path="/error" component={ErrorPage} />
+          <Route path="/*" component={ErrorPage} />
         </Switch>
       </Router>
     );

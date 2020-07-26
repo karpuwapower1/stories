@@ -1,13 +1,11 @@
 import React from "react";
 import { Card, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import ShadowsIntoLightTwo from "../../fonts/ShadowsIntoLightTwo.ttf";
 
 export default class MainPageMenuItem extends React.Component {
   styles = {
     fontSize: "50px",
     color: "black",
-    fontFamily: { ShadowsIntoLightTwo },
   };
   render() {
     return (

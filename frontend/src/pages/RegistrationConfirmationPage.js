@@ -1,18 +1,21 @@
 import React from "react";
 import { Form, Button, Container, Col, Row } from "react-bootstrap";
-import {Redirect} from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import InvalidMessage from "../components/general/InvalidMessage.js";
+import Constants from "../constants.js";
 import axios from "axios";
 
 export default class RegistrationPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-        token: "",
-        message: `Confirmation token was sent to your email`,
-        redirect: "",
-    }
+    this.state = this.initialState;
   }
+
+  initialState = {
+    token: "",
+    message: "Confirmation token was sent to your email",
+    redirect: "",
+  };
 
   submit = (event) => {
     event.preventDefault();
@@ -25,8 +28,8 @@ export default class RegistrationPage extends React.Component {
     })
       .then((response) => {
         this.setState({
-        redirect: "/main"
-        })
+          redirect: Constants.MAIN_PAGE_ROUTE,
+        });
       })
       .catch((error) => {
         this.setState({ message: "Invalid token" });
@@ -41,7 +44,14 @@ export default class RegistrationPage extends React.Component {
 
   render() {
     if (this.state.redirect) {
-      return <Redirect to={{pathname: this.state.redirect, links: this.props.location.state.links}} />
+      return (
+        <Redirect
+          to={{
+            pathname: this.state.redirect,
+            links: this.props.location.state.links,
+          }}
+        />
+      );
     }
     return (
       <Container>
@@ -53,7 +63,7 @@ export default class RegistrationPage extends React.Component {
               <Form.Group controlId="confirmationToken">
                 <Form.Control
                   type="text"
-                  autoComplete= "off"
+                  autoComplete="off"
                   placeholder="Token"
                   name="token"
                   value={this.state.token}

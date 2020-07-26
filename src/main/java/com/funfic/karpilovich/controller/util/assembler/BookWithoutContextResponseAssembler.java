@@ -96,14 +96,14 @@ public class BookWithoutContextResponseAssembler<T extends BookWithoutContextPro
 
     private void addNextPageLink(CollectionModel<EntityModel<BookWithoutContextResponse>> model, Page<? extends T> entities,
             UriComponentsBuilder builder) {
-        if (entities.isLast()) {
+        if (!entities.isLast()) {
             model.add(createLink(builder, entities.getNumber() + 1, IanaLinkRelations.NEXT));
         }
     }
 
     private void addLastPageLink(CollectionModel<EntityModel<BookWithoutContextResponse>> model, Page<? extends T> entities,
             UriComponentsBuilder builder) {
-        if (entities.isLast()) {
+        if (!entities.isLast()) {
             model.add(createLink(builder, entities.getTotalPages() - 1, IanaLinkRelations.LAST));
         }
     }

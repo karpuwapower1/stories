@@ -13,12 +13,7 @@ export default class Cloud extends React.Component {
       link: "",
     };
   }
-
-  color = randomColor({
-    count: 10,
-    hue: "blue",
-  });
-
+  
   cloudItem = [];
 
   createCloudItem = () => {

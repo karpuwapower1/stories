@@ -2,6 +2,7 @@ import React from "react";
 import { Form, Button, Container, Col, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import InvalidMessage from "../components/general/InvalidMessage.js";
+import Constants from "../constants.js";
 import axios from "axios";
 
 export default class LoginPage extends React.Component {
@@ -16,19 +17,23 @@ export default class LoginPage extends React.Component {
     event.preventDefault();
     axios({
       method: "POST",
-      url: this.props.location.state.links.login.href, 
-      params :{
-      username: this.state.email,
-      password: this.state.password,}
-      })
+      url: this.props.location.state.links.login.href,
+      params: {
+        username: this.state.email,
+        password: this.state.password,
+      },
+    })
       .then((response) => {
-        localStorage.setItem("authorization", response.data.jwttoken);
-        window.location.href = "/main";
+        localStorage.setItem(
+          Constants.AUTHORIZATION_STORAGE_NAME,
+          response.data.jwttoken
+        );
+        window.location.href = Constants.MAIN_PAGE_ROUTE;
       })
       .catch((error) => {
         this.setState({ message: "Invalid email or password" });
       });
-  }
+  };
 
   setParameter = (event) => {
     this.setState({

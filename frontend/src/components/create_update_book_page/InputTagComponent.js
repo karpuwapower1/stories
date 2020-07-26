@@ -1,6 +1,7 @@
 import React from "react";
 import { WithContext as ReactTags } from "react-tag-input";
 import "./InputTagComponent.css";
+import Constants from "../../constants.js";
 
 export default class InputTagComponent extends React.Component {
   constructor(props) {
@@ -10,7 +11,9 @@ export default class InputTagComponent extends React.Component {
   suggestions = [];
 
   componentDidMount = () => {
-    const tags = JSON.parse(localStorage.getItem("main_data"));
+    const tags = JSON.parse(
+      localStorage.getItem(Constants.MAIN_DATA_STORAGE_NAME)
+    );
     this.initiateSuggestions(tags);
   };
 
